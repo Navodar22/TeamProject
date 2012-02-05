@@ -12,7 +12,7 @@ class SignPresenter extends BasePresenter
 	public function startup() {
 		parent::startup();
 		
-		$this->setLayout('Sign');
+		$this->setLayout('sign');
 	}
 
 	/**

@@ -12,7 +12,7 @@ require LIBS_DIR . '/Nette/loader.php';
 $configurator = new NConfigurator;
 
 // Enable Nette Debugger for error visualisation & logging
-//$configurator->setProductionMode($configurator::AUTO);
+$configurator->setProductionMode(FALSE);
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 
 // Enable RobotLoader - this will load all classes automatically
