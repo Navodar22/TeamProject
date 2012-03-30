@@ -1,0 +1,6 @@
+{block content}
+<h2>Fakulty</h2>
+
+{foreach $faculties as $faculty}
+	<a href="{plink Institutes:default, $faculty->id}">{$faculty->name}</a> <a href="{plink Faculties:edit, $faculty->id}">edit</a> <a href="{plink Faculties:delete, $faculty->id}">delete</a><br />
+{/foreach}

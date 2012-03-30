@@ -12,6 +12,8 @@ class BaseModel extends NObject
   
   /** @var  container */
   protected $context;
+  
+  protected $table;
     
   /** 
    *  Construct function for all models. Initialize db connection
@@ -58,7 +60,7 @@ class BaseModel extends NObject
 	/**
 	 *  Get database table
 	 */   	
-	public function getTable($table) {
-    return $this->database->table($table);
+	public function getTable() {
+    return $this->database->table($this->table);
   }
 }

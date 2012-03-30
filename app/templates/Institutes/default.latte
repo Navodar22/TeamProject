@@ -1,0 +1,12 @@
+{block content}
+<h2>Ústavy ({isSet($faculty) ? $faculty->name : 'všetky'})</h2>
+
+{ifset $faculty}
+	{foreach $faculty->related('institute')->where('del', FALSE) as $institute}
+		<a href="{plink Institutes:edit, $institute->id, $faculty->id}">{$institute->name}</a> <a href="{plink Institutes:delete, $institute->id, $faculty->id}">delete</a><br />
+	{/foreach}
+{else}
+	{foreach $all_institutes as $institute}
+		<a href="{plink Institutes:edit, $institute->id}">{$institute->name}</a> <a href="{plink Institutes:delete, $institute->id}">delete</a><br />
+	{/foreach}	
+{/ifset}

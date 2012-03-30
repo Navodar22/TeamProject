@@ -43,7 +43,7 @@ development < common:
         database:
                 driver: mysql
                 host: localhost
-                database: knowledgebase
+                database: masus
                 username: root
                 password: root
                 profiler: TRUE

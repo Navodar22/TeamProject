@@ -20,22 +20,23 @@
 	<title>{$title}</title>
 
 	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/jquery-ui-1.8.18.custom.css" type="text/css">
 	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css" type="text/css">
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/jquery-ui-1.8.18.custom.min.js"></script>
 	{block head}{/block}
 </head>
 
-<body>
-	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-	
+<body>	
 	<div class="envelope">
       <div class="header">
 		<div class="user-info">
 			<div class="f_left">Prihlásený ako: <span class="c-green bold">{$user->name} | {$user->role}</span></div>
 			<a class="logout" href="{link sign:out}" title="Odhlásiť"></a>
+			<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 			<div class="clearer"></div>
 		</div>
         <div class="header-content">
@@ -52,8 +53,8 @@
           <div class="header-item middle">
             <div class="top">
               <div class="top-content"> 
-                <a class="arrow-left" href="#"><img  src="images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="images/house.png" /></a>
+                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
+                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
                 <br class="clearer" />                
               </div>
             </div>
@@ -65,8 +66,8 @@
           <div class="header-item middle">
             <div class="top">
               <div class="top-content">
-                <a class="arrow-left" href="#"><img  src="images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="images/house.png" /></a>
+                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
+                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
                 <br class="clearer" />                    
               </div>
             </div>
@@ -82,8 +83,8 @@
           <div class="header-item middle">
             <div class="top">
               <div class="top-content">  
-                <a class="arrow-left" href="#"><img  src="images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="images/house.png" /></a>
+                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
+                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
                 <br class="clearer" />                  
               </div>
             </div>
@@ -99,8 +100,8 @@
           <div class="header-item middle">
             <div class="top">
               <div class="top-content"> 
-                <a class="arrow-left" href="#"><img  src="images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="images/house.png" /></a>
+                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
+                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
                 <br class="clearer" />                   
               </div>
             </div>
@@ -116,8 +117,8 @@
           <div class="header-item right">
             <div class="top">
               <div class="top-content">
-                <a class="arrow-left" href="#"><img  src="images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="images/house.png" /></a>
+                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
+                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
                 <br class="clearer" />   
               </div>
             </div>
@@ -139,92 +140,23 @@
       </div><!-- header -->
       
       <div class="content">
-        <div class="table shadow">
-          <div class="table-left">          
-            <table>
-              <tr>
-                <th>Ľud. zdroje</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock"><div class="table-text">text</div></td>
-              </tr>
-              <tr>
-                <th>Fin. zdroje</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Trvanie</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Od</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Do</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr class="black">
-                <td></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-              </tr>
-              <tr class="fin">
-                <th>Financovanie</th>
-                <td>Ministerstvo<br />URPI<br />KAIVT</td>
-                <td>text</td>
-                <td>text</td>
-                <td>text</td>
-                <td>text</td>
-              </tr>
-              <tr class="legend">
-                <th class="no-border"></th>
-                <td class="no-border"></td>
-                <td class="no-border"></td>
-                <td class="cancel">Ukončené</td>
-                <td class="lock">Zamietnuté</td>
-                <td class="realization">V realizácii</td>
-              </tr>
-            </table>
-            
-          </div> <!-- table-left -->
-          
-          <div class="controls">
-            <a href="#"><div class="controls-cancel"></div></a>
-            <a href="#"><div class="controls-up"></div></a>
-            <a href="#"><div class="controls-down"></div></a>
-            <a href="#"><div class="controls-add"></div></a>
-          </div>
-          
-          <br class="clearer" />
-          
-        </div> <!-- table -->
-        
-        
-      </div> <!-- content -->   
+		{block #content}        
+        {/block}
+      </div> <!-- content --> 
+		<a href="{plink Projects:default}">Add project</a>
+		<a href="{plink Faculties:default}">Fakulty</a>
+		<a href="{plink Faculties:add}">Add faculty</a>
+		<a href="{plink Institutes:default}">Ústavy</a>
+		<a href="{plink Institutes:add}">Add ústav</a>
     </div> <!-- envelope -->
-
-	{include #content}
+	
+	
+	<script>
+	$(function() {
+		$(".datepicker").datepicker();
+		$(".flash").delay(3000).fadeOut(2000);
+	});
+	</script>
 </body>
 </html>
+
