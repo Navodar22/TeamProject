@@ -41,14 +41,19 @@ create table project(
 	cost float not null,
 	user_id int not null,	
 	state_id int not null default 1,
-	faculty_id int not null,
-	institute_id int not null,
 	start timestamp,
 	end timestamp,
 
 	foreign key (user_id) references user(id) on delete restrict on update cascade,
-	foreign key (state_id) references state(id) on delete restrict on update cascade,
-	foreign key (faculty_id) references faculty(id) on delete restrict on update cascade,
+	foreign key (state_id) references state(id) on delete restrict on update cascade	
+);
+
+drop table if exists project_x_institute;
+create table project_x_institute(
+	id int not null auto_increment primary key,
+	project_id int not null,
+	institute_id int not null,
+
+	foreign key (project_id) references project(id) on delete restrict on update cascade,
 	foreign key (institute_id) references institute(id) on delete restrict on update cascade
-	
 );

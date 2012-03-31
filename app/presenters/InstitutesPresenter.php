@@ -21,7 +21,7 @@ class InstitutesPresenter extends BaseLPresenter
 	public function startup() {
 		parent::startup();
 		
-		$faculties = $this->model('Faculty')->getTable()->where('del', FALSE);
+		$faculties = $this->db->table('faculty')->where('del', FALSE);
 		$faculties_array = array();
 		
 		foreach($faculties as $faculty) {
@@ -37,10 +37,10 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	public function renderDefault($id = NULL)
 	{
-		$faculty = $this->model('Faculty')->getTable()->where('del', FALSE)->where('id', $id)->fetch();
+		$faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();
 		
 		if(!$faculty) {
-			$this->template->all_institutes = $this->model('Institute')->getTable()->where('del', FALSE);
+			$this->template->all_institutes = $this->db->table('institute')->where('del', FALSE);
 		} else {		
 			$this->template->faculty = $faculty;
 		}
@@ -52,7 +52,7 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	public function actionEdit($id, $faculty = NULL) {
-		$this->institute = $this->model('Institute')->getTable()->where('del', FALSE)->where('id', $id)->fetch();	
+		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();	
 		
 		if(!$this->institute) {
 			throw new NBadRequestException;
@@ -70,14 +70,14 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	public function actionDelete($id, $faculty = NULL) {
-		$this->institute = $this->model('Institute')->getTable()->where('del', FALSE)->where('id', $id)->fetch();		
+		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();		
 		
 		if(!$this->institute) {
 			throw new NBadRequestException;
 		}
 		
 		$delete = array('del' => TRUE);
-		$result = $this->model('Institute')->getTable()->where('id', $this->institute->id)->update($delete);	
+		$result = $this->db->table('institute')->where('id', $this->institute->id)->update($delete);	
 		
 		if($result) {
 			$this->flashMessage('Ústav bol odstránený', 'ok');
@@ -117,10 +117,10 @@ class InstitutesPresenter extends BaseLPresenter
 			$values = $form->values;
 			try {
 				if($this->institute) {
-					$this->model('Institute')->getTable()->where('id', $this->institute->id)->update($values);
+					$this->db->table('institute')->where('id', $this->institute->id)->update($values);
 					$this->flashMessage('Ústav bol upravený.', 'ok');
 				} else {
-					$this->model('Institute')->getTable()->insert($values);					
+					$this->db->table('institute')->insert($values);					
 					$this->flashMessage('Ústav bol pridaný.', 'ok');
 				}
 			} catch (PDOException $e) {

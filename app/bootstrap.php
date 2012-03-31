@@ -12,7 +12,7 @@ require LIBS_DIR . '/Nette/loader.php';
 $configurator = new NConfigurator;
 
 // Enable Nette Debugger for error visualisation & logging
-$configurator->setProductionMode(FALSE);
+//$configurator->setProductionMode($configurator::DEVELOPMENT);
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 
 // Enable RobotLoader - this will load all classes automatically
@@ -25,6 +25,8 @@ $configurator->createRobotLoader()
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(dirname(__FILE__) . '/config/config.neon');
 $container = $configurator->createContainer();
+
+//$container->application->catchExceptions = 'FALSE';
 
 // Setup router
 $container->router[] = new NRoute('index.php', 'Homepage:default', NRoute::ONE_WAY);

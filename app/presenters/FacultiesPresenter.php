@@ -16,7 +16,7 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	public function renderDefault()
 	{
-		$this->template->faculties = $this->model('Faculty')->getTable()->where('del', FALSE);
+		$this->template->faculties = $this->db->table('faculty')->where('del', FALSE);
 	} 
 	
 	
@@ -24,7 +24,7 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	public function actionEdit($id) {
-		$this->faculty = $this->model('Faculty')->getTable()->where('del', FALSE)->where('id', $id)->fetch();	
+		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();	
 		
 		if(!$this->faculty) {
 			throw new NBadRequestException;
@@ -38,17 +38,17 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	public function actionDelete($id) {
-		$this->faculty = $this->model('Faculty')->getTable()->where('del', FALSE)->where('id', $id)->fetch();		
+		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();		
 		
 		if(!$this->faculty) {
 			throw new NBadRequestException;
 		}
 		
 		$delete = array('del' => TRUE);
-		$result = $this->model('Faculty')->getTable()->where('id', $this->faculty->id)->update($delete);	
+		$result = $this->db->table('faculty')->where('id', $this->faculty->id)->update($delete);	
 		
 		foreach($this->faculty->related('institute') as $institute) {
-			$this->model('Institute')->getTable()->where('id', $institute->id)->update($delete);	
+			$this->db->table('institute')->where('id', $institute->id)->update($delete);	
 		}
 		
 		if($result) {
@@ -87,10 +87,10 @@ class FacultiesPresenter extends BaseLPresenter
 			$values = $form->values;
 			try {
 				if($this->faculty) {
-					$this->model('Faculty')->getTable()->where('id', $this->faculty->id)->update($values);
+					$this->db->table('faculty')->where('id', $this->faculty->id)->update($values);
 					$this->flashMessage('Fakulta bola úspešne zmenená.', 'ok');
 				} else {
-					$this->model('Faculty')->getTable()->insert($values);
+					$this->db->table('faculty')->insert($values);
 					$this->flashMessage('Fakulta bola úspešne pridaná.', 'ok');
 				}
 			} catch (PDOException $e) {
