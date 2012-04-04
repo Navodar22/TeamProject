@@ -170,6 +170,8 @@ class ProjectsPresenter extends BaseLPresenter
 		$form->addSubmit('back', 'Návrat')
 				->setValidationScope(NULL);
 		
+		$form->addSubmit('add_institute', 'Pridať ústav')->setDisabled();
+		
 		$form->onSuccess[] = callback($this, 'addFormSubmitted');
 		
 		return $form;
@@ -192,9 +194,11 @@ class ProjectsPresenter extends BaseLPresenter
 				$values['user_id'] = '1'; //@TODO actual loged user id - ldap
 
 				$this->db->table('project')->insert($values);
+				
+				$project_id = $this->db->lastInsertId();
 
 				$this->flashMessage('Projekt bol úspešne vytvorený.', 'ok');
-				$this->redirect('default');
+				$this->redirect('edit', $project_id);
 			} else {
 				$this->redirect('default');
 			}

@@ -6,7 +6,9 @@ create table user(
 	last_name varchar(100)
 );
 
-insert into user values ('1', '50774', 'Samuel', 'Kelemen');
+
+
+
 
 drop table if exists state;
 create table state(
@@ -14,14 +16,8 @@ create table state(
 	name varchar(100) not null
 ); 
 
-insert into state values ('1', 'Nový');
-insert into state values ('2', 'Schválený');
-insert into state values ('3', 'Zamietnutý');
-insert into state values ('4', 'Pripravený na realizáciu');
-insert into state values ('5', 'V realizácii');
-insert into state values ('6', 'Úspešne ukončený');
-insert into state values ('7', 'Neúspešne ukončený');
-insert into state values ('8', 'Zrušený');
+
+
 
 
 drop table if exists faculty;
@@ -30,6 +26,10 @@ create table faculty(
 	name varchar(200) not null,
 	del boolean default false
 );
+
+
+
+
 
 drop table if exists insitute;
 create table institute(
@@ -42,6 +42,9 @@ create table institute(
 );
 
 
+
+
+
 drop table if exists project;
 create table project(
 	id int not null auto_increment primary key,
@@ -51,6 +54,10 @@ create table project(
 
 	foreign key (user_id) references user(id) on delete restrict on update cascade	
 );
+
+
+
+
 
 drop table if exists project_institute;
 create table project_institute(

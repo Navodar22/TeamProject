@@ -12,10 +12,12 @@ abstract class BasePresenter extends NPresenter
 	
 	
 	public $aStates = array(
-		'2',	// schválený
-		'4',	// pripravený na realizáciu
-		'5',	// v ralizácii
-		'6'		// úspešne ukončený
+		'2',	// Schválený
+		'3',	// Pripravený na realizáciu
+		'4',	// V realizácii
+		'5',	// Úspešne ukončený
+		'6',	// Dočaste zastavený
+		'7'		// Neúspešne ukončený
 	);
 	
     public function startup() {
