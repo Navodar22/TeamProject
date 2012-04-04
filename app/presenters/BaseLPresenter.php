@@ -16,4 +16,9 @@ abstract class BaseLPresenter extends BasePresenter
 			$this->template->user = $this->getUser()->getIdentity();
 		}
 	}
+	
+	
+	public function getStatuses() {
+		//implement return statuses array by role
+	}
 }

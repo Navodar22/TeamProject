@@ -142,18 +142,30 @@
       <div class="content">
 		{block #content}        
         {/block}
-      </div> <!-- content --> 
-		<a href="{plink Projects:default}">Add project</a>
-		<a href="{plink Faculties:default}">Fakulty</a>
-		<a href="{plink Faculties:add}">Add faculty</a>
-		<a href="{plink Institutes:default}">Ústavy</a>
+      </div> <!-- content -->
+		<a href="{plink Projects:default}">Moje projekty</a> |
+		<a href="{plink Projects:add}">Add project</a> |
+		<a href="{plink Faculties:default}">Fakulty</a> |
+		<a href="{plink Faculties:add}">Add faculty</a> |
+		<a href="{plink Institutes:default}">Ústavy</a> |
 		<a href="{plink Institutes:add}">Add ústav</a>
     </div> <!-- envelope -->
 	
 	
 	<script>
 	$(function() {
-		$(".datepicker").datepicker();
+		$( ".datepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true
+		});
+		$( ".datepicker").datepicker( "option", "dateFormat", 'dd.mm.yy' );
+		{ifset $project_dates} 
+			$('.datepicker[name=start]').datepicker("setDate", {$project_dates['start']} );
+			$('.datepicker[name=end]').datepicker("setDate", {$project_dates['end']} );
+		{else}
+			
+		{/ifset}
 		$(".flash").delay(3000).fadeOut(2000);
 	});
 	</script>
