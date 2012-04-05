@@ -102,6 +102,14 @@ table { border-collapse:collapse; }
 .format-table table th { font-weight: bold; border: 0; padding-right: 20px }
 .format-table table td { border: 0; padding-bottom: 10px }
 
+/* temp table */
+table.render-table { margin: 0 auto; margin-bottom: 30px }
+table.render-table td { padding: 3px }
+table.render-table th { padding: 3px; background: gray; color: white }
+table.render-table .left { text-align: left }
+table.render-table a { text-decoration: none }
+table.render-table a:hover { text-decoration: underline; color: blue }
+
 .login { margin: 0 auto; margin-top: 50px }
 .login table { width: 100%; border: 0 }
 .login table td { padding-top: 5px; border: 0 }

@@ -68,6 +68,8 @@ class FacultiesPresenter extends BaseLPresenter
 		
 		$form->addText('name', 'Názov fakulty')
 				->addRule(NForm::FILLED, 'Musíte zadať názov fakulty.');
+		$form->addText('acronym', 'Skratka fakulty')
+				->addRule(NForm::FILLED, 'Musíte zadať skratku fakulty.');
 		
 		$form->addSubmit('process', 'Ulož');
 		$form->addSubmit('back', 'Naspäť')

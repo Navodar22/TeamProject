@@ -1,6 +1,21 @@
 {block content}
 <h2>Fakulty</h2>
 
-{foreach $faculties as $faculty}
-	<a href="{plink Institutes:default, $faculty->id}">{$faculty->name}</a> <a href="{plink Faculties:edit, $faculty->id}">edit</a> <a href="{plink Faculties:delete, $faculty->id}">delete</a><br />
-{/foreach}
+<table class="render-table">
+	<tr>
+		<th>Názov</th>
+		<th>Akronym</th>
+		<th>Akcia</th>
+	</tr>
+	
+	{foreach $faculties as $faculty}
+	<tr>
+		<td class="left"><a href="{plink Institutes:default, $faculty->id}">{$faculty->name}</a></td>
+		<td>{$faculty->acronym}</td>
+		<td>
+			<a href="{plink Faculties:edit, $faculty->id}">edit</a>
+			<a href="{plink Faculties:delete, $faculty->id}">delete</a>
+		</td>
+	</tr>
+	{/foreach}
+</table>

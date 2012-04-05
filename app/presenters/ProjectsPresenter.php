@@ -494,7 +494,7 @@ class ProjectsPresenter extends BaseLPresenter
 		foreach($faculties as $faculty) {
 			foreach($faculty->related('institute')->where('del', FALSE)->order('name') as $institute) {
 				if(!in_array($institute->id, $banned)) {
-					$result[$institute->id] = $faculty->name . ' - ' . $institute->name; 
+					$result[$institute->id] = $faculty->acronym . ' - ' . $institute->acronym; 
 				}
 			}			
 		}

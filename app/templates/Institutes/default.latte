@@ -1,12 +1,34 @@
 {block content}
 <h2>Ústavy ({isSet($faculty) ? $faculty->name : 'všetky'})</h2>
 
-{ifset $faculty}
-	{foreach $faculty->related('institute')->where('del', FALSE) as $institute}
-		<a href="{plink Institutes:edit, $institute->id, $faculty->id}">{$institute->name}</a> <a href="{plink Institutes:delete, $institute->id, $faculty->id}">delete</a><br />
-	{/foreach}
-{else}
-	{foreach $all_institutes as $institute}
-		<a href="{plink Institutes:edit, $institute->id}">{$institute->name}</a> <a href="{plink Institutes:delete, $institute->id}">delete</a><br />
-	{/foreach}	
-{/ifset}
+<table class="render-table">
+	<tr>
+		<th>Názov</th>
+		<th>Akronym</th>
+		<th>Akcia</th>
+	</tr>
+	
+	{ifset $faculty}
+		{foreach $faculty->related('institute')->where('del', FALSE) as $institute}
+			<tr>
+				<td class="left">{$institute->name}</td>
+				<td>{$institute->acronym}</td>
+				<td>
+					<a href="{plink Institutes:edit, $institute->id, $faculty->id}">edit</a>
+					<a href="{plink Institutes:delete, $institute->id, $faculty->id}">delete</a>
+				</td>
+			</tr>
+		{/foreach}
+	{else}
+		{foreach $all_institutes as $institute}
+			<tr>
+				<td class="left">{$institute->name}</td>
+				<td>{$institute->acronym}</td>
+				<td>
+					<a href="{plink Institutes:edit, $institute->id}">edit</a>
+					<a href="{plink Institutes:delete, $institute->id}">delete</a>
+				</td>
+			</tr>
+		{/foreach}
+	{/ifset}
+</table>

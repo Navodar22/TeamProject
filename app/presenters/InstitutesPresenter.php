@@ -25,7 +25,7 @@ class InstitutesPresenter extends BaseLPresenter
 		$faculties_array = array();
 		
 		foreach($faculties as $faculty) {
-			$faculties_array[$faculty->id] = $faculty->name; 
+			$faculties_array[$faculty->id] = $faculty->acronym; 
 		}
 		
 		$this->faculties = $faculties_array;
@@ -80,6 +80,7 @@ class InstitutesPresenter extends BaseLPresenter
 		$result = $this->db->table('institute')->where('id', $this->institute->id)->update($delete);	
 		
 		if($result) {
+			$this->calculateMoney();
 			$this->flashMessage('Ústav bol odstránený', 'ok');
 		} else {
 			$this->flashMessage('Ústav sa nepodarilo odstrániť', 'error');
@@ -96,8 +97,11 @@ class InstitutesPresenter extends BaseLPresenter
 		
 		$form->addText('name', 'Názov ústavu')
 				->addRule(NForm::FILLED, 'Musíte zadať názov ústavu.');
+		$form->addText('acronym', 'Skratka ústavu')
+				->addRule(NForm::FILLED, 'Musíte zadať skratku ústavu.');
 		
 		$form->addSelect('faculty_id', 'Zaradiť pod katedru', $this->faculties);
+		$form->addText('students', 'Počet študentov');
 		
 		$form->addSubmit('process', 'Ulož');
 		$form->addSubmit('back', 'Naspäť')
@@ -117,16 +121,37 @@ class InstitutesPresenter extends BaseLPresenter
 			$values = $form->values;
 			try {
 				if($this->institute) {
-					$this->db->table('institute')->where('id', $this->institute->id)->update($values);
+					$this->db->table('institute')->where('id', $this->institute->id)->update($values);	
+					$this->calculateMoney();
 					$this->flashMessage('Ústav bol upravený.', 'ok');
 				} else {
-					$this->db->table('institute')->insert($values);					
+					$this->db->table('institute')->insert($values);		
+					$this->calculateMoney();
 					$this->flashMessage('Ústav bol pridaný.', 'ok');
-				}
+				}				
 			} catch (PDOException $e) {
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
 			}
 		}
 			$this->redirect('default', $this->faculty);	
+	}
+	
+	
+	
+	public function calculateMoney() {
+		$total_students = 0;
+		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
+			$total_students += $institute->students;
+		}
+
+		$this->db->table('school')->update(array('students' => $total_students));
+		$school = $this->db->table('school')->where('id', '1')->fetch();
+
+		$money_index = $school->money/$school->students;
+
+		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
+			$institute_money = $institute->students * $money_index;
+			$institute->update(array('money' => $institute_money));
+		}	
 	}
 }
