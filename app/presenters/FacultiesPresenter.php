@@ -8,12 +8,16 @@
  */
 class FacultiesPresenter extends BaseLPresenter
 {
+	/** @var database object */
 	public $faculty;
 	
 	
 	
 	
-	
+	/** 
+	 * Default render function.
+	 * Render all faculties in system
+	 */
 	public function renderDefault()
 	{
 		$this->template->faculties = $this->db->table('faculty')->where('del', FALSE);
@@ -22,7 +26,12 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Edit action function.
+	 * Edit selected faculty.
+	 * 
+	 * @param int $id		ID of editing faculty
+	 */
 	public function actionEdit($id) {
 		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();	
 		
@@ -36,7 +45,12 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Delete action function.
+	 * Delete selected faculty.
+	 * 
+	 * @param int $id		ID of selected faculty
+	 */
 	public function actionDelete($id) {
 		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();		
 		
@@ -44,14 +58,31 @@ class FacultiesPresenter extends BaseLPresenter
 			throw new NBadRequestException;
 		}
 		
+		//set help value - not really delete, only set delete flag to true
 		$delete = array('del' => TRUE);
-		$result = $this->db->table('faculty')->where('id', $this->faculty->id)->update($delete);	
 		
-		foreach($this->faculty->related('institute') as $institute) {
-			$this->db->table('institute')->where('id', $institute->id)->update($delete);	
+		try {
+			//perform delete action via transaction
+			$this->db->beginTransaction();
+			
+			//delete faculty
+			$result = $this->db->table('faculty')->where('id', $this->faculty->id)->update($delete);	
+
+			//delete all realted institutes - set delete flag to true
+			foreach($this->faculty->related('institute') as $institute) {
+				$this->db->table('institute')->where('id', $institute->id)->update($delete);	
+			}
+			
+			$this->db->commit();
+		} catch (PDOException $e) {
+			$this->db->rollback();
+			$this->flashMessage('Fakultu sa nepodarilo vymazať zo systému', 'error');
+			$this->redirect('default');
 		}
 		
 		if($result) {
+			//recalculate system money
+			$this->calculateMoney();
 			$this->flashMessage('Fakulta bola odstránená', 'ok');
 		} else {
 			$this->flashMessage('Fakultu sa nepodarilo odstrániť', 'error');
@@ -62,7 +93,11 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Save form create function
+	 * 
+	 * @return NAppForm 
+	 */
 	public function createComponentSaveForm() {
 		$form = new NAppForm();
 		
@@ -83,7 +118,11 @@ class FacultiesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Save form submit callback
+	 * 
+	 * @param type $form 
+	 */
 	public function addFormSubmitted($form) {
 		if($form['process']->isSubmittedBy()) {
 			$values = $form->values;

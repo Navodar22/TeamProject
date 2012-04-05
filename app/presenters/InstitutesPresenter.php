@@ -8,33 +8,36 @@
  */
 class InstitutesPresenter extends BaseLPresenter
 {
+	/** @var database object */
 	public $institute;
 	
+	/** @var array		Non deleted faculties*/
 	public $faculties;
 	
+	/** @var */
 	public $faculty;
 	
 	
 	
 	
-	
+	/**
+	 * Startup function
+	 */
 	public function startup() {
 		parent::startup();
 		
-		$faculties = $this->db->table('faculty')->where('del', FALSE);
-		$faculties_array = array();
-		
-		foreach($faculties as $faculty) {
-			$faculties_array[$faculty->id] = $faculty->acronym; 
-		}
-		
-		$this->faculties = $faculties_array;
+		//set faculties to global object variable
+		$this->getFaculties();
 	}
 	
 	
 	
 	
-	
+	/**
+	 * Render function to render institute list
+	 * 
+	 * @param int $id		ID of selected faculty or NULL for all institutes 
+	 */
 	public function renderDefault($id = NULL)
 	{
 		$faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();
@@ -49,8 +52,13 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
-	
+	/**
+	 * Edit action function.
+	 * Edit selected institute
+	 * 
+	 * @param int $id				ID of selected institute
+	 * @param int $faculty			ID of associate faculty
+	 */
 	public function actionEdit($id, $faculty = NULL) {
 		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();	
 		
@@ -58,6 +66,7 @@ class InstitutesPresenter extends BaseLPresenter
 			throw new NBadRequestException;
 		}
 		
+		//if get to this action from faculty institute render, need to redirect back
 		if($faculty) {
 			$this->faculty = $faculty;
 		}
@@ -68,7 +77,12 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Delete function to delete selected institute
+	 * 
+	 * @param int $id				ID of selected institute
+	 * @param int $faculty			ID of associate faculty
+	 */
 	public function actionDelete($id, $faculty = NULL) {
 		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();		
 		
@@ -76,8 +90,16 @@ class InstitutesPresenter extends BaseLPresenter
 			throw new NBadRequestException;
 		}
 		
+		//help delete variable - not delete only set delete flag to true
 		$delete = array('del' => TRUE);
-		$result = $this->db->table('institute')->where('id', $this->institute->id)->update($delete);	
+		
+		try {
+			//delete institute
+			$result = $this->db->table('institute')->where('id', $this->institute->id)->update($delete);	
+		} catch (PDOException $e) {
+			$this->flashMessage('Ústav sa nepodarilo odstrániť', 'error');
+			$this->redirect('default', $faculty);
+		}
 		
 		if($result) {
 			$this->calculateMoney();
@@ -91,7 +113,11 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Save form create function
+	 * 
+	 * @return NAppForm 
+	 */
 	public function createComponentSaveForm() {
 		$form = new NAppForm();
 		
@@ -107,7 +133,7 @@ class InstitutesPresenter extends BaseLPresenter
 		$form->addSubmit('back', 'Naspäť')
 				->setValidationScope(NULL);
 		
-		$form->onSuccess[] = callback($this, 'addFormSubmitted');
+		$form->onSuccess[] = callback($this, 'saveFormSubmitted');
 		
 		return $form;
 	}
@@ -115,20 +141,22 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
-	public function addFormSubmitted($form) {
+	/**
+	 * Save form submit callback
+	 * 
+	 * @param NAppForm $form 
+	 */
+	public function saveFormSubmitted($form) {
 		if($form['process']->isSubmittedBy()) {
 			$values = $form->values;
 			try {
 				if($this->institute) {
 					$this->db->table('institute')->where('id', $this->institute->id)->update($values);	
-					$this->calculateMoney();
-					$this->flashMessage('Ústav bol upravený.', 'ok');
 				} else {
 					$this->db->table('institute')->insert($values);		
-					$this->calculateMoney();
-					$this->flashMessage('Ústav bol pridaný.', 'ok');
-				}				
+				}	
+				$this->calculateMoney();
+				$this->flashMessage('Ústav bol pridaný.', 'ok');
 			} catch (PDOException $e) {
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
 			}
@@ -138,20 +166,18 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	public function calculateMoney() {
-		$total_students = 0;
-		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
-			$total_students += $institute->students;
+	
+	/**
+	 * Function to get faculties in array - only non deleted
+	 */
+	public function getFaculties() {
+		$faculties = $this->db->table('faculty')->where('del', FALSE);
+		$faculties_array = array();
+		
+		foreach($faculties as $faculty) {
+			$faculties_array[$faculty->id] = $faculty->acronym; 
 		}
-
-		$this->db->table('school')->update(array('students' => $total_students));
-		$school = $this->db->table('school')->where('id', '1')->fetch();
-
-		$money_index = $school->money/$school->students;
-
-		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
-			$institute_money = $institute->students * $money_index;
-			$institute->update(array('money' => $institute_money));
-		}	
+		
+		$this->faculties = $faculties_array;
 	}
 }
