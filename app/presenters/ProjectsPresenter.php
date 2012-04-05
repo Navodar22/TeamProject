@@ -69,6 +69,16 @@ class ProjectsPresenter extends BaseLPresenter
 		$this->template->total_values = $this->calculateTotalValues();		
 		$this->template->project = $this->project;
 		$this->template->form = $this['editForm'];
+		
+		$participate_faculties = array();
+		
+		foreach($this->db->table('project_institute') as $project_institute) {
+			if(!isSet($participate_faculties[$project_institute->institute->faculty->id])) {
+				$participate_faculties[$project_institute->institute->faculty->id] = $project_institute->institute->faculty;
+			}
+		}
+		
+		$this->template->participate_faculties = $participate_faculties;
 	}
 	
 	
@@ -119,6 +129,8 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		//set other default values of institute to edit institute form
 		$this['editInstituteForm']->setDefaults($this->project_institute);
+		
+		$this->template->institute = $this->project_institute->institute;
 	}
 	
 	
@@ -300,7 +312,8 @@ class ProjectsPresenter extends BaseLPresenter
 		$form = new NAppForm();
 
 		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TODO make global function to get states by role
-		$form->addSelect('institute_id', 'Ústav', $this->free_institutes);
+		$form->addSelect('institute_id', 'Ústav', $this->free_institutes)
+				->getControlPrototype()->class('w250');
 		
 		$form->addText('hr', 'Celková cena hr')
 				->addRule(NForm::FILLED, 'Musíte zadať hr projektu')
@@ -361,7 +374,7 @@ class ProjectsPresenter extends BaseLPresenter
 					$this->flashMessage('Participácia na projekte nemôže byť menšia ako jeho celková cena.', 'error');
 					$error = true;
 				}
-
+				
 				//is form error free ?
 				if(!$error) {
 					$this->db->table('project_institute')->insert($values);
@@ -492,9 +505,10 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		//get free institutes
 		foreach($faculties as $faculty) {
+			$result[$faculty->name] = array();
 			foreach($faculty->related('institute')->where('del', FALSE)->order('name') as $institute) {
 				if(!in_array($institute->id, $banned)) {
-					$result[$institute->id] = $faculty->acronym . ' - ' . $institute->acronym; 
+					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
 				}
 			}			
 		}

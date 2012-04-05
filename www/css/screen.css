@@ -118,6 +118,7 @@ table.render-table a:hover { text-decoration: underline; color: blue }
 h2 { margin: 5px 0 10px 0 }
 
 .w350 { width: 350px }
+.w250 { width: 250px }
 .c-green { color: #CFE186 }
 .bold { font-weight: bold }
 .shadow { -webkit-box-shadow: 5px 5px 10px 2px #706f6f; -moz-box-shadow: 5px 5px 10px 2px #706f6f; box-shadow: 5px 5px 10px 2px #706f6f }
