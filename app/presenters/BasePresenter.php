@@ -32,4 +32,33 @@ abstract class BasePresenter extends NPresenter
         return $this->context->LoadModel->getModel($model_name);
     }
 	
+	
+	
+	
+	/**
+	 * Function convert NTableSelection object to array.
+	 * Only one level !
+	 * 
+	 * @param NTableSelection $object
+	 * @return array
+	 */
+	public function objectToArray(NTableSelection $object) {
+		$result = array();
+		$temp = array();
+		
+		foreach($object as $row) {
+			$columns = array_keys(iterator_to_array($row));	
+			break;
+		}
+		
+		foreach($object as $row) {
+			foreach($columns as $column) {
+				$temp[$column] = $row->$column;
+			}
+			$result[] = $temp;
+		}
+		
+		return $result;
+	}
+	
 }

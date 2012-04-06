@@ -17,9 +17,9 @@
 		<td style="width: 100px">Spolu</td>
 		<td style="width: 100px">{$faculty['total']['projects_count']}</td>
 		<td style="width: 100px">{$faculty['total']['cost']}</td>
-		<td style="width: 100px">{$faculty['total']['allowed_cost']}</td>
+		<td style="width: 100px">{$faculty['total']['approved_cost']}</td>
 		<td style="width: 100px">{$faculty['total']['hr']}</td>
-		<td style="width: 100px">{$faculty['total']['allowed_hr']}</td>		
+		<td style="width: 100px">{$faculty['total']['approved_hr']}</td>		
 		<td></td>
 	</tr>
 	
@@ -28,9 +28,9 @@
 		<td style="text-align: left; padding-left: 5px" title="{$institute['name']}">{$institute['acronym']}</td>
 		<td>{$institute['projects_count']}</td>
 		<td>{$institute['cost']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$institute['allowed_cost']}</td>
+		<td style="background: green; color: white; font-weight: bold">{$institute['approved_cost']}</td>
 		<td>{$institute['hr']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$institute['allowed_hr']}</td>
+		<td style="background: green; color: white; font-weight: bold">{$institute['approved_hr']}</td>
 		<td><a href="{plink 'Homepage:institute', $institute_id}">viac</a></td>
 	</tr>
 {/foreach}
