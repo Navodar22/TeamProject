@@ -133,9 +133,13 @@ h2 { margin: 5px 0 10px 0 }
 /* Flash messages */
 div.flash { text-shadow: 1px 1px 1px #ffffff;
 filter: dropshadow(color=#ffffff, offx=5, offy=5);color: #000000; font-weight: bold; background: #FFF9D7;	border: 1px solid #E2C822; padding: 0px 10px; margin: 0px 10px; float: right}
+div.login-flash { height: 30px; line-height: 30px; text-shadow: 1px 1px 1px #ffffff;
+filter: dropshadow(color=#ffffff, offx=5, offy=5);color: #000000; font-weight: bold; background: #FFF9D7;	border: 1px solid #E2C822; padding: 0px 10px; margin: 0px 10px; }
 div.info { background: #FFF9D7 url('../images/info.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #E2C822; }
 div.ok { background: #8cec8c url('../images/ok.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #1cb41c }
 div.error { background: #ff9f9f url('../images/error.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #cc0404;  }
+
+
 /* End Flash messages*/
 
 a[href^="error:"] {

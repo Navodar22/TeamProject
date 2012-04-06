@@ -50,8 +50,9 @@ class SignPresenter extends BasePresenter
 			$this->getUser()->login($values->username, $values->password);
 			$this->redirect('Homepage:');
 
-		} catch (AuthenticationException $e) {
-			$form->addError($e->getMessage());
+		} catch (NAuthenticationException $e) {
+			$this->flashMessage($e->getMessage(), 'error');
+			$this->redirect('Sign:in');
 		}
 	}
 

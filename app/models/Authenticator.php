@@ -53,6 +53,7 @@ class Authenticator extends NObject implements IAuthenticator
 		
 		list($username, $password) = $credentials;
         
+		$auth_user = false;
 		foreach($this->users as $user) {
 			if(($user['username'] == $username) && ($user['password'] == $password)) {
 				$auth_user = array(
@@ -63,7 +64,7 @@ class Authenticator extends NObject implements IAuthenticator
 		}
 		
 		if (!$auth_user) {
-			throw new NAuthenticationException("Login failed.", self::IDENTITY_NOT_FOUND);
+			throw new NAuthenticationException("Neplatné prihlasovacie údaje.", self::IDENTITY_NOT_FOUND);
 		}
 		
 		return new NIdentity('1', $auth_user['role'], $auth_user);	
