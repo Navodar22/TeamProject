@@ -23,6 +23,25 @@ abstract class BaseLPresenter extends BasePresenter
 	}
 	
 	
+	
+	public function getSchoolData() {
+		
+	}
+	
+	
+	
+	public function getFacultyData($id) {
+		
+	}
+	
+	
+	
+	public function getInstituteData($id) {
+		
+	}
+	
+	
+	
 	public function calculateMoney() {
 		$total_students = 0;
 		foreach($this->db->table('institute') as $institute) {

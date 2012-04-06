@@ -1,83 +1,28 @@
 {block #content}
 
-<div class="table shadow">
-          <div class="table-left">          
-            <table class="projects">
-              <tr>
-                <th>Ľud. zdroje</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock"><div class="table-text">text</div></td>
-              </tr>
-              <tr>
-                <th>Fin. zdroje</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Trvanie</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Od</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr>
-                <th>Do</th>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-                <td class="lock">text</td>
-                <td class="realization">text</td>
-                <td class="lock">text</td>
-              </tr>
-              <tr class="black">
-                <td></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-                <td><div class="person"></div></td>
-              </tr>
-              <tr class="fin">
-                <th>Financovanie</th>
-                <td>Ministerstvo<br />URPI<br />KAIVT</td>
-                <td>text</td>
-                <td>text</td>
-                <td>text</td>
-                <td>text</td>
-              </tr>
-              <tr class="legend">
-                <th class="no-border"></th>
-                <td class="no-border"></td>
-                <td class="no-border"></td>
-                <td class="cancel">Ukončené</td>
-                <td class="lock">Zamietnuté</td>
-                <td class="realization">V realizácii</td>
-              </tr>
-            </table>
-            
-          </div> <!-- table-left -->
-          
-          <div class="controls">
-            <a href="#"><div class="controls-cancel"></div></a>
-            <a href="#"><div class="controls-up"></div></a>
-            <a href="#"><div class="controls-down"></div></a>
-            <a href="#"><div class="controls-add"></div></a>
-          </div>
-          
-          <br class="clearer" />
-          
-        </div> <!-- table -->
+<h2>Prehľad projektov školy</h2>
+
+<table style="text-align: center; margin: 0 auto">
+	<tr style="background: gray; color: white">
+		<th style="width: 100px">Fakulta</th>
+		<th style="width: 100px">Počet projektov</th>
+		<th style="width: 100px">Fin.zdroje</th>
+		<th style="width: 100px">Schválené fin.zdroje</th>
+		<th style="width: 100px">Ludské zdroje</th>
+		<th style="width: 100px">Schválené ludské zdroje</th>
+		<th style="width: 80px">Akcie</th>			
+	</tr>
+	
+{foreach $school_data as $faculty_id => $school_faculty}
+	<tr>
+		<td style="text-align: left; padding-left: 5px" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+		<td>{$school_faculty['projects_count']}</td>
+		<td>{$school_faculty['cost']}</td>
+		<td style="background: green; color: white; font-weight: bold">{$school_faculty['allowed_cost']}</td>
+		<td>{$school_faculty['hr']}</td>
+		<td style="background: green; color: white; font-weight: bold">{$school_faculty['allowed_hr']}</td>
+		<td><a href="{plink Homepage:faculty, $faculty_id}">viac</a></td>
+	</tr>
+{/foreach}
+
+</table>

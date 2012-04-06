@@ -30,6 +30,10 @@ $container = $configurator->createContainer();
 
 // Setup router
 $container->router[] = new NRoute('index.php', 'Homepage:default', NRoute::ONE_WAY);
+
+$container->router[] = new NRoute('faculty[/<id>]', 'Homepage:faculty');
+$container->router[] = new NRoute('institute[/<id>]', 'Homepage:institute');
+
 $container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Homepage:default');
 
 

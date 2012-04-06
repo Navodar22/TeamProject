@@ -72,12 +72,12 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		$participate_faculties = array();
 		
-		foreach($this->db->table('project_institute') as $project_institute) {
+		foreach($this->project->related('project_institute') as $project_institute) {
 			if(!isSet($participate_faculties[$project_institute->institute->faculty->id])) {
 				$participate_faculties[$project_institute->institute->faculty->id] = $project_institute->institute->faculty;
 			}
 		}
-		
+
 		$this->template->participate_faculties = $participate_faculties;
 	}
 	
