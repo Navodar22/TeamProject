@@ -103,12 +103,19 @@ table { border-collapse:collapse; }
 .format-table table td { border: 0; padding-bottom: 10px }
 
 /* temp table */
-table.render-table { margin: 0 auto; margin-bottom: 30px }
+table.render-table { margin: 0 auto; margin-bottom: 30px}
 table.render-table td { padding: 3px }
 table.render-table th { padding: 3px; background: gray; color: white }
 table.render-table .left { text-align: left }
 table.render-table a { text-decoration: none }
 table.render-table a:hover { text-decoration: underline; color: blue }
+
+table.statistics-table { border: 0; margin-bottom: 30px; font-size: 10px }
+table.statistics-table td { padding: 3px; border: 0 }
+table.statistics-table th { padding: 3px; background: gray; color: white }
+table.statistics-table .left { text-align: left }
+table.statistics-table a { text-decoration: none }
+table.statistics-table a:hover { text-decoration: underline; color: blue }
 
 .login { margin: 0 auto; margin-top: 50px }
 .login table { width: 100%; border: 0 }

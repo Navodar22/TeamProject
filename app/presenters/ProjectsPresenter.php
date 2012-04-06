@@ -491,7 +491,7 @@ class ProjectsPresenter extends BaseLPresenter
 	 */
 	public function getFreeInstitutes($project_id) {
 		//get db values
-		$faculties = $this->db->table('faculty')->where('del', FALSE)->order('name');
+		$faculties = $this->db->table('faculty')->order('name');
 		$project = $this->db->table('project')->where('id', $project_id)->fetch();
 		
 		//init array values
@@ -506,7 +506,7 @@ class ProjectsPresenter extends BaseLPresenter
 		//get free institutes
 		foreach($faculties as $faculty) {
 			$result[$faculty->name] = array();
-			foreach($faculty->related('institute')->where('del', FALSE)->order('name') as $institute) {
+			foreach($faculty->related('institute')->order('name') as $institute) {
 				if(!in_array($institute->id, $banned)) {
 					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
 				}

@@ -20,7 +20,7 @@ class FacultiesPresenter extends BaseLPresenter
 	 */
 	public function renderDefault()
 	{
-		$this->template->faculties = $this->db->table('faculty')->where('del', FALSE);
+		$this->template->faculties = $this->db->table('faculty');
 	} 
 	
 	
@@ -33,7 +33,7 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of editing faculty
 	 */
 	public function actionEdit($id) {
-		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();	
+		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();	
 		
 		if(!$this->faculty) {
 			throw new NBadRequestException;
@@ -52,25 +52,22 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of selected faculty
 	 */
 	public function actionDelete($id) {
-		$this->faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();		
+		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();		
 		
 		if(!$this->faculty) {
 			throw new NBadRequestException;
 		}
-		
-		//set help value - not really delete, only set delete flag to true
-		$delete = array('del' => TRUE);
 		
 		try {
 			//perform delete action via transaction
 			$this->db->beginTransaction();
 			
 			//delete faculty
-			$result = $this->db->table('faculty')->where('id', $this->faculty->id)->update($delete);	
+			$result = $this->db->table('faculty')->where('id', $this->faculty->id)->delete();	
 
 			//delete all realted institutes - set delete flag to true
 			foreach($this->faculty->related('institute') as $institute) {
-				$this->db->table('institute')->where('id', $institute->id)->update($delete);	
+				$this->db->table('institute')->where('id', $institute->id)->delete();	
 			}
 			
 			$this->db->commit();

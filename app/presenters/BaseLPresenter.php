@@ -25,7 +25,7 @@ abstract class BaseLPresenter extends BasePresenter
 	
 	public function calculateMoney() {
 		$total_students = 0;
-		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
+		foreach($this->db->table('institute') as $institute) {
 			$total_students += $institute->students;
 		}
 
@@ -38,7 +38,7 @@ abstract class BaseLPresenter extends BasePresenter
 			$money_index = $school->money/$school->students;
 		}
 
-		foreach($this->db->table('institute')->where('del', FALSE) as $institute) {
+		foreach($this->db->table('institute') as $institute) {
 			$institute_money = $institute->students * $money_index;
 			$institute->update(array('money' => $institute_money));
 		}	

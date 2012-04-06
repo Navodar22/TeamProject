@@ -25,9 +25,8 @@ class InstitutesPresenter extends BaseLPresenter
 	 */
 	public function startup() {
 		parent::startup();
-		
-		//set faculties to global object variable
-		$this->getFaculties();
+
+		$this->faculties = $this->getFaculties();
 	}
 	
 	
@@ -40,10 +39,10 @@ class InstitutesPresenter extends BaseLPresenter
 	 */
 	public function renderDefault($id = NULL)
 	{
-		$faculty = $this->db->table('faculty')->where('del', FALSE)->where('id', $id)->fetch();
+		$faculty = $this->db->table('faculty')->where('id', $id)->fetch();
 		
 		if(!$faculty) {
-			$this->template->all_institutes = $this->db->table('institute')->where('del', FALSE);
+			$this->template->all_institutes = $this->db->table('institute');
 		} else {		
 			$this->template->faculty = $faculty;
 		}
@@ -60,7 +59,7 @@ class InstitutesPresenter extends BaseLPresenter
 	 * @param int $faculty			ID of associate faculty
 	 */
 	public function actionEdit($id, $faculty = NULL) {
-		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();	
+		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();	
 		
 		if(!$this->institute) {
 			throw new NBadRequestException;
@@ -84,18 +83,15 @@ class InstitutesPresenter extends BaseLPresenter
 	 * @param int $faculty			ID of associate faculty
 	 */
 	public function actionDelete($id, $faculty = NULL) {
-		$this->institute = $this->db->table('institute')->where('del', FALSE)->where('id', $id)->fetch();		
+		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();		
 		
 		if(!$this->institute) {
 			throw new NBadRequestException;
 		}
 		
-		//help delete variable - not delete only set delete flag to true
-		$delete = array('del' => TRUE);
-		
 		try {
 			//delete institute
-			$result = $this->db->table('institute')->where('id', $this->institute->id)->update($delete);	
+			$result = $this->db->table('institute')->where('id', $this->institute->id)->delete();	
 		} catch (PDOException $e) {
 			$this->flashMessage('Ústav sa nepodarilo odstrániť', 'error');
 			$this->redirect('default', $faculty);
@@ -171,13 +167,13 @@ class InstitutesPresenter extends BaseLPresenter
 	 * Function to get faculties in array - only non deleted
 	 */
 	public function getFaculties() {
-		$faculties = $this->db->table('faculty')->where('del', FALSE);
+		$faculties = $this->db->table('faculty');
 		$faculties_array = array();
 		
 		foreach($faculties as $faculty) {
 			$faculties_array[$faculty->id] = $faculty->acronym; 
 		}
 		
-		$this->faculties = $faculties_array;
+		return $faculties_array;
 	}
 }

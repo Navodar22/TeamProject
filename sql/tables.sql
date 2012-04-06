@@ -24,8 +24,7 @@ drop table if exists faculty;
 create table faculty(
 	id int not null auto_increment primary key,
 	name varchar(200) not null,
-	acronym varchar(10) not null,
-	del boolean default false
+	acronym varchar(10) not null
 );
 
 
@@ -40,7 +39,6 @@ create table institute(
 	faculty_id int not null,
 	money float,
 	students int,
-	del boolean default false,
 
 	foreign key (faculty_id) references faculty(id) on delete cascade on update cascade
 );
@@ -82,8 +80,8 @@ create table project_institute(
 	start timestamp,
 	end timestamp,
 
-	foreign key (project_id) references project(id) on delete restrict on update cascade,
-	foreign key (institute_id) references institute(id) on delete restrict on update cascade,
+	foreign key (project_id) references project(id) on delete cascade on update cascade,
+	foreign key (institute_id) references institute(id) on delete cascade on update cascade,
 	foreign key (state_id) references state(id) on delete restrict on update cascade
 );
 
