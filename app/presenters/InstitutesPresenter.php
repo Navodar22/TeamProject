@@ -18,6 +18,9 @@ class InstitutesPresenter extends BaseLPresenter
 	public $faculty;
 	
 	
+	public $backlink;
+	
+	
 	
 	
 	/**
@@ -58,8 +61,9 @@ class InstitutesPresenter extends BaseLPresenter
 	 * @param int $id				ID of selected institute
 	 * @param int $faculty			ID of associate faculty
 	 */
-	public function actionEdit($id, $faculty = NULL) {
-		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();	
+	public function actionEdit($id, $faculty = NULL, $backlink = NULL) {
+		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();
+		$this->backlink = $backlink;
 		
 		if(!$this->institute) {
 			throw new NBadRequestException;
@@ -157,7 +161,12 @@ class InstitutesPresenter extends BaseLPresenter
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
 			}
 		}
+		
+		if($this->backlink) {
+			$this->application->restoreRequest($this->backlink);
+		} else {
 			$this->redirect('default', $this->faculty);	
+		}
 	}
 	
 	

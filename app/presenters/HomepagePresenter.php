@@ -56,6 +56,7 @@ class HomepagePresenter extends BaseLPresenter
 	 * @return array 
 	 */
 	public function getSchoolData() {
+		// Database queries = 1
 		$faculties = $this->db->table('faculty');
 		
 		$result = array();
@@ -71,6 +72,7 @@ class HomepagePresenter extends BaseLPresenter
 				'projects' => array()
 			);
 			
+			// Database queries = count of faculties - now 7
 			foreach($this->db->table('project_institute')->where('institute.faculty.id', $faculty->id) as $project_institute) {
 				$result[$faculty->id]['cost'] += $project_institute->cost;
 				$result[$faculty->id]['hr'] += $project_institute->hr;
@@ -101,7 +103,10 @@ class HomepagePresenter extends BaseLPresenter
 	 * @return array
 	 */
 	public function getFacultyData($id) {
+		// Database queries = 1
 		$faculty = $this->db->table('faculty')->where('id', $id)->fetch();
+		
+		// Database queries = 1 - may be too many records
 		$project_institutes = $this->objectToArray($this->db->table('project_institute'));
 		
 		if(!$faculty) {
@@ -121,6 +126,7 @@ class HomepagePresenter extends BaseLPresenter
 		
 		$result['institute'] = array();
 
+		// Database queries = 1
 		foreach($faculty->related('institute') as $institute) {
 			
 			$result['institute'][$institute->id] = array(
@@ -196,6 +202,10 @@ class HomepagePresenter extends BaseLPresenter
 			'hr' => 0,
 			'approved_hr' => 0,
 			'projects_count' => 0,
+			'start' => new DateTime('31.12.3000'),
+			'end' => new DateTime('1.1.1970'),
+			'approved_start' => new DateTime('31.12.3000'),
+			'approved_end' => new DateTime('1.1.1970'),
 			'projects' => array()
 		);
 		
@@ -205,6 +215,14 @@ class HomepagePresenter extends BaseLPresenter
 			$result['total']['cost'] += $project_institute->cost;
 			$result['total']['hr'] += $project_institute->hr;
 			$result['total']['participation'] += $project_institute->participation;
+			
+			if($result['total']['start'] > $project_institute->start) {
+				$result['total']['start'] = $project_institute->start;
+			}
+
+			if($result['total']['end'] < $project_institute->end) {
+				$result['total']['end'] = $project_institute->end;
+			}
 
 			if(!in_array($project_institute->project->id, $result['total']['projects'])) {
 				$result['total']['projects_count']++;
@@ -216,6 +234,14 @@ class HomepagePresenter extends BaseLPresenter
 				$result['total']['approved_cost'] += $project_institute->cost;
 				$result['total']['approved_hr'] += $project_institute->hr;
 				$result['total']['approved_participation'] += $project_institute->participation;
+				
+				if($result['total']['approved_start'] > $project_institute->start) {
+					$result['total']['approved_start'] = $project_institute->start;
+				}
+
+				if($result['total']['approved_end'] < $project_institute->end) {
+					$result['total']['approved_end'] = $project_institute->end;
+				}
 			}
 		}
 		
@@ -244,53 +270,52 @@ class HomepagePresenter extends BaseLPresenter
 			throw new NBadRequestException();
 		}
 		
-		$totals = array();
+		$totals = array(
+			'total' => array(
+				'cost' => 0,
+				'hr' => 0,
+				'participation' => 0,
+				'start' => new DateTime('31.12.3000'),
+				'end' => new DateTime('1.1.1970')
+			),
+			'approved' => array(
+				'cost' => 0,
+				'hr' => 0,
+				'participation' => 0,
+				'start' => new DateTime('31.12.3000'),
+				'end' => new DateTime('1.1.1970')
+			)
+		);
+		
 		$totals['name'] = $project['name'];
 		
 		//iterate over array
 		foreach($this->project_institutes as $project_institute) {	
 			if($project_institute['project_id'] == $project['id']) { 
-				//not first project add values to previous 
-				if(isSet($totals['total'])) {
-					$totals['total']['cost'] += $project_institute['cost'];
-					$totals['total']['hr'] += $project_institute['hr'];
-					$totals['total']['participation'] += $project_institute['participation'];
+		
+				$totals['total']['cost'] += $project_institute['cost'];
+				$totals['total']['hr'] += $project_institute['hr'];
+				$totals['total']['participation'] += $project_institute['participation'];
 
-					if($totals['total']['start'] > $project_institute['start']) {
-						$totals['total']['start'] = $project_institute['start'];
-					}
-
-					if($totals['total']['end'] < $project_institute['end']) {
-						$totals['total']['end'] = $project_institute['end'];
-					}
-				} else { //if first project initialize array
-					$totals['total']['cost'] = $project_institute['cost'];
-					$totals['total']['hr'] = $project_institute['hr'];
-					$totals['total']['participation'] = $project_institute['participation'];
+				if($totals['total']['start'] > $project_institute['start']) {
 					$totals['total']['start'] = $project_institute['start'];
-					$totals['total']['end'] = $project_institute['end'];
 				}
 
+				if($totals['total']['end'] < $project_institute['end']) {
+					$totals['total']['end'] = $project_institute['end'];
+				}
+				
 				if(in_array($project_institute['state_id'], $this->aStates)) {
 
-					//not first project add values to previous 
-					if(isSet($totals['approved'])) {
-						$totals['approved']['cost'] += $project_institute['cost'];
-						$totals['approved']['hr'] += $project_institute['hr'];
-						$totals['approved']['participation'] += $project_institute['participation'];
+					$totals['approved']['cost'] += $project_institute['cost'];
+					$totals['approved']['hr'] += $project_institute['hr'];
+					$totals['approved']['participation'] += $project_institute['participation'];
 
-						if($totals['approved']['start'] > $project_institute['start']) {
-							$totals['approved']['start'] = $project_institute['start'];
-						}
-
-						if($totals['approved']['end'] < $project_institute['end']) {
-							$totals['approved']['end'] = $project_institute['end'];
-						}
-					} else { //if first project initialize array
-						$totals['approved']['cost'] = $project_institute['cost'];
-						$totals['approved']['hr'] = $project_institute['hr'];
-						$totals['approved']['participation'] = $project_institute['participation'];
+					if($totals['approved']['start'] > $project_institute['start']) {
 						$totals['approved']['start'] = $project_institute['start'];
+					}
+
+					if($totals['approved']['end'] < $project_institute['end']) {
 						$totals['approved']['end'] = $project_institute['end'];
 					}
 				}

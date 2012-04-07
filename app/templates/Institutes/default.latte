@@ -9,7 +9,7 @@
 	</tr>
 	
 	{ifset $faculty}
-		{foreach $faculty->related('institute')->where('del', FALSE) as $institute}
+		{foreach $faculty->related('institute') as $institute}
 			<tr>
 				<td class="left">{$institute->name}</td>
 				<td>{$institute->acronym}</td>

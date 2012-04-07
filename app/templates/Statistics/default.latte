@@ -128,7 +128,7 @@
 				<tr>
 					<td style="text-align: left; padding-left: 10px" title="{$institute->name}">
 						<div style="width: 15px; height: 15px; background: {!$colors[$iterator->counter-1]}; float: left; margin-right: 10px"></div>
-						<a href="{plink Institutes:edit, $institute->id}">{$institute->acronym}</a>
+						<a href="{plink Institutes:edit, $institute->id, NULL, $backlink}">{$institute->acronym}</a>
 					</td> 
 					<td>{$institute->money}</td>
 					<td>{$institute->students}</td>

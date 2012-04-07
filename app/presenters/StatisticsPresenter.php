@@ -56,5 +56,24 @@ class StatisticsPresenter extends BaseLPresenter
 		
 		$this->template->school = $school;
 		$this->template->colors = $this->colors;
+		$this->template->backlink = $this->application->storeRequest();
+	}
+	
+	
+	public function actionInsertData() {
+		$values = array(
+			'institute_id' => '3',
+			'state_id' => '1',
+			'cost' => '200',
+			'hr' => '20',
+			'participation' => '100'
+		);
+		
+		for($i = 5; $i <= 505; $i++) {
+			$values['project_id'] = $i;
+			$this->db->table('project_institute')->insert($values);
+		}
+		
+		$this->redirect('default');
 	}
 }
