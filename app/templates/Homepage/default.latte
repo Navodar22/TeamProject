@@ -1,28 +1,39 @@
 {block #content}
 
-<h2>Prehľad projektov školy</h2>
+<h2>Rozpočtový plán STU / celkový prehľad</h2>
 
-<table style="text-align: center; margin: 0 auto">
-	<tr style="background: gray; color: white">
-		<th style="width: 100px">Fakulta</th>
-		<th style="width: 100px">Počet projektov</th>
-		<th style="width: 100px">Fin.zdroje</th>
-		<th style="width: 100px">Schválené fin.zdroje</th>
-		<th style="width: 100px">Ludské zdroje</th>
-		<th style="width: 100px">Schválené ludské zdroje</th>
-		<th style="width: 80px">Akcie</th>			
+<div class="date_pick">obdobie: @TODO</div>
+<div class="clearer"></div>
+
+
+<div class="overview">
+<table>
+	<tr>
+		<th>Fakulta</th>
+		<th>Počet projektov</th>
+		<th>Fin.zdroje</th>
+		<th>Schválené fin.zdroje</th>
+		<th>Ludské zdroje</th>
+		<th>Schválené ludské zdroje</th>
+		<th>Akcie</th>			
 	</tr>
 	
 {foreach $school_data as $faculty_id => $school_faculty}
-	<tr>
-		<td style="text-align: left; padding-left: 5px" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+	<tr class="{$iterator->odd ? odd : even}">
+		<td class="name" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
 		<td>{$school_faculty->project_count}</td>
 		<td>{$school_faculty->total_cost|emptyPrice}</td>
-		<td style="background: green; color: white; font-weight: bold">{$school_faculty->approved_cost|emptyPrice}</td>
+		<td class="approved">{$school_faculty->approved_cost|emptyPrice}</td>
 		<td>{$school_faculty->total_hr|emptyNumber}</td>
-		<td style="background: green; color: white; font-weight: bold">{$school_faculty->approved_hr|emptyNumber}</td>
-		<td><a href="{plink Homepage:faculty, $faculty_id}">viac</a></td>
+		<td class="approved">{$school_faculty->approved_hr|emptyNumber}</td>
+		<td class="actions"><a class="more" href="{plink Homepage:faculty, $faculty_id}"></a></td>
 	</tr>
 {/foreach}
 
 </table>
+</div>	
+	
+<ul class="bottom_menu">
+	<li><a href="#">Zmeniť zobrazené obdobie</a></li>
+	<li><a href="#">Zobraziť všetky projekty</a></li>
+</ul>

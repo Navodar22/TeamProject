@@ -2,69 +2,62 @@
 
 <h2>{$institute->name}</h2>
 
-<table style="text-align: center; margin: 0 auto">
-	<tr style="background: gray; color: white">
-		<th style="width: 100px">Číslo projektu</th>
-		<th style="width: 100px">Názov projektu</th>
-		<th style="width: 100px">Fin. zdroje</th>
-		<th style="width: 100px">Schválené fin.zdroje</th>
-		<th style="width: 100px">Spoluúčasť</th>
-		<th style="width: 100px">Schválená spoluúčasť</th>		
-		<th style="width: 100px">Ludské zdroje</th>
-		<th style="width: 100px">Schválené ludské zdroje</th>	
-		<th style="width: 100px">Od</th>
-		<th style="width: 100px">Schválené od</th>	
-		<th style="width: 100px">Do</th>
-		<th style="width: 100px">Schválené do</th>	
-		<th>Akcie</th>
-	</tr>
-	
-	<tr style="background: gray; color: white">
-		<th style="width: 100px"></th>
-		<th style="width: 100px"></th>
-		<th style="width: 100px">{$institute->total_cost|emptyPrice}</th>
-		<th style="width: 100px">{$institute->approved_cost|emptyPrice}</th>
-		<th style="width: 100px">{$institute->total_participation|emptyPrice}</th>
-		<th style="width: 100px">{$institute->approved_participation|emptyPrice}</th>		
-		<th style="width: 100px">{$institute->total_hr|emptyNumber}</th>
-		<th style="width: 100px">{$institute->approved_hr|emptyNumber}</th>	
-		<th style="width: 100px">{$institute->start|date: 'd.m.Y'}</th>
-		<th style="width: 100px">
-			{if empty($institute->approved_start)}
-				-
-			{else}
-				{$institute->start|date: 'd.m.Y'}
-			{/if}
-		</th>	
-		<th style="width: 100px">{$institute->end|date: 'd.m.Y'}</th>
-		<th style="width: 100px">
-			{if empty($institute->approved_end)}
-				-
-			{else}
-				{$institute->end|date: 'd.m.Y'}
-			{/if}
-		</th>	
-		<th>Akcie</th>
-	</tr>
+<div class="overview">
+	<table>
+		<tr>
+			<th>Číslo projektu</th>
+			<th>Názov projektu</th>
+			<th>Fin. zdroje</th>
+			<th>Schválené fin.zdroje</th>
+			<th>Spoluúčasť</th>
+			<th>Schválená spoluúčasť</th>		
+			<th>Ludské zdroje</th>
+			<th>Schválené ludské zdroje</th>	
+			{*
+			<th>Od</th>
+			<th>Schválené od</th>	
+			<th>Do</th>
+			<th>Schválené do</th>	
+			*}
+			<th>Akcie</th>
+		</tr>
 
-
-{foreach $projects as $project}
-	<tr>
-		<td style="text-align: left; padding-left: 5px">{$project->id}</td>
-		<td>{$project->name}</td>
-		<td>{$project->cost|emptyPrice}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project->approved_cost|emptyPrice}</td>
-		<td>{$project->participation|emptyPrice}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project->approved_participation|emptyPrice}</td>
-		<td>{$project->hr|emptyNumber}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project->approved_hr|emptyNumber}</td>
-		<td>{$project->start|emptyDate: 'd.m.Y'}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project->approved_start|emptyDate: 'd.m.Y'}</td>
-		<td>{$project->end|emptyDate: 'd.m.Y'}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project->end|emptyDate: 'd.m.Y'}</td>
-		<td><a href="{plink 'Projects:edit', $project->id}">uprav</a></td>
-	</tr>
-{/foreach}
-
-
-</table>
+	{foreach $projects as $project}
+		<tr>
+			<td>{$project->id}</td>
+			<td>{$project->name}</td>
+			<td>{$project->cost|emptyPrice}</td>
+			<td class="approved">{$project->approved_cost|emptyPrice}</td>
+			<td>{$project->participation|emptyPrice}</td>
+			<td class="approved">{$project->approved_participation|emptyPrice}</td>
+			<td>{$project->hr|emptyNumber}</td>
+			<td class="approved">{$project->approved_hr|emptyNumber}</td>
+			{*
+			<td>{$project->start|emptyDate: 'd.m.y'}</td>
+			<td class="approved">{$project->approved_start|emptyDate: 'd.m.y'}</td>
+			<td>{$project->end|emptyDate: 'd.m.y'}</td>
+			<td class="approved">{$project->end|emptyDate: 'd.m.y'}</td>
+			*}
+			<td class="actions"><a class="more" href="{plink 'Projects:edit', $project->id}"></a></td>
+		</tr>
+	{/foreach}
+		
+		<tr class="total">
+			<td></td>
+			<td></td>
+			<td>{$institute->total_cost|emptyPrice}</td>
+			<td>{$institute->approved_cost|emptyPrice}</td>
+			<td>{$institute->total_participation|emptyPrice}</td>
+			<td>{$institute->approved_participation|emptyPrice}</td>		
+			<td>{$institute->total_hr|emptyNumber}</td>
+			<th>{$institute->approved_hr|emptyNumber}</th>	
+			{*
+			<th>{$institute->start|emptyDate: 'd.m.y'}</th>
+			<th>{$institute->start|emptyDate: 'd.m.y'}</th>	
+			<th>{$institute->end|emptyDate: 'd.m.y'}</th>
+			<th>{$institute->end|emptyDate: 'd.m.y'}</th>	
+			<td>{$institute->start|date: 'd.m.Y'}</td>
+			*}
+		</tr>
+	</table>	
+</div>
