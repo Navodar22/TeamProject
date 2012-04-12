@@ -34,109 +34,22 @@
 	<div class="envelope">
       <div class="header">
 		<div class="user-info">
-			<div class="f_left">Prihlásený ako: <span class="c-green bold">{$user->name} | {$user->role}</span></div>
+			<div class="f_left"><span class="bold">Prihlásený:&nbsp&nbsp</span> {$user->name} 
+			<br/><span class="bold"> Oprávnenie: </span> {$user->role}</div>
 			<a class="logout" href="{link sign:out}" title="Odhlásiť"></a>
 			<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 			<div class="clearer"></div>
 		</div>
         <div class="header-content">
-          <div class="header-item left">
-            <div class="top">
-              <div class="top-content">
-                <span>ALL</span>
-              </div>
-            </div>
-            <div class="item-content">
-            </div>
-          </div>
-          
-          <div class="header-item middle">
-            <div class="top">
-              <div class="top-content"> 
-                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
-                <br class="clearer" />                
-              </div>
-            </div>
-            <div class="item-content">
-              <span>TOTAL</span>
-            </div>
-          </div>
-          
-          <div class="header-item middle">
-            <div class="top">
-              <div class="top-content">
-                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
-                <br class="clearer" />                    
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="item-content-top">
-                <span>FEI</span>
-              </div>
-              <div class="item-content-bottom">
-              </div>
-            </div>
-          </div>
-          
-          <div class="header-item middle">
-            <div class="top">
-              <div class="top-content">  
-                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
-                <br class="clearer" />                  
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="item-content-top">
-                <span>FIIT</span>
-              </div>
-              <div class="item-content-bottom">
-              </div>
-            </div>
-          </div>
-          
-          <div class="header-item middle">
-            <div class="top">
-              <div class="top-content"> 
-                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
-                <br class="clearer" />                   
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="item-content-top">
-                <span>FIIT</span>
-              </div>
-              <div class="item-content-bottom">
-              </div>
-            </div>
-          </div>
-          
-          <div class="header-item right">
-            <div class="top">
-              <div class="top-content">
-                <a class="arrow-left" href="#"><img  src="{$baseUri}/images/arrow-left.png" /></a> 
-                <a class="house" href="#"><img  src="{$baseUri}/images/house.png" /></a>
-                <br class="clearer" />   
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="item-content-top">
-                <span>SvF</span>
-              </div>
-              <div class="item-content-bottom">
-              </div>
-            </div>
-          </div>
-          
-          <div class="header-side">
-          </div>
-          
+		<a class="home" href="http://147.175.98.57/">Domov</a>
+        
+        
+              <a class="feilogo"></a>
+	   
           <br class="clearer" />
         </div><!-- header-content -->
         
+	
       </div><!-- header -->
       
       <div class="content">
@@ -150,8 +63,7 @@
 		<a href="{plink Faculties:add}">Add faculty</a> |
 		<a href="{plink Institutes:default}">Ústavy</a> |
 		<a href="{plink Institutes:add}">Add ústav</a> |
-		<a href="{plink Statistics:default}">Statistics</a> |
-		<a href="{plink Statistics:insertData}">Insert</a>
+		<a href="{plink Statistics:default}">Statistics</a>
     </div> <!-- envelope -->
 	
 	

@@ -1,9 +1,11 @@
 {block #content}
 
-<h2>Prehľad projektov školy</h2>
-
-<table style="text-align: center; margin: 0 auto">
-	<tr style="background: gray; color: white">
+<div class="tableheader">
+<h2>Rozpočtový plán jednotlivých fakúlt STU</h2>
+obdobie: 
+</div>
+<table class="hometable">
+	<tr>
 		<th style="width: 100px">Fakulta</th>
 		<th style="width: 100px">Počet projektov</th>
 		<th style="width: 100px">Fin.zdroje</th>
@@ -15,14 +17,18 @@
 	
 {foreach $school_data as $faculty_id => $school_faculty}
 	<tr>
-		<td style="text-align: left; padding-left: 5px" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+		<td style="text-align: center;font-weight: bold; padding-left: 5px" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
 		<td>{$school_faculty['projects_count']}</td>
 		<td>{$school_faculty['cost']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$school_faculty['approved_cost']}</td>
+		<td style="background: #92d050; color: black;">{$school_faculty['approved_cost']}</td>
 		<td>{$school_faculty['hr']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$school_faculty['approved_hr']}</td>
-		<td><a href="{plink Homepage:faculty, $faculty_id}">viac</a></td>
-	</tr>
+		<td style="background: #92d050; color: black; ">{$school_faculty['approved_hr']}</td>
+		<td ><a class="viacbutton" href="{plink Homepage:faculty, $faculty_id}"><ul><li>viac</li></ul></a></td>
+		</tr>
 {/foreach}
 
 </table>
+<ul class="bottom_menu">
+<li><a href="#">Zmeniť zobrazené obdobie</a></li>
+<li><a href="#">Zobraziť všetky projekty</a></li>
+</ul>

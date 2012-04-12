@@ -1,10 +1,10 @@
 body { font: 12px/1.5 "Tahoma", lucida, sans-serif;	color: #000000;	background: #434343; margin: 0 auto; text-align: center; }
 
-h1,h2,p,ul,li { margin: 0px; padding: 0px; }
+h1,p,ul,li { margin: 0px; padding: 0px; }
 
 h1 { font-size: 24px; color: #000000; text-shadow: 1px 1px 1px #ffffff; filter: dropshadow(color=#ffffff, offx=3, offy=3) }
 
-h2 { font-size: 18px; }
+h2 { font-size: 24px; margin: 0px; font-weight:normal}
 h3 { font-size: 16px; }
 a img { border: none; }
 a { outline: 0; color: #000000; }
@@ -14,12 +14,53 @@ a { outline: 0; color: #000000; }
 table,th,td { border:1px solid black; }
 table { border-collapse:collapse; }
 
+button.css3button {
+	width:80px;
+	margin:-6px -2px -2px -3px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+	padding: 1px 10px;
+	background: -moz-linear-gradient(
+		top,
+		#faf9f7 0%,
+		#c2becc);
+	background: -webkit-gradient(
+		linear, left top, left bottom, 
+		from(#faf9f7),
+		to(#c2becc));
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 0px solid #919191;
+	-moz-box-shadow:
+		0px 1px 3px rgba(255,255,255,0.5),
+		inset 0px 0px 5px rgba(245,244,235,0.6);
+	-webkit-box-shadow:
+		0px 1px 3px rgba(255,255,255,0.5),
+		inset 0px 0px 5px rgba(245,244,235,0.6);
+	text-shadow:
+		0px -1px 3px rgba(255,255,255,0.8),
+		0px 1px 0px rgba(255,255,255,0.3);
+}
+
+.hometable{ width: 704px; text-align: center; margin-left: auto; margin-right: auto; margin-top: -1px;  border-left:3px solid black; border-right:3px solid black; border-bottom:2px solid black; border-radius: 2px;}
+.hometable th {background: #d4d4d4; color: #000066;border-bottom:2px solid black;}
 .size18 { font-size: 18px; }
 .size16 { font-size: 16px; }
 .size14 { font-size: 14px; }
 .size12 { font-size: 12px; }
 .size10 { font-size: 10px; }
 .size8 { font-size: 8px; }
+.viacbutton { display: block; width:79px; height:22px; background: url('../images/viacon.png'); text-decoration:none; }
+.viacbutton li{text-decoration:none; list-style: none; }
+.viacbutton li:hover{ width:79px; height:22px; background: url('../images/viacoff.png'); }
+.bottom_menu {margin-left:150px; margin-top:0px; color:white;  }
+.bottom_menu a{text-decoration:none; color:white; }
+.bottom_menu li{list-style: none; display: inline; float: left;  width: 120px; padding-top:3px; height:42px; background: url('../images/button1.png') ; }
+.bottom_menu li:hover{margin-top:0px; width: 120px; height:42px; background: url('../images/button2.png'); }
+
+.tableheader { padding:20px 0 0 25px;  text-align: left; font-weight: normal; width: 675px; height:70px; margin-top: 35px; margin-bottom: 0px; margin-left: auto; margin-right: auto; border:2px solid black; background: url('../images/header.png'); color: #ffffff; }
 
 .clearer { clear: both; }
 .center { margin-left: auto; margin-right: auto; }
@@ -28,13 +69,16 @@ table { border-collapse:collapse; }
 .f_left { float: left; }
 .hidden { visibility: hidden; }
 
-.envelope { width: 840px; background: #999999; margin: 0 auto; margin-top: 20px; padding-bottom: 70px }
-.header { width: 100%; height: 127px; color: #ffffff; text-shadow: 2px 2px 2px #000000; filter: dropshadow(color=#000000, offx=2, offy=2); background: #8b8b8b url('../images/header-bg.png') repeat-x; padding-top: 1px; }
-.header .user-info { height: 30px; text-align: left; margin-left: 10px; line-height: 30px }
-.header .logout { width: 24px; height: 24px; margin: 5px 5px 0 0; background: url('../images/logout.png'); float: right }
+.envelope { width: 1000px; background: #999999; margin: 0 auto; margin-top: 20px; padding-bottom: 70px }
+.header { width: 100%; height: 147px; color: #ffffff; text-shadow: 1px 1px 1px #999999; filter: dropshadow(color=#000000, offx=2, offy=2); background: #8b8b8b url('../images/header-bg.png') repeat-x; padding-top: 1px; }
+.header .user-info { height: 50px; text-align: left; margin: 10px 0 0 20px; line-height: 20px }
+.header .logout { width: 40px; height: 40px; margin: 5px 15px 0 0; background: url('../images/logout2.png'); float: right }
 .header .header-side { width: 52px; height: 97px; float: left; background: url('../images/header-side-bg.png') no-repeat left 22px; }
 .header .header-content { margin: 4px 0 0 10px; padding-top: 0px }
+.header .home {display: block; margin: 0px 0px 0 10px; position: absolute; float: left; top: 140px; color:white;text-decoration:none; }
+.header .home a {text-decoration:none; color:white; }
 
+.header  .header-content .feilogo { width: 194px; height: 54px; position:absolute; float: right; margin: 15px 0px 0px 280px; background: url('../images/logo.png');  }
 .header .header-item { float: left; text-align: left; min-width: 125px; *width: 125px;}
 
 .header .header-item .top-content .house { margin: 2px 5px 0 0; float: right; } 
@@ -58,8 +102,8 @@ table { border-collapse:collapse; }
 .header .middle .top .top-content { height: 18px; border-right: 1px solid #c6c6c6; border-left: 1px solid #292929; }
 .header .middle .item-content { height: 61px; margin-top: 3px; border-right: 1px solid #9a9a9a; border-left: 1px solid #606060; }
 
-.content { width: 100%; min-height: 400px; background: #dcdbda; padding-top: 5px; border-top: 1px solid #595959; border-bottom: 1px solid #595959; }
-.content .table { width: 800px; background: #706f6f; text-align: left; margin: 0 auto; margin-top: 10px; border: 1px solid #b3b1b2 }
+.content { width: 100%; min-height: 450px; background: #dcdbda; padding-top: 5px; padding-bottom: 75px; border-top: 1px solid #595959; border-bottom: 1px solid #595959; }
+.content .table { width: 900px; background: #706f6f; text-align: left; margin: 0 auto; margin-top: 10px; border: 2px solid #b3b1b2 }
 .content .table .table-left { float: left; } 
 .content .table .table-left table.projects { width: 770px; border-color: #e9e9e9; background: #fafafa; font-size: 12px; }
 .content .table .table-left table.projects td { width: 108px; border: 1px solid #e9e9e9; border-collapse:collapse; padding: 10px 40px 10px 10px;  }
@@ -122,7 +166,6 @@ table.statistics-table a:hover { text-decoration: underline; color: blue }
 .login table td { padding-top: 5px; border: 0 }
 .login table th { width: 100px; border: 0 }
 
-h2 { margin: 5px 0 10px 0 }
 
 .w350 { width: 350px }
 .w250 { width: 250px }
