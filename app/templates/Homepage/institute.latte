@@ -1,6 +1,6 @@
 {block #content}
 
-<h2>{$institute['total']['name']}</h2>
+<h2>{$institute->name}</h2>
 
 <table style="text-align: center; margin: 0 auto">
 	<tr style="background: gray; color: white">
@@ -22,35 +22,49 @@
 	<tr style="background: gray; color: white">
 		<th style="width: 100px"></th>
 		<th style="width: 100px"></th>
-		<th style="width: 100px">{$institute['total']['cost']}</th>
-		<th style="width: 100px">{$institute['total']['approved_cost']}</th>
-		<th style="width: 100px">{$institute['total']['participation']}</th>
-		<th style="width: 100px">{$institute['total']['approved_participation']}</th>		
-		<th style="width: 100px">{$institute['total']['hr']}</th>
-		<th style="width: 100px">{$institute['total']['approved_hr']}</th>	
-		<th style="width: 100px">{$institute['total']['start']|date: 'd.m.Y'}</th>
-		<th style="width: 100px">{$institute['total']['approved_start']|date: 'd.m.Y'}</th>	
-		<th style="width: 100px">{$institute['total']['end']|date: 'd.m.Y'}</th>
-		<th style="width: 100px">{$institute['total']['approved_end']|date: 'd.m.Y'}</th>	
+		<th style="width: 100px">{$institute->total_cost|emptyPrice}</th>
+		<th style="width: 100px">{$institute->approved_cost|emptyPrice}</th>
+		<th style="width: 100px">{$institute->total_participation|emptyPrice}</th>
+		<th style="width: 100px">{$institute->approved_participation|emptyPrice}</th>		
+		<th style="width: 100px">{$institute->total_hr|emptyNumber}</th>
+		<th style="width: 100px">{$institute->approved_hr|emptyNumber}</th>	
+		<th style="width: 100px">{$institute->start|date: 'd.m.Y'}</th>
+		<th style="width: 100px">
+			{if empty($institute->approved_start)}
+				-
+			{else}
+				{$institute->start|date: 'd.m.Y'}
+			{/if}
+		</th>	
+		<th style="width: 100px">{$institute->end|date: 'd.m.Y'}</th>
+		<th style="width: 100px">
+			{if empty($institute->approved_end)}
+				-
+			{else}
+				{$institute->end|date: 'd.m.Y'}
+			{/if}
+		</th>	
 		<th>Akcie</th>
 	</tr>
-	
-{foreach $institute['project'] as $project_id => $project}
+
+
+{foreach $projects as $project}
 	<tr>
-		<td style="text-align: left; padding-left: 5px">{$project_id}</td>
-		<td>{$project['name']}</td>
-		<td>{$project['total']['cost']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project['approved']['cost']}</td>
-		<td>{$project['total']['participation']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project['approved']['participation']}</td>
-		<td>{$project['total']['hr']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project['approved']['hr']}</td>
-		<td>{$project['total']['start']|date: 'd.m.Y'}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project['approved']['start']|date: 'd.m.Y'}</td>
-		<td>{$project['total']['end']|date: 'd.m.Y'}</td>
-		<td style="background: green; color: white; font-weight: bold">{$project['approved']['end']|date: 'd.m.Y'}</td>
-		<td><a href="{plink 'Projects:edit', $project_id}">uprav</a></td>
+		<td style="text-align: left; padding-left: 5px">{$project->id}</td>
+		<td>{$project->name}</td>
+		<td>{$project->cost|emptyPrice}</td>
+		<td style="background: green; color: white; font-weight: bold">{$project->approved_cost|emptyPrice}</td>
+		<td>{$project->participation|emptyPrice}</td>
+		<td style="background: green; color: white; font-weight: bold">{$project->approved_participation|emptyPrice}</td>
+		<td>{$project->hr|emptyNumber}</td>
+		<td style="background: green; color: white; font-weight: bold">{$project->approved_hr|emptyNumber}</td>
+		<td>{$project->start|emptyDate: 'd.m.Y'}</td>
+		<td style="background: green; color: white; font-weight: bold">{$project->approved_start|emptyDate: 'd.m.Y'}</td>
+		<td>{$project->end|emptyDate: 'd.m.Y'}</td>
+		<td style="background: green; color: white; font-weight: bold">{$project->end|emptyDate: 'd.m.Y'}</td>
+		<td><a href="{plink 'Projects:edit', $project->id}">uprav</a></td>
 	</tr>
 {/foreach}
+
 
 </table>

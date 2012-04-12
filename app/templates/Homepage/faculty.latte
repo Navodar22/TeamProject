@@ -1,6 +1,6 @@
 {block #content}
 
-<h2>{$faculty['total']['name']}</h2>
+<h2>{$faculty['name']}</h2>
 
 <table style="text-align: center; margin: 0 auto">
 	<tr style="background: gray; color: white">
@@ -15,22 +15,22 @@
 	
 	<tr>
 		<td style="width: 100px">Spolu</td>
-		<td style="width: 100px">{$faculty['total']['projects_count']}</td>
-		<td style="width: 100px">{$faculty['total']['cost']}</td>
-		<td style="width: 100px">{$faculty['total']['approved_cost']}</td>
-		<td style="width: 100px">{$faculty['total']['hr']}</td>
-		<td style="width: 100px">{$faculty['total']['approved_hr']}</td>		
+		<td style="width: 100px">{$faculty->project_count}</td>
+		<td style="width: 100px">{$faculty->total_cost|emptyPrice}</td>
+		<td style="width: 100px">{$faculty->approved_cost|emptyPrice}</td>
+		<td style="width: 100px">{$faculty->total_hr|emptyNumber}</td>
+		<td style="width: 100px">{$faculty->approved_hr|emptyNumber}</td>		
 		<td></td>
 	</tr>
 	
-{foreach $faculty['institute'] as $institute_id => $institute}
+{foreach $institutes as $institute_id => $institute}
 	<tr>
 		<td style="text-align: left; padding-left: 5px" title="{$institute['name']}">{$institute['acronym']}</td>
-		<td>{$institute['projects_count']}</td>
-		<td>{$institute['cost']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$institute['approved_cost']}</td>
-		<td>{$institute['hr']}</td>
-		<td style="background: green; color: white; font-weight: bold">{$institute['approved_hr']}</td>
+		<td>{$institute->project_count}</td>
+		<td>{$institute->total_cost|emptyPrice}</td>
+		<td style="background: green; color: white; font-weight: bold">{$institute->approved_cost|emptyPrice}</td>
+		<td>{$institute->total_hr|emptyNumber}</td>
+		<td style="background: green; color: white; font-weight: bold">{$institute->approved_hr|emptyNumber}</td>
 		<td><a href="{plink 'Homepage:institute', $institute_id}">viac</a></td>
 	</tr>
 {/foreach}

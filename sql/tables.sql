@@ -52,7 +52,20 @@ create table project(
 	id int not null auto_increment primary key,
 	name varchar(200) not null,
 	description mediumtext not null,
-	user_id int not null,	
+	user_id int not null,
+
+	-- project data
+	cost float default NULL,		/* money */
+	approved_cost float default NULL,
+	hr int default NULL,			/* human resource */
+	approved_hr int default NULL,
+	participation float default NULL,
+	approved_participation float default NULL,
+
+	start timestamp,
+	approved_start timestamp NULL default NULL,
+	end timestamp,
+	approved_end timestamp NULL default NULL,
 
 	foreign key (user_id) references user(id) on delete restrict on update cascade	
 );
@@ -73,7 +86,7 @@ create table project_institute(
 	-- cost variables
 	cost float not null,		/* money */
 	hr int not null,			/* human resource */
-	participation int not null,
+	participation float not null,
 	fonds varchar(300),
 
 	-- time variables

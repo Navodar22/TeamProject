@@ -14,30 +14,16 @@ abstract class BaseLPresenter extends BasePresenter
 			$this->redirect('Sign:in');
 		} else {
 			$this->template->user = $this->getUser()->getIdentity();
+			$this->template->registerHelper('emptyPrice', callback(new EmptyPrice, 'process'));
+			$this->template->registerHelper('emptyNumber', callback(new EmptyNumber, 'process'));
+			$this->template->registerHelper('emptyDate', callback(new EmptyDate, 'process'));
 		}
 	}
 	
 	
+	
 	public function getStatuses() {
 		//implement return statuses array by role
-	}
-	
-	
-	
-	public function getSchoolData() {
-		
-	}
-	
-	
-	
-	public function getFacultyData($id) {
-		
-	}
-	
-	
-	
-	public function getInstituteData($id) {
-		
 	}
 	
 	

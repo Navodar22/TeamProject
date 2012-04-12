@@ -156,7 +156,7 @@ class InstitutesPresenter extends BaseLPresenter
 					$this->db->table('institute')->insert($values);		
 				}	
 				$this->calculateMoney();
-				$this->flashMessage('Ústav bol pridaný.', 'ok');
+				$this->flashMessage('Ústav bol uložený.', 'ok');
 			} catch (PDOException $e) {
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
 			}
