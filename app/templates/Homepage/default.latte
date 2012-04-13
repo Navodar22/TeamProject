@@ -7,30 +7,40 @@
 
 
 <div class="overview">
-<table>
-	<tr>
-		<th>Fakulta</th>
-		<th>Počet projektov</th>
-		<th>Fin.zdroje</th>
-		<th>Schválené fin.zdroje</th>
-		<th>Ludské zdroje</th>
-		<th>Schválené ludské zdroje</th>
-		<th>Akcie</th>			
-	</tr>
-	
-{foreach $school_data as $faculty_id => $school_faculty}
-	<tr class="{$iterator->odd ? odd : even}">
-		<td class="name" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
-		<td>{$school_faculty->project_count}</td>
-		<td>{$school_faculty->total_cost|emptyPrice}</td>
-		<td class="approved">{$school_faculty->approved_cost|emptyPrice}</td>
-		<td>{$school_faculty->total_hr|emptyNumber}</td>
-		<td class="approved">{$school_faculty->approved_hr|emptyNumber}</td>
-		<td class="actions"><a class="more" href="{plink Homepage:faculty, $faculty_id}"></a></td>
-	</tr>
-{/foreach}
+	<table>
+		<tr>
+			<th>Fakulta</th>
+			<th>Počet projektov</th>
+			<th>Fin.zdroje</th>
+			<th>Schválené fin.zdroje</th>
+			<th>Ludské zdroje</th>
+			<th>Schválené ludské zdroje</th>
+			<th>Akcie</th>			
+		</tr>
 
-</table>
+	{foreach $school_data as $faculty_id => $school_faculty}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td class="name" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+			<td>{$school_faculty->project_count}</td>
+			<td>{$school_faculty->total_cost|emptyPrice}</td>
+			<td class="approved">{$school_faculty->approved_cost|emptyPrice}</td>
+			<td>{$school_faculty->total_hr|emptyNumber}</td>
+			<td class="approved">{$school_faculty->approved_hr|emptyNumber}</td>
+			<td><a class="more" href="{plink Homepage:faculty, $faculty_id}"></a></td>
+		</tr>
+	{/foreach}
+
+		<tr class="total">
+			<td>Spolu</td>
+			<td>{$total_data->project_count}</td>
+			<td>{$total_data->total_cost|emptyPrice}</td>
+			<td>{$total_data->approved_cost|emptyPrice}</td>
+			<td>{$total_data->total_hr|emptyNumber}</td>
+			<td>{$total_data->approved_hr|emptyNumber}</td>		
+			<td></td>
+		</tr>
+		
+	</table>
 </div>	
 	
 <ul class="bottom_menu">

@@ -14,6 +14,9 @@ class HomepagePresenter extends BaseLPresenter
 	public $project_institutes;
 	
 	
+	public $institute_id;
+	
+	
 	
 	
 	/**
@@ -23,7 +26,7 @@ class HomepagePresenter extends BaseLPresenter
 		$faculties = $this->db->table('faculty');
 		
 		foreach($faculties as $faculty) {
-		$result[$faculty->id] = $this->db->table('project_institute')->where('institute.faculty.id', $faculty->id)->select('
+			$result[$faculty->id] = $this->db->table('project_institute')->where('institute.faculty.id', $faculty->id)->select('
 				count(DISTINCT project_id) AS project_count,
 				sum(project_institute.cost) AS total_cost,
 				sum(project_institute.hr) AS total_hr,
@@ -34,7 +37,16 @@ class HomepagePresenter extends BaseLPresenter
 			$result[$faculty->id]['acronym'] = $faculty->acronym;
 		}		
 		
+		$total_data = $this->db->table('project')->select('
+				count(*) AS project_count,
+				sum(cost) AS total_cost,
+				sum(hr) AS total_hr,
+				sum(approved_cost) AS approved_cost,
+				sum(approved_hr) AS approved_hr
+				')->fetch();
+		
 		$this->template->school_data = $result;
+		$this->template->total_data = $total_data;
 	} 
 	
 	
@@ -91,6 +103,7 @@ class HomepagePresenter extends BaseLPresenter
 	public function actionInstitute($id) {
 		//$this->template->institute = $this->getInstituteData($id);
 		
+		$this->institute_id = $id;
 		$db_institute = $this->db->table('institute')->where('id', $id)->fetch();
 		
 		$institute = $this->db->table('project_institute')->where('institute.id', $db_institute->id)->select('
@@ -109,9 +122,28 @@ class HomepagePresenter extends BaseLPresenter
 		$institute['name'] = $db_institute->name;
 		$institute['acronym'] = $db_institute->acronym;
 		
-		$projects = $this->db->table('project')->where('project_institute:institute_id', $db_institute->id);
-		
 		$this->template->institute = $institute;
-		$this->template->projects = $projects;
 	}
+	
+	
+	public function createComponentDataGrid() {
+
+        $source = $this->db->table('project')->where('project_institute:institute_id', $this->institute_id);
+
+        $dg = new DataGrid();
+        $dg->setDataSource($source);
+		
+        $dg->addAction('edit', 'Uprav', 'Projects:edit', array('id'));
+
+        $dg->addColumn('id', 'No.')->setIntFilter('project.id')->setStyle('width: 50px');
+        $dg->addColumn('name', 'Name')->setTextFilter('project.name')->setStyle('text-align: left');
+		$dg->addCustomColumn('cost', 'Fin. zdroje')->setIntFilter('project.cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->cost);'));                                                                 																										
+		$dg->addCustomColumn('approved_cost', 'Schválené fin.zdroje')->setIntFilter('project.approved_cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_cost);'));
+		$dg->addCustomColumn('participation', 'Spoluúčasť')->setIntFilter('project.participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->participation);'));
+		$dg->addCustomColumn('approved_participation', 'Schválená spoluúčasť')->setIntFilter('project.approved_participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_participation);'));
+		$dg->addCustomColumn('hr', 'Ľudské zdroje')->setIntFilter('project.hr')->setHtml(create_function('$row', '$helper =  new EmptyNumber(); return $helper->process($row->hr);'));																
+		$dg->addCustomColumn('approved_hr', 'Schválené ľudské zdroje')->setIntFilter('project.approved_hr')->setHtml(create_function('$row', '$helper =  new EmptyNumber(); return $helper->process($row->approved_hr);'));
+		return $dg;
+	}	
+	
 }

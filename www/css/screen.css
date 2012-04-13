@@ -5,7 +5,7 @@ h1,p,ul,li { margin: 0px; padding: 0px; }
 h1 { font-size: 24px; color: #000000; text-shadow: 1px 1px 1px #ffffff; filter: dropshadow(color=#ffffff, offx=3, offy=3) }
 
 h2 { font-size: 24px; color: #555555; font-weight: bold; text-shadow: 1px 1px 1px #ffffff; filter: dropshadow(color=#ffffff, offx=3, offy=3) }
-h3 { font-size: 16px }
+h3 { font-size: 16px; color: #555555; font-weight: bold; text-shadow: 1px 1px 1px #ffffff; filter: dropshadow(color=#ffffff, offx=3, offy=3) }
 a img { border: none; }
 a { outline: 0; color: #000000; }
 
@@ -46,18 +46,28 @@ button.css3button {
 
 .date_pick { margin: 20px 0 }
 .overview { width: 900px; text-align: center; margin: 0 auto; padding: 10px 0; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }
+.overview a { text-decoration: none }
 .overview table { width: 880px; margin: 0 auto; border: 0 }
-.overview table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec }
-.overview table td { border: 0; border-bottom: 1px solid #d4d4d4 }
+.overview table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; height: 40px }
+.overview table th a { color: #000066 }
+.overview table td { border: 0; border-bottom: 1px solid #d4d4d4; width: 100px }
 .overview table tr:hover td { background: #c3c3ff }
-.overview table tr:hover td.approved { background: #8989ff }
-.overview table tr:hover td.actions { background: transparent }
 .overview table tr.even { background: #e0e0e0 }
+
+.overview table tr:hover td.approved { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_cost { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_participation { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_hr { background: #8989ff }
+
 .overview table td.approved { background: #92d050; color: #000000 }
-.overview table td { width: 100px }
-.overview table td.actions { width: 80px }
+.overview table td.dataGrid-approved_cost  { background: #92d050; color: #000000 }
+.overview table td.dataGrid-approved_participation  { background: #92d050; color: #000000 }
+.overview table td.dataGrid-approved_hr  { background: #92d050; color: #000000 }
+
 .overview table td.name { text-align: left; padding-left: 5px }
-.overview table tr.total td { height: 30px; font-weight: bold; background: #d4d4d4; border: 3px solid #ececec }
+.overview table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
+.overview table tfoot td {  border-top: 3px solid #ececec; color: #000066 }
+.overview table tfoot td:hover { background: #d4d4d4 }
 
 a.more { display: block; width: 24px; height: 24px; margin: 0 auto; background: url('../images/more2.png') }
 
@@ -181,7 +191,6 @@ table.statistics-table a:hover { text-decoration: underline; color: blue }
 .login table td { padding-top: 5px; border: 0 }
 .login table th { width: 100px; border: 0 }
 
-
 .w350 { width: 350px }
 .w250 { width: 250px }
 .c-green { color: #CFE186 }
@@ -193,14 +202,48 @@ div.flash { text-shadow: 1px 1px 1px #ffffff;
 filter: dropshadow(color=#ffffff, offx=5, offy=5);color: #000000; font-weight: bold; background: #FFF9D7;	border: 1px solid #E2C822; padding: 0px 10px; margin: 0px 10px; float: right}
 div.login-flash { height: 30px; line-height: 30px; text-shadow: 1px 1px 1px #ffffff;
 filter: dropshadow(color=#ffffff, offx=5, offy=5);color: #000000; font-weight: bold; background: #FFF9D7;	border: 1px solid #E2C822; padding: 0px 10px; margin: 0px 10px; }
-div.info { background: #FFF9D7 url('../images/info.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #E2C822; }
+div.info { background: #FFF9D7 url('../images/info.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #E2C822 }
 div.ok { background: #8cec8c url('../images/ok.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #1cb41c }
-div.error { background: #ff9f9f url('../images/error.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #cc0404;  }
-
-
+div.error { background: #ff9f9f url('../images/error.png') 10px center no-repeat; padding-left: 40px; border: 1px solid #cc0404 }
 /* End Flash messages*/
 
 a[href^="error:"] {
 	background: red;
 	color: white;
 }
+
+
+
+
+/* Filter */
+.component-grid input[type=text] { width: 90% }
+.component-grid select { width: 90% }
+.component-grid .grid-submit-filter { border: 0; padding-right: 20px; margin-right: 5px; color: #000066; font-weight: bold; cursor: pointer; background : transparent url('../images/grid/search.png') right center no-repeat }
+
+/* Actions */
+.component-grid td.grid-row-actions { text-align: center }
+.component-grid .grid-actions-envelope { display: inline-block; vertical-align: middle}
+
+/* Footer */
+.component-grid tfoot td { text-align: center; font-size: 14px; height: 25px; background: #d4d4d4; color: #ffffff; border-top: 1px solid #c6c6c6; }
+.component-grid tfoot td .grid-paginator { margin-top: 2px; display: inline-block }
+.component-grid tfoot td #frmpagingForm-page { width: 25px; text-align: center }
+.component-grid tfoot .grid-p-left { float: left; display: block; margin: 4px 5px 0 0; width: 16px; height: 16px; background: url('../images/grid/arrow_left.png') }
+.component-grid tfoot .grid-p-right { float: right; display: block; margin: 4px 0 0 5px; width: 16px; height: 16px; background: url('../images/grid/arrow_right.png') }
+.component-grid tfoot .grid-p-left-first { float: left; display: block; margin: 4px 2px 0 0; width: 16px; height: 16px; background: url('../images/grid/arrow_left_fast.png') }
+.component-grid tfoot .grid-p-right-last { float: right; display: block; margin: 4px 0 0 2px; width: 16px; height: 16px; background: url('../images/grid/arrow_right_fast.png') }
+.component-grid tfoot .grid-items { float: right; line-height: 25px; margin-right: 10px }
+.component-grid tfoot .grid-reset { float: left; line-height: 25px; margin-left: 10px;  }
+.component-grid tfoot .grid-reset a { color: #000066; text-decoration: none; padding-right: 20px; background: url('../images/grid/arrow_refresh.png') right center no-repeat }
+.component-grid tfoot .grid-itemsPerPage { float: right; margin-top: 2px }
+
+/* Icons */
+.component-grid .grid-icon { display: block; width: 24px; height: 24px; float: left; margin-right: 5px }
+.component-grid .grid-icon.add { background: url('../images/grid/add.png') }
+.component-grid .grid-icon.delete { background: url('../images/grid/delete.png') }
+.component-grid .grid-icon.edit { background: url('../images/more2.png') }
+.component-grid .filter-date { border: 2px solid #fff; background: #fff url('../images/grid/filter-date.png') right bottom no-repeat; }
+
+/* Bool icons */
+.component-grid .grid-yes { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/yes.png') center center no-repeat }
+.component-grid .grid-no { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/no.png') center center no-repeat }

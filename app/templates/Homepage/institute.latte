@@ -3,10 +3,16 @@
 <h2>{$institute->name}</h2>
 
 <div class="overview">
+	{control dataGrid}
+</div>
+
+
+<br /><br />
+<div class="overview">
+	<h3>Súhrnné zdroje ústavu</h3>
 	<table>
 		<tr>
-			<th>Číslo projektu</th>
-			<th>Názov projektu</th>
+			<th>Počet projektov</th>
 			<th>Fin. zdroje</th>
 			<th>Schválené fin.zdroje</th>
 			<th>Spoluúčasť</th>
@@ -19,38 +25,16 @@
 			<th>Do</th>
 			<th>Schválené do</th>	
 			*}
-			<th>Akcie</th>
 		</tr>
-
-	{foreach $projects as $project}
-		<tr>
-			<td>{$project->id}</td>
-			<td>{$project->name}</td>
-			<td>{$project->cost|emptyPrice}</td>
-			<td class="approved">{$project->approved_cost|emptyPrice}</td>
-			<td>{$project->participation|emptyPrice}</td>
-			<td class="approved">{$project->approved_participation|emptyPrice}</td>
-			<td>{$project->hr|emptyNumber}</td>
-			<td class="approved">{$project->approved_hr|emptyNumber}</td>
-			{*
-			<td>{$project->start|emptyDate: 'd.m.y'}</td>
-			<td class="approved">{$project->approved_start|emptyDate: 'd.m.y'}</td>
-			<td>{$project->end|emptyDate: 'd.m.y'}</td>
-			<td class="approved">{$project->end|emptyDate: 'd.m.y'}</td>
-			*}
-			<td class="actions"><a class="more" href="{plink 'Projects:edit', $project->id}"></a></td>
-		</tr>
-	{/foreach}
 		
 		<tr class="total">
-			<td></td>
-			<td></td>
+			<td>{$institute->project_count}</td>
 			<td>{$institute->total_cost|emptyPrice}</td>
 			<td>{$institute->approved_cost|emptyPrice}</td>
 			<td>{$institute->total_participation|emptyPrice}</td>
 			<td>{$institute->approved_participation|emptyPrice}</td>		
 			<td>{$institute->total_hr|emptyNumber}</td>
-			<th>{$institute->approved_hr|emptyNumber}</th>	
+			<td>{$institute->approved_hr|emptyNumber}</td>	
 			{*
 			<th>{$institute->start|emptyDate: 'd.m.y'}</th>
 			<th>{$institute->start|emptyDate: 'd.m.y'}</th>	

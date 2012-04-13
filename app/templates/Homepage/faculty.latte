@@ -15,7 +15,7 @@
 		</tr>
 
 	{foreach $institutes as $institute_id => $institute}
-		<tr>
+		<tr class="{$iterator->odd ? odd : even}">
 			<td class="name" title="{$institute['name']}">{$institute['acronym']}</td>
 			<td>{$institute->project_count}</td>
 			<td>{$institute->total_cost|emptyPrice}</td>
