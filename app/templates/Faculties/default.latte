@@ -1,21 +1,26 @@
 {block content}
 <h2>Fakulty</h2>
 
-<table class="render-table">
-	<tr>
-		<th>Názov</th>
-		<th>Akronym</th>
-		<th>Akcia</th>
-	</tr>
-	
-	{foreach $faculties as $faculty}
-	<tr>
-		<td class="left"><a href="{plink Institutes:default, $faculty->id}">{$faculty->name}</a></td>
-		<td>{$faculty->acronym}</td>
-		<td>
-			<a href="{plink Faculties:edit, $faculty->id}">edit</a>
-			<a href="{plink Faculties:delete, $faculty->id}">delete</a>
-		</td>
-	</tr>
-	{/foreach}
-</table>
+<div class="overview">
+	<a class="add" href="{plink Faculties:add}">Pridať fakultu</a>
+	<table>
+		<tr>
+			<th>Názov</th>
+			<th>Akronym</th>
+			<th>Akcia</th>
+		</tr>
+
+		{foreach $faculties as $faculty}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td class="name"><a href="{plink Institutes:default, $faculty->id}">{$faculty->name}</a></td>
+			<td>{$faculty->acronym}</td>
+			<td class="actions">
+				<div class="actions-container">
+					<a class="more" href="{plink Faculties:edit, $faculty->id}"></a>
+					<a class="delete" href="{plink Faculties:delete, $faculty->id}" onclick="return confirm('Naozaj chcete zmazať {$faculty->name}?')"></a>
+				</div>
+			</td>
+		</tr>
+		{/foreach}
+	</table>
+</div>

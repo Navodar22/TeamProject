@@ -2,6 +2,17 @@
 
 {* Grid component *}
 <table class="component-grid">
+	{ifset $empty}
+	<thead>
+		<tr>
+			<td></td>
+		</tr>
+	</thead>
+	<tr>
+		<td>Aktuálne tu niesu žiadne projekty</td>
+	</tr>
+	</table>
+	{else}
 	<thead>
 		<tr>
 		{* Iterate column names - create th *}
@@ -149,3 +160,4 @@
 		$( ".filter-date").datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	});
 </script>
+{/ifset}

@@ -1,6 +1,9 @@
 {block content}
 <h2>Moje projekty</h2>
 
-{foreach $user_projects as $user_project}
-	<a href="{plink Projects:edit, $user_project->id}">{$user_project->name}</a><br />
-{/foreach}
+<div class="overview">
+	{control dataGrid}
+</div>
+	
+	
+

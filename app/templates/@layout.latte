@@ -43,12 +43,10 @@
 		<div class="header-content">
 			<a href="{plink Homepage:default}">Úvod</a>
 			<a href="{plink Projects:default}">Moje projekty</a>
-			<a href="{plink Projects:add}">Add project</a>
+			<a href="{plink Projects:add}">Pridať projekt</a>
 			<a href="{plink Faculties:default}">Fakulty</a>
-			<a href="{plink Faculties:add}">Add faculty</a>
 			<a href="{plink Institutes:default}">Ústavy</a>
-			<a href="{plink Institutes:add}">Add ústav</a>
-			<a href="{plink Statistics:default}">Statistics</a>	   
+			<a href="{plink Statistics:default}">Štatistiky</a>	   
 			<div class="clearer"></div>
 		</div><!-- header-content -->
         
@@ -68,7 +66,7 @@
 	
 	<script>
 	$(function() {
-		$( ".datepicker").datepicker({
+		$(".datepicker").datepicker({
 			changeMonth: true,
 			changeYear: true,
 			showButtonPanel: true
@@ -81,6 +79,10 @@
 			
 		{/ifset}
 		$(".flash").delay(3000).fadeOut(2000);
+		
+
+		$("input:submit.design").button();
+
 	});
 	</script>
 </body>

@@ -22,7 +22,12 @@
 			<td class="approved">{$institute->approved_cost|emptyPrice}</td>
 			<td>{$institute->total_hr|emptyNumber}</td>
 			<td class="approved">{$institute->approved_hr|emptyNumber}</td>
-			<td><a class="more" href="{plink 'Homepage:institute', $institute_id}"></a></td>
+			<td class="actions">
+				<div class="actions-container">
+					<a class="more" href="{plink 'Homepage:institute', $institute_id}">
+				</a>
+				<div class="clearer"></div>
+			</td>
 		</tr>
 	{/foreach}
 		

@@ -44,32 +44,12 @@ button.css3button {
 		0px 1px 0px rgba(255,255,255,0.3);
 }
 
-.date_pick { margin: 20px 0 }
-.overview { width: 900px; text-align: center; margin: 0 auto; padding: 10px 0; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }
-.overview a { text-decoration: none }
-.overview table { width: 880px; margin: 0 auto; border: 0 }
-.overview table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; height: 40px }
-.overview table th a { color: #000066 }
-.overview table td { border: 0; border-bottom: 1px solid #d4d4d4; width: 100px }
-.overview table tr:hover td { background: #c3c3ff }
-.overview table tr.even { background: #e0e0e0 }
+a.more { display: block; float: left; width: 24px; height: 24px; margin: 0 auto; background: url('../images/more2.png') }
+a.delete { display: block; float: left; width: 24px; height: 24px; margin: 0 auto; background: url('../images/delete.png') }
 
-.overview table tr:hover td.approved { background: #8989ff }
-.overview table tr:hover td.dataGrid-approved_cost { background: #8989ff }
-.overview table tr:hover td.dataGrid-approved_participation { background: #8989ff }
-.overview table tr:hover td.dataGrid-approved_hr { background: #8989ff }
+input.more { float: left; width: 24px; height: 24px; margin: 0 auto; border: 0; cursor: pointer; background: url('../images/more2.png') }
+input.delete { float: left; width: 24px; height: 24px; margin: 0 auto; border: 0; cursor: pointer; background: url('../images/delete.png') }
 
-.overview table td.approved { background: #92d050; color: #000000 }
-.overview table td.dataGrid-approved_cost  { background: #92d050; color: #000000 }
-.overview table td.dataGrid-approved_participation  { background: #92d050; color: #000000 }
-.overview table td.dataGrid-approved_hr  { background: #92d050; color: #000000 }
-
-.overview table td.name { text-align: left; padding-left: 5px }
-.overview table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
-.overview table tfoot td {  border-top: 3px solid #ececec; color: #000066 }
-.overview table tfoot td:hover { background: #d4d4d4 }
-
-a.more { display: block; width: 24px; height: 24px; margin: 0 auto; background: url('../images/more2.png') }
 
 .bottom_menu { margin: 30px 0 0 50px; color: #fff; font-weight: bold }
 .bottom_menu a { text-decoration: none; color:white }
@@ -92,7 +72,7 @@ a.more { display: block; width: 24px; height: 24px; margin: 0 auto; background: 
 .f_left { float: left; }
 .hidden { visibility: hidden; }
 
-.envelope { width: 1000px; background: #999999; margin: 0 auto; margin-top: 20px }
+.envelope { width: 1000px; background: #999999; margin: 0 auto; margin-top: 20px; margin-bottom: 20px }
 .header { width: 100%; color: #ffffff; text-shadow: 1px 1px 1px #000000; filter: dropshadow(color=#000000, offx=3, offy=3); background: #8b8b8b url('../images/header-bg.png') repeat-x; padding-top: 1px; }
 .header .user-info { text-align: left; margin: 10px 0 0 20px; line-height: 20px }
 .header .logout { width: 24px; height: 24px; margin: 0 10px; background: url('../images/logout.png'); float: right }
@@ -161,24 +141,6 @@ a.more { display: block; width: 24px; height: 24px; margin: 0 auto; background: 
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#4dffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
-.project-table table { width: 800px; margin-left: 10px; text-align: left; border: 0 }
-.project-table table tr {  }
-.project-table table th { font-weight: bold; border: 0 }
-.project-table table td { border: 0; padding-bottom: 10px }
-
-.format-table table { margin: 0 auto; text-align: left; border: 0 }
-.format-table table tr {  }
-.format-table table th { font-weight: bold; border: 0; padding-right: 20px }
-.format-table table td { border: 0; padding-bottom: 10px }
-
-/* temp table */
-table.render-table { margin: 0 auto; margin-bottom: 30px}
-table.render-table td { padding: 3px }
-table.render-table th { padding: 3px; background: gray; color: white }
-table.render-table .left { text-align: left }
-table.render-table a { text-decoration: none }
-table.render-table a:hover { text-decoration: underline; color: blue }
-
 table.statistics-table { border: 0; margin-bottom: 30px; font-size: 10px }
 table.statistics-table td { padding: 3px; border: 0 }
 table.statistics-table th { padding: 3px; background: gray; color: white }
@@ -196,6 +158,7 @@ table.statistics-table a:hover { text-decoration: underline; color: blue }
 .c-green { color: #CFE186 }
 .bold { font-weight: bold }
 .shadow { -webkit-box-shadow: 5px 5px 10px 2px #706f6f; -moz-box-shadow: 5px 5px 10px 2px #706f6f; box-shadow: 5px 5px 10px 2px #706f6f }
+.center { margin: 0 auto }
 
 /* Flash messages */
 div.flash { text-shadow: 1px 1px 1px #ffffff;
@@ -214,6 +177,69 @@ a[href^="error:"] {
 
 
 
+
+/* Forms */
+.forms { display: inline-block; text-align: left; margin: 0 auto; padding: 10px; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }
+.forms table { margin: 0 auto; border: 0 }
+
+.forms fieldset { border: 0 }
+.forms fieldset table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; padding: 5px 10px }
+.forms fieldset table td { border: 3px solid #ececec }
+.forms table td { border: 0 }
+.forms table th { border: 0 }
+.forms textarea { font: 12px/1.5 "Tahoma", lucida, sans-serif; width: 350px } 
+
+
+
+
+/* Institutes */
+.institutes { width: 900px; text-align: center; margin: 0 auto; padding: 10px 0; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }
+.institutes table { width: 880px; margin: 0 auto; border: 0 }
+
+.institutes table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; height: 30px }
+.institutes table td { border: 0; border-bottom: 1px solid #d4d4d4; width: 100px; height: 30px }
+
+.institutes table td.actions { text-align: center }
+.institutes table td.actions .actions-container { display: inline-block }
+.institutes table td.actions .actions-container input { margin: 0 5px }
+.institutes table .name { text-align: left; padding-left: 5px }
+.institutes table tr.even { background: #e0e0e0 }
+.institutes th.head { background: transparent; text-align: left; padding-left: 5px; font-size: 14px; color: #555555; font-weight: bold; text-shadow: 1px 1px 1px #ffffff; filter: dropshadow(color=#ffffff, offx=3, offy=3) }
+
+.institutes table tr:hover td { background: #c3c3ff }
+
+.institutes table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
+.institutes table tr.total-approved td { height: 30px; background: #92d050; color: #000000; font-weight: bold; border: 3px solid #ececec }
+
+.date_pick { margin: 20px 0 }
+
+/* Overview table */
+.overview { width: 900px; text-align: center; margin: 0 auto; padding: 10px 0; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }
+.overview a { text-decoration: none }
+.overview table { width: 880px; margin: 0 auto; border: 0 }
+.overview table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; height: 40px }
+.overview table th a { color: #000066 }
+.overview table td { border: 0; border-bottom: 1px solid #d4d4d4; width: 100px }
+.overview table tr:hover td { background: #c3c3ff }
+.overview table tr.even { background: #e0e0e0 }
+
+.overview table tr:hover td.approved { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_cost { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_participation { background: #8989ff }
+.overview table tr:hover td.dataGrid-approved_hr { background: #8989ff }
+
+.overview table td.approved { background: #92d050; color: #000000 }
+.overview table td.dataGrid-approved_cost  { background: #92d050; color: #000000 }
+.overview table td.dataGrid-approved_participation  { background: #92d050; color: #000000 }
+.overview table td.dataGrid-approved_hr  { background: #92d050; color: #000000 }
+
+.overview table td.actions { text-align: center }
+.overview table td.actions .actions-container { display: inline-block }
+.overview table td.actions .actions-container a { margin: 0 5px }
+.overview table td.name { text-align: left; padding-left: 5px }
+.overview table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
+.overview table tfoot td {  border-top: 3px solid #ececec; color: #000066 }
+.overview table tfoot td:hover { background: #d4d4d4 }
 
 /* Filter */
 .component-grid input[type=text] { width: 90% }
@@ -247,3 +273,7 @@ a[href^="error:"] {
 /* Bool icons */
 .component-grid .grid-yes { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/yes.png') center center no-repeat }
 .component-grid .grid-no { width: 16px; height: 16px; margin: 0 auto; background: url('../images/grid/no.png') center center no-repeat }
+
+/* Add icon */
+.add { display: inline-block; float: left; height: 19px; margin-left: 10px; padding-left: 20px; background: url('../images/button-add.png') no-repeat }
+.add:hover { color: #000066 }

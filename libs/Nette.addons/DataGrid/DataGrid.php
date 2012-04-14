@@ -487,6 +487,7 @@ class DataGrid extends NControl
 		$this->saveSession();		
 		$this->template->render();
 	}
+
 	
 	
 	//************************* Handle signals *********************************

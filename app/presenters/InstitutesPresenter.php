@@ -121,17 +121,25 @@ class InstitutesPresenter extends BaseLPresenter
 	public function createComponentSaveForm() {
 		$form = new NAppForm();
 		
+		$form->addGroup();
 		$form->addText('name', 'Názov ústavu')
-				->addRule(NForm::FILLED, 'Musíte zadať názov ústavu.');
+				->addRule(NForm::FILLED, 'Musíte zadať názov ústavu.')
+				->getControlPrototype()
+					->class('w350');
 		$form->addText('acronym', 'Skratka ústavu')
 				->addRule(NForm::FILLED, 'Musíte zadať skratku ústavu.');
 		
 		$form->addSelect('faculty_id', 'Zaradiť pod katedru', $this->faculties);
 		$form->addText('students', 'Počet študentov');
 		
-		$form->addSubmit('process', 'Ulož');
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Ulož')
+				->getControlPrototype()
+					->class('design');
 		$form->addSubmit('back', 'Naspäť')
-				->setValidationScope(NULL);
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
 		
 		$form->onSuccess[] = callback($this, 'saveFormSubmitted');
 		

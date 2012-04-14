@@ -20,6 +20,9 @@ class ProjectsPresenter extends BaseLPresenter
 	public $states;
 	
 	
+	public $user_id;
+	
+	
 	
 	
 	/**
@@ -40,8 +43,7 @@ class ProjectsPresenter extends BaseLPresenter
 	 * Render all actualy logged user
 	 */
 	public function renderDefault() {
-		$user_id = $this->getUser()->getIdentity()->getId();		
-		$this->template->user_projects = $this->db->table('project')->where('user_id', $user_id);
+		$this->user_id = $this->getUser()->getIdentity()->getId();		
 	} 
 
 	
@@ -150,13 +152,17 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		try {
 			//store project_id before delete record
+			$this->db->beginTransaction();
 			$project_id = $project_institute->fetch()->project->id;
 			$project_institute->delete();
+			$this->calculateProjectData($project_id);
+			$this->db->commit();
 
 			//set message and redirect
 			$this->flashMessage('Ústav bol úspešne odstránený z participácie na projekte.', 'ok');
 			$this->redirect('edit', $project_id);
 		} catch (PDOException $e) {			
+			$this->db->rollback();
 			$this->flashMessage('Odstránenie ústavu z projektu nebolo úspešné.', 'error');
 			$this->redirect('edit', $project_id);
 		}
@@ -173,16 +179,26 @@ class ProjectsPresenter extends BaseLPresenter
 	public function createComponentAddForm() {
 		$form = new NAppForm();
 		
+		$form->addGroup();
 		$form->addText('name', 'Názov projektu')
-				->addRule(NForm::FILLED, 'Musíte zadať názov projektu.');
-		$form->addTextArea('description', 'Popis projektu', '50','5')
+				->addRule(NForm::FILLED, 'Musíte zadať názov projektu.')
+				->getControlPrototype()
+					->class('w350');;
+		$form->addTextArea('description', 'Popis projektu', '55','5')
 				->addRule(NForm::FILLED, 'Musíte zadať popis projektu.');
 		
-		$form->addSubmit('process', 'Uložiť projekt');
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Uložiť projekt')
+				->getControlPrototype()
+					->class('design');
 		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL);
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
 		
-		$form->addSubmit('add_institute', 'Pridať ústav')->setDisabled();
+		$form->addSubmit('add_institute', 'Pridať ústav')->setDisabled()
+				->getControlPrototype()
+					->class('design');
 		
 		$form->onSuccess[] = callback($this, 'addFormSubmitted');
 		
@@ -233,22 +249,34 @@ class ProjectsPresenter extends BaseLPresenter
 	public function createComponentEditForm() {
 		$form = new NAppForm();
 		
+		$form->addGroup();
 		$form->addText('name', 'Názov projektu')
-				->addRule(NForm::FILLED, 'Musíte zadať názov projektu.');
-		$form->addTextArea('description', 'Popis projektu', '50','5')
+				->addRule(NForm::FILLED, 'Musíte zadať názov projektu.')
+				->getControlPrototype()
+					->class('w350');
+		$form->addTextArea('description', 'Popis projektu', '55','5')
 				->addRule(NForm::FILLED, 'Musíte zadať popis projektu.');
 		
 		//foreach related institute render a control buttons for this institute
 		foreach($this->project->related('project_institute') as $project_institute) {
-			$form->addSubmit("edit_$project_institute->id", 'Uprav');
-			$form->addSubmit("delete_$project_institute->id", 'Vymaž');
+			$form->addSubmit("edit_$project_institute->id", ' ')
+					->getControlPrototype()->class('more');
+			$form->addSubmit("delete_$project_institute->id", ' ')
+					->getControlPrototype()->class('delete');
 		}
 		
-		$form->addSubmit('process', 'Uložiť projekt');
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Uložiť projekt')
+				->getControlPrototype()
+					->class('design');
 		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL);
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
 		
-		$form->addSubmit('add_institute', 'Pridať ústav');
+		$form->addSubmit('add_institute', 'Pridať ústav')
+				->getControlPrototype()
+					->class('design');
 		
 		$form->onSuccess[] = callback($this, 'editFormSubmitted');
 		
@@ -311,20 +339,23 @@ class ProjectsPresenter extends BaseLPresenter
 	public function createComponentAddInstituteForm() {	
 		$form = new NAppForm();
 
-		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TODO make global function to get states by role
+		$form->addGroup();
+		$form->addSelect('state_id', 'Stav projektu', $this->states) //@TODO make global function to get states by role
+				->getControlPrototype()->class('w250');
 		$form->addSelect('institute_id', 'Ústav', $this->free_institutes)
 				->getControlPrototype()->class('w250');
 		
-		$form->addText('hr', 'Celková cena hr')
-				->addRule(NForm::FILLED, 'Musíte zadať hr projektu')
-				->addRule(NForm::INTEGER, 'HR projektu musí byť číslo');
 		$form->addText('cost', 'Celková cena projektu')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
 				->addRule(NForm::FLOAT, 'Cena projektu musí byť číslo');
 		$form->addText('participation', 'Spoluúčasť na projekte')
 				->addRule(NForm::FILLED, 'Musíte zadať spoluúčasť na projekte')
 				->addRule(NForm::FLOAT, 'Spoluúčasť na projekte musí byť číslo');
-		$form->addText('fonds', 'Fondy');		
+		$form->addText('hr', 'Celková cena hr')
+				->addRule(NForm::FILLED, 'Musíte zadať hr projektu')
+				->addRule(NForm::INTEGER, 'HR projektu musí byť číslo');
+		$form->addText('fonds', 'Fondy')
+				->getControlPrototype()->class('w250');
 		$form->addText('start', 'Začiatok projektu')
 				->addRule(NForm::FILLED, 'Musíte vyplniť začiatok projektu.')
 				->getControlPrototype()->class('datepicker');
@@ -332,9 +363,14 @@ class ProjectsPresenter extends BaseLPresenter
 				->addRUle(NForm::FILLED, 'Musíte vyplniť koniec projektu.')
 				->getControlPrototype()->class('datepicker');
 		
-		$form->addSubmit('process', 'Pridaj ústav');		
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Pridaj ústav')
+				->getControlPrototype()
+					->class('design');
 		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL);
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
 		
 		$form->onSuccess[] = callback($this, 'addInstituteFormSubmitted');
 		
@@ -406,6 +442,7 @@ class ProjectsPresenter extends BaseLPresenter
 	public function createComponentEditInstituteForm() {	
 		$form = new NAppForm();
 
+		$form->addGroup();
 		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TOTO prev todo
 		
 		$form->addText('hr', 'Celková cena hr')
@@ -425,9 +462,14 @@ class ProjectsPresenter extends BaseLPresenter
 				->addRUle(NForm::FILLED, 'Musíte vyplniť koniec projektu.')
 				->getControlPrototype()->class('datepicker');
 		
-		$form->addSubmit('process', 'Ulož');		
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Ulož')
+				->getControlPrototype()
+					->class('design');
 		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL);
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
 		
 		$form->onSuccess[] = callback($this, 'editInstituteFormSubmitted');
 		
@@ -491,6 +533,38 @@ class ProjectsPresenter extends BaseLPresenter
 	
 	
 
+	public function createComponentDataGrid() {
+
+        $source = $this->db->table('project')->where('user_id', $this->user_id);
+
+		if($source->count('*') <= 0) {
+			
+			$dg = new DataGrid();
+			$dg->setDataSource($source);
+
+			$dg->template->empty = true;
+			return $dg;
+		}
+		
+        $dg = new DataGrid();
+        $dg->setDataSource($source);
+		
+        $dg->addAction('edit', 'Uprav', 'Projects:edit', array('id'));
+
+        $dg->addColumn('id', 'No.')->setIntFilter('project.id')->setStyle('width: 50px');
+        $dg->addColumn('name', 'Name')->setTextFilter('project.name')->setStyle('text-align: left');
+		$dg->addCustomColumn('cost', 'Fin. zdroje')->setIntFilter('project.cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->cost);'));                                                                 																										
+		$dg->addCustomColumn('approved_cost', 'Schválené fin.zdroje')->setIntFilter('project.approved_cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_cost);'));
+		$dg->addCustomColumn('participation', 'Spoluúčasť')->setIntFilter('project.participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->participation);'));
+		$dg->addCustomColumn('approved_participation', 'Schválená spoluúčasť')->setIntFilter('project.approved_participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_participation);'));
+		$dg->addCustomColumn('hr', 'Ľudské zdroje')->setIntFilter('project.hr')->setHtml(create_function('$row', '$helper =  new EmptyNumber(); return $helper->process($row->hr);'));																
+		$dg->addCustomColumn('approved_hr', 'Schválené ľudské zdroje')->setIntFilter('project.approved_hr')->setHtml(create_function('$row', '$helper =  new EmptyNumber(); return $helper->process($row->approved_hr);'));
+		return $dg;
+	}	
+	
+	
+	
+	
 	/**
 	 * Function to get free faculties/institutes for project.
 	 * Every institute can be assigned to project only once.

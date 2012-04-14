@@ -130,6 +130,15 @@ class HomepagePresenter extends BaseLPresenter
 
         $source = $this->db->table('project')->where('project_institute:institute_id', $this->institute_id);
 
+		if($source->count('*') <= 0) {
+			
+			$dg = new DataGrid();
+			$dg->setDataSource($source);
+
+			$dg->template->empty = true;
+			return $dg;
+		}
+		
         $dg = new DataGrid();
         $dg->setDataSource($source);
 		

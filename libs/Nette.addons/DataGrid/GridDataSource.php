@@ -24,6 +24,7 @@ class GridDataSource extends NObject
 	 * Find existing columns in datasource
 	 */
 	public function getExistColumns() {
+		$result = array();
 		foreach($this->notorm_source as $row) {
 			$result = array_keys(iterator_to_array($row)); 
 			break;
