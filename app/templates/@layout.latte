@@ -42,7 +42,7 @@
 		</div>
 		<div class="header-content">
 			<a href="{plink Homepage:default}">Úvod</a>
-			<a href="{plink Projects:default}">Moje projekty</a>
+			<a href="{plink Projects:myProjects}">Moje projekty</a>
 			<a href="{plink Projects:add}">Pridať projekt</a>
 			<a href="{plink Faculties:default}">Fakulty</a>
 			<a href="{plink Institutes:default}">Ústavy</a>
@@ -54,7 +54,10 @@
 	</div><!-- header -->
 
 	<div class="content">
-		{block #content}{/block}
+		<ul class="breadcrumb">
+			{block #breadcrumb}{/block}
+		</ul>
+		{include #content}
 	</div> <!-- content -->
 	
 	<div class="footer">
@@ -81,7 +84,7 @@
 		$(".flash").delay(3000).fadeOut(2000);
 		
 
-		$("input:submit.design").button();
+		$(".design").button();
 
 	});
 	</script>

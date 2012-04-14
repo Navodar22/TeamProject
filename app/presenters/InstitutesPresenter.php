@@ -75,6 +75,7 @@ class InstitutesPresenter extends BaseLPresenter
 		}
 		
 		$this['saveForm']->setDefaults($this->institute);
+		$this->template->institute = $this->institute;
 	}
 	
 	

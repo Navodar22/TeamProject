@@ -119,10 +119,12 @@ class HomepagePresenter extends BaseLPresenter
 				min(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.start ELSE NULL END) AS approved_start,
 				max(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.end ELSE NULL END) AS approved_end
 				')->fetch();
+		$institute['id'] = $db_institute->id;
 		$institute['name'] = $db_institute->name;
 		$institute['acronym'] = $db_institute->acronym;
 		
 		$this->template->institute = $institute;
+		$this->template->faculty = $db_institute->faculty;
 	}
 	
 	

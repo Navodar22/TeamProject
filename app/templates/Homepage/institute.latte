@@ -1,5 +1,12 @@
-{block #content}
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Homepage:faculty, $faculty->id}">{$faculty->name}</a></li>
+<li>></li>
+<li class="actual">{$institute->name}</li>
+{/block}
 
+{block #content}
 <h2>{$institute->name}</h2>
 
 <div class="overview">

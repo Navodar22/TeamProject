@@ -1,3 +1,9 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li class="actual">Ústavy</li>
+{/block}
+
 {block content}
 <h2>Ústavy ({isSet($faculty) ? $faculty->name : 'všetky'})</h2>
 

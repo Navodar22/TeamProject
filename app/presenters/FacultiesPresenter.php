@@ -40,6 +40,7 @@ class FacultiesPresenter extends BaseLPresenter
 		}
 		
 		$this['saveForm']->setDefaults($this->faculty);
+		$this->template->faculty = $this->faculty;
 	}
 	
 	
