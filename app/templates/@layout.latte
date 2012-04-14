@@ -46,7 +46,16 @@
 			<a href="{plink Projects:add}">Pridať projekt</a>
 			<a href="{plink Faculties:default}">Fakulty</a>
 			<a href="{plink Institutes:default}">Ústavy</a>
-			<a href="{plink Statistics:default}">Štatistiky</a>	   
+			<a href="{plink Statistics:default}">Štatistiky</a>	  
+			
+			<div class="date-range">
+				<a href="{link Homepage:dateRange}">Zobrazované obdobie: </a>
+				{if !empty($dateRange)}
+					<span class="c-green">{$dateRange->from|date: 'd.m.y'} - {$dateRange->to|date: 'd.m.y'}</span>
+				{else}
+					<span class="c-green">Všetko</span>
+				{/if}
+			</div>
 			<div class="clearer"></div>
 		</div><!-- header-content -->
         
@@ -80,6 +89,13 @@
 			$('.datepicker[name=end]').datepicker("setDate", {$project_dates['end']} );
 		{else}
 			
+		{/ifset}
+			
+		{ifset $date_range_data} 
+			$('.datepicker[name=from]').datepicker("setDate", {$date_range_data['from']} );
+			$('.datepicker[name=to]').datepicker("setDate", {$date_range_data['to']} );
+		{else}
+			$('.datepicker[name=to]').datepicker("setDate", 'm.d.y');
 		{/ifset}
 		$(".flash").delay(3000).fadeOut(2000);
 		

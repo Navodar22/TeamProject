@@ -47,6 +47,7 @@ input.delete { float: left; width: 24px; height: 24px; margin: 0 auto; border: 0
 .header .header-content { margin: 4px 0 0 10px; padding-top: 0px; text-align: left; padding: 0 0 10px 15px }
 .header .header-content a { color: #ffffff; text-decoration: none; margin-right: 15px; font-weight: bold; text-shadow: 1px 1px 1px #000000; filter: dropshadow(color=#000000, offx=3, offy=3) }
 .header .header-content a:hover { text-shadow: 3px 3px 3px #000000; filter: dropshadow(color=#000000, offx=9, offy=9) }
+.header .header-content .date-range { float: right; margin-right: 20px; font-weight: bold }
 
 .header a.feilogo { display: block; width: 194px; height: 54px; float: left; margin-bottom: 10px; background: url('../images/logo.png') }
 .header .header-item { float: left; text-align: left; min-width: 125px; *width: 125px;}
@@ -143,7 +144,6 @@ div.error { background: #ff9f9f url('../images/error.png') 10px center no-repeat
 .institutes table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
 .institutes table tr.total-approved td { height: 30px; background: #92d050; color: #000000; font-weight: bold; border: 3px solid #ececec }
 
-.date_pick { margin: 20px 0 }
 
 /* Overview table */
 .overview { width: 900px; text-align: center; margin: 0 auto; padding: 10px 0; background: #ececec; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000 }

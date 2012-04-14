@@ -95,9 +95,25 @@ class InstitutesPresenter extends BaseLPresenter
 		}
 		
 		try {
-			//delete institute
-			$result = $this->db->table('institute')->where('id', $this->institute->id)->delete();	
+			//delete institute - need recalculate money of institutes projects
+			$this->db->beginTransaction();
+			$projects = $this->db->table('project_institute')
+							->where('institute_id', $this->institute->id)
+							->select('DISTINCT project_id AS id');
+			
+			foreach($projects as $project) {
+				$project_ids[] = $project->id;
+			}			
+			
+			$result = $this->institute->delete();
+			
+			foreach($project_ids as $project_id) {
+				$this->calculateProjectData($project_id);
+			}
+						
+			$this->db->commit();
 		} catch (PDOException $e) {
+			$this->db->rollback();
 			$this->flashMessage('Ústav sa nepodarilo odstrániť', 'error');
 			$this->redirect('default', $faculty);
 		}

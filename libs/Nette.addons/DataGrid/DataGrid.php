@@ -318,7 +318,7 @@ class DataGrid extends NControl
 	 */
 	public function createComponentForm() {
 		$form = new NAppForm();
-		
+
 		//create filter form elements
 		foreach($this->th as $key => $value) {
 			if($value->filter) {

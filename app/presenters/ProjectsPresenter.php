@@ -545,7 +545,13 @@ class ProjectsPresenter extends BaseLPresenter
 
 	public function createComponentDataGrid() {
 
-        $source = $this->db->table('project');
+		if(empty($this->dateRange)) {
+			$source = $this->db->table('project');
+		} else {
+			$source = $this->db->table('project')
+					->where('project.start >= ?', $this->dateRange->from)
+					->where('project.end <= ?', $this->dateRange->to);
+		}
 
 		if($source->count('*') <= 0) {
 			
@@ -577,7 +583,14 @@ class ProjectsPresenter extends BaseLPresenter
 	
 	public function createComponentDataGridMyProjects() {
 
-        $source = $this->db->table('project')->where('user_id', $this->user_id);
+		if(empty($this->dateRange)) {
+			$source = $this->db->table('project')->where('user_id', $this->user->getId());
+		} else {
+			$source = $this->db->table('project')
+					->where('project.user_id', $this->user->getId())
+					->where('project.start >= ?', $this->dateRange->from)
+					->where('project.end <= ?', $this->dateRange->to);
+		}
 
 		if($source->count('*') <= 0) {
 			
@@ -720,30 +733,5 @@ class ProjectsPresenter extends BaseLPresenter
 		}
 		
 		return $totals;		
-	}
-	
-	
-	
-	
-	/**
-	 * 
-	 */
-	public function calculateProjectData($id) {
-		$values = $this->db->table('project_institute')->where('project_id', $id)->select('
-			sum(project_institute.cost) AS cost,
-			sum(project_institute.hr) AS hr,
-			sum(project_institute.participation) AS participation,
-			sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
-			sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr,
-			sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.participation, 0)) AS approved_participation,
-			min(project_institute.start) AS start,
-			max(project_institute.end) AS end,
-			min(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.start ELSE NULL END) AS approved_start,
-			max(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.end ELSE NULL END) AS approved_end
-		')->fetch();
-		
-		//Ndebugger::dump($values);exit;
-		
-		$this->db->table('project')->where('id', $id)->update($values);
 	}
 }
