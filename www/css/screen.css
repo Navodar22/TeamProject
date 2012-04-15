@@ -39,6 +39,7 @@ input.delete { float: left; width: 24px; height: 24px; margin: 0 auto; border: 0
 .f_left { float: left; }
 .hidden { visibility: hidden; }
 
+
 .envelope { width: 1000px; background: #999999; margin: 0 auto; margin-top: 20px; margin-bottom: 20px }
 .header { width: 100%; color: #ffffff; text-shadow: 1px 1px 1px #000000; filter: dropshadow(color=#000000, offx=3, offy=3); background: #8b8b8b url('../images/header-bg.png') repeat-x; padding-top: 1px; }
 .header .user-info { text-align: left; margin: 10px 0 0 20px; line-height: 20px }
@@ -79,16 +80,7 @@ input.delete { float: left; width: 24px; height: 24px; margin: 0 auto; border: 0
 .content ul.breadcrumb li a { color: #fff; text-decoration: none }
 .content ul.breadcrumb li.actual { color: #e5e5e5 }
 
-.footer { font-size: 11px; font-style: italic; height: 20px; line-height: 20px; color: #292929; background: #999999 } 
-
-table.statistics-table { border: 0; margin-bottom: 30px; font-size: 10px }
-table.statistics-table td { padding: 3px; border: 0 }
-table.statistics-table th { padding: 3px; background: gray; color: white }
-table.statistics-table .left { text-align: left }
-table.statistics-table a { text-decoration: none }
-table.statistics-table a:hover { text-decoration: underline; color: blue }
-
-.login { margin: 0 auto; margin-top: 50px }
+.footer { font-size: 11px; font-style: italic; height: 20px; line-height: 20px; color: #292929; background: #999999 } .login { margin: 0 auto; margin-top: 50px }
 .login table { width: 100%; border: 0 }
 .login table td { padding-top: 5px; border: 0 }
 .login table th { width: 100px; border: 0 }
@@ -143,6 +135,16 @@ div.error { background: #ff9f9f url('../images/error.png') 10px center no-repeat
 
 .institutes table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
 .institutes table tr.total-approved td { height: 30px; background: #92d050; color: #000000; font-weight: bold; border: 3px solid #ececec }
+
+.legend {width: 520px; float:right; margin: 0 40px 40px 10px;}
+.statistics-pie {float:left; position: absolute;}
+.statistics {  border: 0; text-align: center; margin: 0 auto; padding: 10px 0; font-size: 12px; background: #ececec; -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; -webkit-box-shadow: 5px 5px 20px 1px #000000; -moz-box-shadow: 5px 5px 20px 1px #000000; box-shadow: 5px 5px 20px 1px #000000}
+table.statistics-table { width: 480px; margin: 0 20px 0 20px; }
+table.statistics-table td { padding: 3px; border: 0 }
+table.statistics-table th { background: #d4d4d4; color: #000066; border: 3px solid #ececec; height: 20px  }
+table.statistics-table .left { text-align: left }
+table.statistics-table a { text-decoration: none }
+table.statistics-table a:hover { text-decoration: underline; color: blue }
 
 
 /* Overview table */
