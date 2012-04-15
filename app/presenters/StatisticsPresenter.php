@@ -76,4 +76,58 @@ class StatisticsPresenter extends BaseLPresenter
 		
 		$this->redirect('default');
 	}
+	
+	public function renderFacultystat() {
+		$faculties = $this->db->table('faculty');
+		
+		if(empty($this->dateRange)) {
+			foreach($faculties as $faculty) {
+				$result[$faculty->id] = $this->db->table('project_institute')->where('institute.faculty.id', $faculty->id)->select('
+					count(DISTINCT project_id) AS project_count,
+					sum(project_institute.cost) AS total_cost,
+					sum(project_institute.hr) AS total_hr,
+					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
+					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr
+					')->fetch();
+				$result[$faculty->id]['name'] = $faculty->name;
+				$result[$faculty->id]['acronym'] = $faculty->acronym;
+			}	
+		} else {
+			foreach($faculties as $faculty) {
+				$result[$faculty->id] = $this->db->table('project_institute')
+						->where('institute.faculty.id', $faculty->id)
+						->where('start >= ?', $this->dateRange->from)
+						->where('end <= ?', $this->dateRange->to)->select('
+							count(DISTINCT project_id) AS project_count,
+							sum(project_institute.cost) AS total_cost,
+							sum(project_institute.hr) AS total_hr,
+							sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
+							sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr
+						')->fetch();
+				
+				$result[$faculty->id]['name'] = $faculty->name;
+				$result[$faculty->id]['acronym'] = $faculty->acronym;
+			}	
+		}
+		
+		if(empty($this->dateRange)) {
+			$db_total_data = $this->db->table('project');
+		} else {
+			$db_total_data = $this->db->table('project')
+					->where('start >= ?', $this->dateRange->from)
+					->where('end <= ?', $this->dateRange->to);
+		}
+		
+		$total_data = $db_total_data->select('
+						count(*) AS project_count,
+						sum(cost) AS total_cost,
+						sum(hr) AS total_hr,
+						sum(approved_cost) AS approved_cost,
+						sum(approved_hr) AS approved_hr
+					')->fetch();
+		
+		$this->template->school_data = $result;
+		$this->template->total_data = $total_data;
+			$this->template->colors = $this->colors;
+		}
 }
