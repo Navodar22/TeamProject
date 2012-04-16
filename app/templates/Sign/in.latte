@@ -1,9 +1,0 @@
-{var $robots = noindex}
-
-{block #content}
-
-<div class="box login w350">
-	<h1>Prihlásenie</h1>
-	<div n:foreach="$flashes as $flash" class="login-flash {$flash->type}">{$flash->message}</div>
-	{control signInForm}
-</div>
