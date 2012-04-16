@@ -1,0 +1,170 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Statistics:default}">Štatistiky</a></li>
+<li>></li>
+<li class="actual">Štatistiky fakúlt</li>
+{/block}
+
+{block head}
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1.0', {'packages':['corechart']});  
+  
+  function drawChart(element_id, title, chartData) {
+
+	// Create the data table.
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'Ústav');
+	data.addColumn('number', 'Pridelené financie');
+	data.addRows(chartData);
+
+	// Set chart options
+	var options = { 'width': 400,
+				    'height': 300,
+					'is3D': true,
+					'backgroundColor':'transparent',
+					'colors': [
+						'#305abc',	
+						'#c3000e',	
+						'#32c300',	
+						'#6f24cc',	
+						'#e07432',	
+						'#8cd108',	
+						'#b810cc',
+						'#397d99',
+						'#de5909',
+						'#920156',
+						'#530192',
+						'#014592',
+						'#459201',
+						'#cf39d4',
+						'#3982d4',
+						'#39d485',
+						'#b45e3c',
+						'#3c74b4',
+						'#6c3cb4',
+						'#b43c6f',
+						'#b43c3c',
+						'#91b43c',
+						'#e885a3',
+						'#e8c185',
+						'#8985e8',
+					],
+					'legend': { 
+						'position': 'none'
+					},
+					'tooltip': {
+						'showColorCode': true
+					},
+					'chartArea': {
+						'top': 20
+					}
+				};
+
+	// Instantiate and draw our chart, passing in some options.
+	var chart = new google.visualization.PieChart(document.getElementById(element_id));
+	chart.draw(data, options);
+  }
+</script>
+{/block}
+	
+{block content}
+<h2>Štatistiky</h2>
+<a class="design" href="{link Statistics:default}">Štatistiky</a>
+<a class="design" href="{link Statistics:facultystat}">Štatistiky fakúlt</a>
+<script>
+	chartData_faculties_projects = [];
+	{foreach $school_data as $faculty_id => $school_faculty}
+		chartData_faculties_projects.push([{$school_faculty['name']}, {$school_faculty->project_count}]);
+	{/foreach}
+	// Set a callback to run when the Google Visualization API is loaded.	
+	google.setOnLoadCallback(function() { drawChart('chart_div_faculties_projects', 'Fakulty projects', chartData_faculties_projects) });
+</script>
+
+<h3>Počet projektov</h3>
+<div class="statistics-pie" id="chart_div_faculties_projects"></div>
+<div>
+<div class="legend">
+	<div class="statistics">
+		<table class="statistics-table">
+			<tr>
+				<th style="width:100px">Fakulta</th> 
+				<th style="width:130px">Počet projektov</th>
+			</tr>
+			{foreach $school_data as $faculty_id => $school_faculty}
+				<tr>
+					<td><div style="width: 15px; height: 15px; background: {!$colors[$iterator->counter-1]}; float: left; margin-right: 10px"></div>{$school_faculty['acronym']} </td>
+					<td>{$school_faculty->project_count}</td>
+				</tr>
+			{/foreach}
+		</table>	
+	</div>	
+</div>
+</div>
+<div class="clearer"></div>
+
+<script>
+	chartData_faculties_money = [];
+	{foreach $school_data as $faculty_id => $school_faculty}
+		chartData_faculties_money.push([{$school_faculty['name']}, {$school_faculty->total_cost}]);
+	{/foreach}	
+	google.setOnLoadCallback(function() { drawChart('chart_div_faculties_money', 'Fakulty money', chartData_faculties_money) });
+</script>
+
+<div>
+<h3>Finančné zdroje</h3>
+<div class="statistics-pie" id="chart_div_faculties_money"></div>
+
+<div class="legend">
+	<div class="statistics">
+		<table class="statistics-table">
+			<tr>
+				<th style="width:100px">Fakulta</th> 
+				<th style="width:130px">Finančné zdroje</th>
+			</tr>
+			{foreach $school_data as $faculty_id => $school_faculty}
+				<tr>
+					<td><div style="width: 15px; height: 15px; background: {!$colors[$iterator->counter-1]}; float: left; margin-right: 10px"></div>{$school_faculty['acronym']} </td>
+					<td>{$school_faculty->total_cost|emptyPrice}</td>
+				</tr>
+			{/foreach}
+		</table>	
+	</div>	
+</div>
+<div class="clearer"></div>
+</div>
+
+<script>
+	chartData_faculties_people = [];
+	{foreach $school_data as $faculty_id => $school_faculty}
+		chartData_faculties_people.push([{$school_faculty['name']}, {$school_faculty->total_hr}]);
+	{/foreach}	
+	google.setOnLoadCallback(function() { drawChart('chart_div_faculties_people', 'Fakulty money', chartData_faculties_people) });
+</script>
+
+<div>
+<h3>Ludské zdroje</h3>
+<div class="statistics-pie" id="chart_div_faculties_people"></div>
+
+<div class="legend">
+	<div class="statistics">
+		<table class="statistics-table">
+			<tr>
+				<th style="width:100px">Fakulta</th> 
+				<th style="width:130px">Ludské zdroje</th>
+			</tr>
+			{foreach $school_data as $faculty_id => $school_faculty}
+				<tr>
+					<td><div style="width: 15px; height: 15px; background: {!$colors[$iterator->counter-1]}; float: left; margin-right: 10px"></div>{$school_faculty['acronym']} </td>
+					<td>{$school_faculty->total_hr|emptyNumber}</td>
+				</tr>
+			{/foreach}
+		</table>	
+	</div>	
+</div>
+<div class="clearer"></div>
+</div>
