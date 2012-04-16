@@ -1,0 +1,54 @@
+{block #breadcrumb}
+<li class="actual">Domov</li>
+{/block}
+
+{block #content}
+
+<h2  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" >Rozpočtový plán STU / celkový prehľad</h2>
+
+<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]"  class="overview">
+	<table>
+		<tr>
+			<th>Fakulta</th>
+			<th>Počet projektov</th>
+			<th>Fin.zdroje</th>
+			<th>Schválené fin.zdroje</th>
+			<th>Ludské zdroje</th>
+			<th>Schválené ludské zdroje</th>
+			<th>Akcie</th>			
+		</tr>
+
+	{foreach $school_data as $faculty_id => $school_faculty}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td class="name" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+			<td>{$school_faculty->project_count}</td>
+			<td>{$school_faculty->total_cost|emptyPrice}</td>
+			<td class="approved">{$school_faculty->approved_cost|emptyPrice}</td>
+			<td>{$school_faculty->total_hr|emptyNumber}</td>
+			<td class="approved">{$school_faculty->approved_hr|emptyNumber}</td>
+			<td class="actions">
+				<div class="actions-container">
+					<a class="more" href="{plink Homepage:faculty, $faculty_id}"></a>
+					<div class="clearer"></div>
+				</div>
+			</td>
+		</tr>
+	{/foreach}
+
+		<tr class="total">
+			<td>Spolu</td>
+			<td>{$total_data->project_count}</td>
+			<td>{$total_data->total_cost|emptyPrice}</td>
+			<td>{$total_data->approved_cost|emptyPrice}</td>
+			<td>{$total_data->total_hr|emptyNumber}</td>
+			<td>{$total_data->approved_hr|emptyNumber}</td>		
+			<td></td>
+		</tr>
+		
+	</table>
+</div>	
+	
+<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" class="bottom_menu">
+	<a class="design" href="{link Homepage:dateRange}">Zmeniť zobrazené obdobie</a>
+	<a class="design" href="{link Projects:default}">Zobraziť všetky projekty</a>
+</div>

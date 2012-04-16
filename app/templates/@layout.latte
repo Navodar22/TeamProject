@@ -1,0 +1,111 @@
+{**
+ * My Application layout template.
+ *
+ * @copyright  Copyright (c) 2010 John Doe
+ * @package    MyApplication
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<meta name="description" content="Nette Framework web application skeleton">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+
+	<title>{$title}</title>
+
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/jquery-ui-1.8.18.custom.css" type="text/css">
+	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css" type="text/css">
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/jquery-ui-1.8.18.custom.min.js"></script>
+	{block head}{/block}
+</head>
+
+<body>	
+	<div class="envelope">
+	  <div class="header">
+		<div class="user-info">
+			<a href="http://www.stuba.sk" class="feilogo"></a>
+			<a class="logout" href="{link sign:out}" title="Odhlásiť"></a>
+			<div class="f_right"><span class="bold">Prihlásený: </span><span class="c-green bold">{$user->name} | {$user->role} </span></div>
+			<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+			<div class="clearer"></div>
+		</div>
+		<div class="header-content">
+                        <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Homepage:default}">Úvod</a>
+			<a href="{plink Projects:myProjects}">Moje projekty</a>
+			<a href="{plink Projects:add}">Pridať projekt</a>
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Faculties:default}">Fakulty</a>
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Institutes:default}">Ústavy</a>
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Statistics:default}">Štatistiky</a>
+                        <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Settings:default}">Nastavenia</a>
+			
+			<div n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" class="date-range">
+				<a href="{link Homepage:dateRange}">Zobrazované obdobie: </a>
+				{if !empty($dateRange)}
+					<span class="c-green">{$dateRange->from|date: 'd.m.y'} - {$dateRange->to|date: 'd.m.y'}</span>
+				{else}
+					<span class="c-green">Všetko</span>
+				{/if}
+			</div>
+			<div class="clearer"></div>
+		</div><!-- header-content -->
+        
+	
+	</div><!-- header -->
+
+	<div  class="content">
+		<ul  class="breadcrumb">
+			{block #breadcrumb}{/block}
+		</ul>
+                
+		{include #content}
+	</div> <!-- content -->
+	
+	<div class="footer">
+		Created by FEI STU
+	</div>
+		
+    </div> <!-- envelope -->
+	
+	
+	<script>
+	$(function() {
+		$(".datepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true
+		});
+		$( ".datepicker").datepicker( "option", "dateFormat", 'dd.mm.yy' );
+		{ifset $project_dates} 
+			$('.datepicker[name=start]').datepicker("setDate", {$project_dates['start']} );
+			$('.datepicker[name=end]').datepicker("setDate", {$project_dates['end']} );
+		{else}
+			
+		{/ifset}
+			
+		{ifset $date_range_data} 
+			$('.datepicker[name=from]').datepicker("setDate", {$date_range_data['from']} );
+			$('.datepicker[name=to]').datepicker("setDate", {$date_range_data['to']} );
+		{else}
+			$('.datepicker[name=to]').datepicker("setDate", 'm.d.y');
+		{/ifset}
+		$(".flash").delay(3000).fadeOut(2000);
+		
+
+		$(".design").button();
+
+	});
+	</script>
+</body>
+</html>
+
