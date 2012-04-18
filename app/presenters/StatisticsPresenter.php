@@ -7,6 +7,8 @@
  */
 class StatisticsPresenter extends BaseLPresenter
 {
+         
+    
 	public $colors = array(
 		'#305abc',	
 		'#c3000e',	
@@ -138,6 +140,41 @@ class StatisticsPresenter extends BaseLPresenter
 		
 		$this->template->school_data = $result;
 		$this->template->total_data = $total_data;
-			$this->template->colors = $this->colors;
+		$this->template->colors = $this->colors;
+		
 		}
+		
+                
+	public function createComponentDataGridProjects() {
+
+		if(empty($this->dateRange)) {
+			$source = $this->db->table('project');
+		} else {
+			$source = $this->db->table('project')
+					->where('project.start >= ?', $this->dateRange->from)
+					->where('project.end <= ?', $this->dateRange->to);
+		}
+
+		if($source->count('*') <= 0) {
+			
+			$dg = new DataGrid();
+			$dg->setDataSource($source);
+
+			$dg->template->empty = true;
+			return $dg;
+		}
+		
+        $dg = new DataGrid();
+        $dg->setDataSource($source);
+	
+       
+        $dg->addColumn('id', 'No.')->setStyle('width: 50px');
+        $dg->addColumn('name', 'Name')->setStyle('width: 50px');
+        $dg->addColumn('start', 'Začiatok')->setStyle('width: 50px');    
+        $dg->addColumn('end', 'Koniec')->setStyle('width: 50px');    
+	
+		
+	return $dg;
+	}
+	
 }

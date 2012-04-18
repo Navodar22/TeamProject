@@ -75,8 +75,7 @@
 {block content}
 <h2>Štatistiky</h2>
 <a class="design" href="{link Statistics:default}">Štatistiky</a>
-<a class="design" href="{link Statistics:facultystat}">Štatistiky fakúlt</a>
-<script>
+<a class="design" href="{link Statistics:facultystat}">Štatistiky projektov</a><script>
 	chartData_faculties_projects = [];
 	{foreach $school_data as $faculty_id => $school_faculty}
 		chartData_faculties_projects.push([{$school_faculty['name']}, {$school_faculty->project_count}]);
@@ -167,4 +166,9 @@
 	</div>	
 </div>
 <div class="clearer"></div>
+
+<div class="overview">
+	{control dataGridProjects}
+</div>
+
 </div>
