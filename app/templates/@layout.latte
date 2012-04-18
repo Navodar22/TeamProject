@@ -36,19 +36,20 @@
 		<div class="user-info">
 			<a href="http://www.stuba.sk" class="feilogo"></a>
 			<a class="logout" href="{link sign:out}" title="Odhlásiť"></a>
-			<div class="f_right"><span class="bold">Prihlásený: </span><span class="c-green bold">{$user->name} | {$user->role}</span></div>
+			<div class="f_right"><span class="bold">Prihlásený: </span><span class="c-green bold">{$user->name} | {$user->role} </span></div>
 			<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 			<div class="clearer"></div>
 		</div>
 		<div class="header-content">
-			<a href="{plink Homepage:default}">Úvod</a>
+                        <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Homepage:default}">Úvod</a>
 			<a href="{plink Projects:myProjects}">Moje projekty</a>
 			<a href="{plink Projects:add}">Pridať projekt</a>
-			<a href="{plink Faculties:default}">Fakulty</a>
-			<a href="{plink Institutes:default}">Ústavy</a>
-			<a href="{plink Statistics:default}">Štatistiky</a>	  
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Faculties:default}">Fakulty</a>
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Institutes:default}">Ústavy</a>
+			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Statistics:default}">Štatistiky</a>
+                        <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink Settings:default}">Nastavenia</a>
 			
-			<div class="date-range">
+			<div n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" class="date-range">
 				<a href="{link Homepage:dateRange}">Zobrazované obdobie: </a>
 				{if !empty($dateRange)}
 					<span class="c-green">{$dateRange->from|date: 'd.m.y'} - {$dateRange->to|date: 'd.m.y'}</span>
@@ -62,10 +63,11 @@
 	
 	</div><!-- header -->
 
-	<div class="content">
-		<ul class="breadcrumb">
+	<div  class="content">
+		<ul  class="breadcrumb">
 			{block #breadcrumb}{/block}
 		</ul>
+                
 		{include #content}
 	</div> <!-- content -->
 	

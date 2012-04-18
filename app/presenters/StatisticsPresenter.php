@@ -35,28 +35,38 @@ class StatisticsPresenter extends BaseLPresenter
 		'#8985e8',
 	);
 	
-	
+	private $user;
 	
 	public function renderDefault() {
-		$faculties = $this->db->table('faculty');
-		$this->template->faculties = $faculties;
+                $this->user = $this->getUser()->getIdentity();
+                
+                if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
+               
+                    $faculties = $this->db->table('faculty');
+                    $this->template->faculties = $faculties;
+
+                    $school = array();
+                    foreach($faculties as $faculty) {
+                            $school[$faculty->id]['money'] = 0;
+                            $school[$faculty->id]['students'] = 0;
+                            $school[$faculty->id]['acronym'] = $faculty->acronym;
+                            foreach($faculty->related('institute') as $institute) {
+                                    $school[$faculty->id]['money'] += $institute->money;
+                                    $school[$faculty->id]['students'] += $institute->students;
+                            }
+                    }
+
+                    rsort($school);
+
+                    $this->template->school = $school;
+                    $this->template->colors = $this->colors;
+                    $this->template->backlink = $this->application->storeRequest();
+                    
+                }else{
+                    $this->redirect('Homepage:');
+                }
+            
 		
-		$school = array();
-		foreach($faculties as $faculty) {
-			$school[$faculty->id]['money'] = 0;
-			$school[$faculty->id]['students'] = 0;
-			$school[$faculty->id]['acronym'] = $faculty->acronym;
-			foreach($faculty->related('institute') as $institute) {
-				$school[$faculty->id]['money'] += $institute->money;
-				$school[$faculty->id]['students'] += $institute->students;
-			}
-		}
-		
-		rsort($school);
-		
-		$this->template->school = $school;
-		$this->template->colors = $this->colors;
-		$this->template->backlink = $this->application->storeRequest();
 	}
 	
 	

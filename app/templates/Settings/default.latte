@@ -1,0 +1,30 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li class="actual"><a href="{link Settings:default}">Nastavenia</a></li>
+{/block}
+
+{block content}
+<h2>Nastavenia</h2>
+
+<div class="overview">
+	<table>
+		<tr>
+			<th>Financie</th>
+			<th>Študenti</th>
+			<th>Akcia</th>
+		</tr>
+
+		{foreach $schools as $school}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td>{$school->money}</td>
+			<td>{$school->students}</td>
+			<td class="actions">
+				<div class="actions-container">
+                                    <a class="more" href="{plink Settings:edit, $school->id}"></a>
+				</div>
+			</td>
+		</tr>
+		{/foreach}
+	</table>
+</div>

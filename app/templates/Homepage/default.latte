@@ -4,9 +4,9 @@
 
 {block #content}
 
-<h2>Rozpočtový plán STU / celkový prehľad</h2>
+<h2  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" >Rozpočtový plán STU / celkový prehľad</h2>
 
-<div class="overview">
+<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]"  class="overview">
 	<table>
 		<tr>
 			<th>Fakulta</th>
@@ -48,7 +48,7 @@
 	</table>
 </div>	
 	
-<div class="bottom_menu">
+<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" class="bottom_menu">
 	<a class="design" href="{link Homepage:dateRange}">Zmeniť zobrazené obdobie</a>
 	<a class="design" href="{link Projects:default}">Zobraziť všetky projekty</a>
 </div>

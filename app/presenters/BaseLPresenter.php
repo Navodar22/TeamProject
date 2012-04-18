@@ -9,7 +9,7 @@ abstract class BaseLPresenter extends BasePresenter
 {
 	
 	public $dateRange;
-	
+	private $user;
 	
 	
     public function startup() {
@@ -18,8 +18,9 @@ abstract class BaseLPresenter extends BasePresenter
 		if(!$this->getUser()->isLoggedIn()) {
 			$this->redirect('Sign:in');
 		} else {
-			$this->template->user = $this->getUser()->getIdentity();
+			$this->template->user = $this->user = $this->getUser()->getIdentity();
 			
+                        
 			$this->dateRange = $this->getDateRange();
 			$this->template->dateRange = $this->dateRange;
 			

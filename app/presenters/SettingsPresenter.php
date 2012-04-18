@@ -6,10 +6,10 @@
  * @author     Samuel Kelemen
  * @package    Petri net alocation system
  */
-class FacultiesPresenter extends BaseLPresenter
+class SettingsPresenter extends BaseLPresenter
 {
 	/** @var database object */
-	public $faculty;
+	public $settings;
 	private $user;
 	
 	
@@ -20,16 +20,17 @@ class FacultiesPresenter extends BaseLPresenter
 	 */
 	public function renderDefault()
 	{
-                $this->user = $this->getUser()->getIdentity();
+            $this->user = $this->getUser()->getIdentity();
                 
-                if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
-                    
-                    $this->template->faculties = $this->db->table('faculty');
-                
-                    
-                }else{
-                    $this->redirect('Homepage:');
-                }
+            if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
+
+                $this->template->schools = $this->db->table('school');
+
+
+            }else{
+                $this->redirect('Homepage:');
+            }
+		
 	} 
 	
 	
@@ -42,14 +43,14 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of editing faculty
 	 */
 	public function actionEdit($id) {
-		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();	
+		$this->settings = $this->db->table('school')->where('id', $id)->fetch();	
 		
-		if(!$this->faculty) {
+		if(!$this->settings) {
 			throw new NBadRequestException;
 		}
 		
-		$this['saveForm']->setDefaults($this->faculty);
-		$this->template->faculty = $this->faculty;
+		$this['saveForm']->setDefaults($this->settings);
+		$this->template->setting = $this->settings;
 	}
 	
 	
@@ -62,9 +63,9 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of selected faculty
 	 */
 	public function actionDelete($id) {
-		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();		
+		$this->settings = $this->db->table('faculty')->where('id', $id)->fetch();		
 		
-		if(!$this->faculty) {
+		if(!$this->settings) {
 			throw new NBadRequestException;
 		}
 		
@@ -121,12 +122,12 @@ class FacultiesPresenter extends BaseLPresenter
 		$form = new NAppForm();
 		
 		$form->addGroup();
-		$form->addText('name', 'Názov fakulty')
-				->addRule(NForm::FILLED, 'Musíte zadať názov fakulty.')
+		$form->addText('money', 'Financie')
+				->addRule(NForm::FILLED, 'Musíte zadať financie.')
 				->getControlPrototype()
 					->class('w350');
-		$form->addText('acronym', 'Skratka fakulty')
-				->addRule(NForm::FILLED, 'Musíte zadať skratku fakulty.');
+		$form->addText('students', 'Počet študentov')
+				->addRule(NForm::FILLED, 'Musíte zadať počet študentov.');
 		
 		$form->setCurrentGroup(NULL);
 		$form->addSubmit('process', 'Ulož')
@@ -154,12 +155,12 @@ class FacultiesPresenter extends BaseLPresenter
 		if($form['process']->isSubmittedBy()) {
 			$values = $form->values;
 			try {
-				if($this->faculty) {
-					$this->db->table('faculty')->where('id', $this->faculty->id)->update($values);
-					$this->flashMessage('Fakulta bola úspešne zmenená.', 'ok');
+				if($this->settings) {
+					$this->db->table('school')->where('id', $this->settings->id)->update($values);
+					$this->flashMessage('Zdroje boli úspešne zmenené.', 'ok');
 				} else {
 					$this->db->table('faculty')->insert($values);
-					$this->flashMessage('Fakulta bola úspešne pridaná.', 'ok');
+					$this->flashMessage('Zdroje boli úspešne pridané .', 'ok');
 				}
 			} catch (PDOException $e) {
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');

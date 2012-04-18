@@ -19,7 +19,7 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	public $backlink;
-	
+	private $user;
 	
 	
 	
@@ -29,7 +29,16 @@ class InstitutesPresenter extends BaseLPresenter
 	public function startup() {
 		parent::startup();
 
-		$this->faculties = $this->getFaculties();
+                $this->user = $this->getUser()->getIdentity();
+                
+                if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
+               
+                    $this->faculties = $this->getFaculties();
+                    
+                }else{
+                    $this->redirect('Homepage:');
+                }
+                
 	}
 	
 	

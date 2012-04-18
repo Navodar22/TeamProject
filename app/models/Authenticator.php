@@ -10,14 +10,37 @@ class Authenticator extends NObject implements IAuthenticator
 {
 	/** @var TableSelection */
 	private $users = array(
+                'student' => array(
+			'username' => 'student',
+			'password' => 'student',
+                        'privileges' => '0000010000'
+		),
 		'normal' => array(
 			'username' => 'normal',
-			'password' => 'normal'
+			'password' => 'normal',
+                        'privileges' => '0000100000'
 		),
 		'admin' => array(
 			'username' => 'admin',
 			'password' => 'admin',
+                        'privileges' => '0001000000'
+		),
+                'katedra' => array(
+			'username' => 'katedra',
+			'password' => 'katedra',
+                        'privileges' => '0010000000'
+		),
+                'dean' => array(
+			'username' => 'dean',
+			'password' => 'dean',
+                        'privileges' => '0100000000'
+		),
+                'board' => array(
+			'username' => 'board',
+			'password' => 'board',
+                        'privileges' => '1000000000'
 		)
+                
 	);
 	
 	
@@ -54,11 +77,14 @@ class Authenticator extends NObject implements IAuthenticator
 		list($username, $password) = $credentials;
         
 		$auth_user = false;
+                
+                
 		foreach($this->users as $user) {
 			if(($user['username'] == $username) && ($user['password'] == $password)) {
 				$auth_user = array(
 					'name' => $user['username'],
-					'role' => $user['username']
+					'role' => $user['username'],
+                                        'privileges' => $user['privileges']
 				);
 			}
 		}
