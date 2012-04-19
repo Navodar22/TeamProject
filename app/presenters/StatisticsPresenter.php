@@ -148,15 +148,16 @@ class StatisticsPresenter extends BaseLPresenter
 	public function createComponentDataGridProjects() {
 	    $today = date("Y-m-d");
 		if(empty($this->dateRange)) {
-			$source = $this->db->table('project')->where('end < ?',$today );
+			$source = $this->db->table('project')->where('end < ?',$today )->order('end');
 		}
 		else {
-			$source = $this->db->table('project')->where('end < ?',$today );
+			$source = $this->db->table('project')->where('end < ?',$today )->order('end');
 		}
 
 		if($source->count('*') <= 0) {
 			
 			$dg = new DataGrid();
+			
 			$dg->setDataSource($source);
 	
 			$dg->template->empty = true;
@@ -168,13 +169,13 @@ class StatisticsPresenter extends BaseLPresenter
         $dg = new DataGrid();
 		
         $dg->setDataSource($source);
-		//$dg['end']->addDefaultSorting('asc');
-        
+	//	$dg['id']->addDefaultSorting('asc');
+       // $dg['end']->addDefaultSorting('asc');
         $dg->addColumn('id', 'No.')->setStyle('width: 50px');
         $dg->addColumn('name', 'Name')->setStyle('width: 50px');
-        $dg->addDateColumn('start', 'Začiatok','%d.%m.%Y')->setStyle('width: 50px');    
+        $dg->addDateColumn('start', 'Začiatok','%d.%m.%Y')->setStyle('width: 50px');  
+		
         $dg->addDateColumn('end', 'Koniec','%d.%m.%Y')->setStyle('width: 50px');
-
 		
 	return $dg;
 	}
