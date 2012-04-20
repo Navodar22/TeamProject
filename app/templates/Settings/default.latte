@@ -5,13 +5,13 @@
 {/block}
 
 {block content}
-<h2>Nastavenia</h2>
+<h2  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" >Nastavenia</h2>
 
 <div class="overview">
 	<table>
 		<tr>
-			<th>Financie</th>
-			<th>Študenti</th>
+			<th>Finančné zdroje</th>
+			<th>Počet študentov</th>
 			<th>Akcia</th>
 		</tr>
 
@@ -26,5 +26,35 @@
 			</td>
 		</tr>
 		{/foreach}
+	</table>
+</div>
+<br />
+<br />
+
+<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]"  class="overview">
+	<table>
+		<tr>
+			<th>Fakulta</th>
+			<th>Finančné zdroje</th>
+			<th>Počet študentov</th>
+			<th>Akcie</th>
+		</tr>
+
+	{foreach $school_data as $faculty_id => $school_faculty}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td class="name" title="{$school_faculty['name']}">{$school_faculty['acronym']}</td>
+                        <td>{$school_faculty->total_money|emptyPrice}</td>
+			<td>{$school_faculty->total_students}</td>
+			
+			<td class="actions">
+				<div class="actions-container">
+					<a class="more" href="{plink Settings:faculty, $faculty_id}"></a>
+					<div class="clearer"></div>
+				</div>
+			</td>
+		</tr>
+	{/foreach}
+
+
 	</table>
 </div>

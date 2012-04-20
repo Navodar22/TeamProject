@@ -128,7 +128,7 @@ class InstitutesPresenter extends BaseLPresenter
 		}
 		
 		if($result) {
-			$this->calculateMoney();
+			//$this->calculateMoney();
 			$this->flashMessage('Ústav bol odstránený', 'ok');
 		} else {
 			$this->flashMessage('Ústav sa nepodarilo odstrániť', 'error');
@@ -156,7 +156,7 @@ class InstitutesPresenter extends BaseLPresenter
 				->addRule(NForm::FILLED, 'Musíte zadať skratku ústavu.');
 		
 		$form->addSelect('faculty_id', 'Zaradiť pod katedru', $this->faculties);
-		$form->addText('students', 'Počet študentov');
+		//$form->addText('students', 'Počet študentov');
 		
 		$form->setCurrentGroup(NULL);
 		$form->addSubmit('process', 'Ulož')
@@ -189,7 +189,7 @@ class InstitutesPresenter extends BaseLPresenter
 				} else {
 					$this->db->table('institute')->insert($values);		
 				}	
-				$this->calculateMoney();
+				//$this->calculateMoney();
 				$this->flashMessage('Ústav bol uložený.', 'ok');
 			} catch (PDOException $e) {
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');

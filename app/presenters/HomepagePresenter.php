@@ -24,7 +24,8 @@ class HomepagePresenter extends BaseLPresenter
 	 */
 	public function renderDefault()	{		
 		$faculties = $this->db->table('faculty');
-		
+		$result = null;
+
 		if(empty($this->dateRange)) {
 			foreach($faculties as $faculty) {
 				$result[$faculty->id] = $this->db->table('project_institute')->where('institute.faculty.id', $faculty->id)->select('

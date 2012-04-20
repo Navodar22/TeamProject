@@ -58,6 +58,27 @@ abstract class BaseLPresenter extends BasePresenter
 			$institute->update(array('money' => $institute_money));
 		}	
 	}
+
+        public function checkMoney( $id, $money ){
+            $total_money = 0;
+            $school = $this->db->table('school')->where('id', '1')->fetch();
+
+            foreach($this->db->table('institute') as $institute) {
+                    if( $institute->id != $id ){
+                        $total_money += $institute->money;
+                    }
+                    
+            }
+
+            $total_money += $money;
+
+            if( $total_money < $school->money ){
+                return true;
+            }
+
+            return false;
+            
+        }
 	
 	
 	

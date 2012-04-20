@@ -101,7 +101,7 @@ class FacultiesPresenter extends BaseLPresenter
 		
 		if($result) {
 			//recalculate system money
-			$this->calculateMoney();
+			//$this->calculateMoney();
 			$this->flashMessage('Fakulta bola odstránená', 'ok');
 		} else {
 			$this->flashMessage('Fakultu sa nepodarilo odstrániť', 'error');
