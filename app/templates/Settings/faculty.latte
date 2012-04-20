@@ -1,0 +1,36 @@
+{block #breadcrumb}
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li class="actual">{$faculty['name']}</li>
+{/block}
+
+{block #content}
+
+<h2>{$faculty['name']}</h2>
+
+<div class="overview">
+	<table>
+		<tr style="background: gray; color: white">
+                        <th>Ústav</th>
+			<th>Finančné zdroje</th>
+			<th>Počet študentov</th>
+			<th>Akcia</th>
+		</tr>
+
+	{foreach $institutes as $institute_id => $institute}
+		<tr class="{$iterator->odd ? odd : even}">
+			<td class="name" title="{$institute['name']}">{$institute['acronym']}</td>
+			<td>{$institute->money|emptyPrice}</td>
+                        <td>{$institute->students}</td>
+			<td class="actions">
+				<div class="actions-container">
+					<a class="more" href="{plink 'Settings:editInstitute', $institute_id}">
+				</a>
+				<div class="clearer"></div>
+			</td>
+		</tr>
+	{/foreach}
+
+
+	</table>
+</div>
