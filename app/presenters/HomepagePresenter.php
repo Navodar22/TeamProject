@@ -25,21 +25,28 @@ class HomepagePresenter extends BaseLPresenter
 	public function renderDefault()	{		
 		$faculties = $this->db->table('faculty');
 		$result = null;
-
-		if(empty($this->dateRange)) {
+    $school_total_money = 0;
+		if(empty($this->dateRange)) {		  
 			foreach($faculties as $faculty) {
+        $faculty_money = 0;
 				$result[$faculty->id] = $this->db->table('project_institute')->where('institute.faculty.id', $faculty->id)->select('
 					count(DISTINCT project_id) AS project_count,
 					sum(project_institute.cost) AS total_cost,
 					sum(project_institute.hr) AS total_hr,
 					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
-					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr
-					')->fetch();
+					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr					
+          ')->fetch();
+        foreach ($faculty->related('institute') as $institute)
+          $faculty_money += $institute->money;
+            
+        $result[$faculty->id]['free_money'] = $faculty_money - $result[$faculty->id]['approved_cost'];  
 				$result[$faculty->id]['name'] = $faculty->name;
 				$result[$faculty->id]['acronym'] = $faculty->acronym;
+				$school_total_money += $faculty_money;
 			}	
 		} else {
 			foreach($faculties as $faculty) {
+			  $faculty_money = 0;
 				$result[$faculty->id] = $this->db->table('project_institute')
 						->where('institute.faculty.id', $faculty->id)
 						->where('start >= ?', $this->dateRange->from)
@@ -50,12 +57,14 @@ class HomepagePresenter extends BaseLPresenter
 							sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
 							sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr
 						')->fetch();
-				
+				foreach ($faculty->related('institute') as $institute)
+          $faculty_money += $institute->money;            
+        $result[$faculty->id]['free_money'] = $faculty_money - $result[$faculty->id]['approved_cost'];     
 				$result[$faculty->id]['name'] = $faculty->name;
 				$result[$faculty->id]['acronym'] = $faculty->acronym;
+        $school_total_money += $faculty_money;
 			}	
 		}
-		
 		if(empty($this->dateRange)) {
 			$db_total_data = $this->db->table('project');
 		} else {
@@ -71,14 +80,14 @@ class HomepagePresenter extends BaseLPresenter
 						sum(approved_cost) AS approved_cost,
 						sum(approved_hr) AS approved_hr
 					')->fetch();
-		
+    $total_data['free_money'] = $school_total_money - $total_data['approved_cost'];
+
+
 		$this->template->school_data = $result;
 		$this->template->total_data = $total_data;
 	} 
 	
-	
-	
-	
+			
 	/**
 	 * Faculty render function.
 	 * 
@@ -86,6 +95,7 @@ class HomepagePresenter extends BaseLPresenter
 	 */
 	public function actionFaculty($id) {
 		$db_faculty = $this->db->table('faculty')->where('id', $id)->fetch();
+		$faculty_money = 0;
 		
 		if(empty($this->dateRange)) {
 			$faculty_date = $this->db->table('project_institute')->where('institute.faculty.id', $db_faculty->id);
@@ -102,16 +112,18 @@ class HomepagePresenter extends BaseLPresenter
 				sum(project_institute.hr) AS total_hr,
 				sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
 				sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.hr, 0)) AS approved_hr
-				')->fetch();
+        ')->fetch();
 		$faculty['name'] = $db_faculty->name;
 		$faculty['acronym'] = $db_faculty->acronym;
 		$faculty['id'] = $db_faculty->id;
-			
-		
+		foreach ($db_faculty->related('institute') as $institute)
+      $faculty_money += $institute->money;
+    $faculty['free_money'] = $faculty_money - $faculty['approved_cost'];
+    
 		if(empty($this->dateRange)) {
 			foreach($db_faculty->related('institute') as $institute) {
 			$institutes[$institute->id] = $this->db->table('project_institute')->where('institute.id', $institute->id)->select('
-					count(DISTINCT project_id) AS project_count,
+          count(DISTINCT project_id) AS project_count,
 					sum(project_institute.cost) AS total_cost,
 					sum(project_institute.hr) AS total_hr,
 					sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.cost, 0)) AS approved_cost,
@@ -123,6 +135,7 @@ class HomepagePresenter extends BaseLPresenter
 					')->fetch();
 				$institutes[$institute->id]['name'] = $institute->name;
 				$institutes[$institute->id]['acronym'] = $institute->acronym;
+				$institutes[$institute->id]['free_money'] = $institute->money - $institutes[$institute->id]['approved_cost'];
 			}		
 		} else {
 			foreach($db_faculty->related('institute') as $institute) {
@@ -143,6 +156,7 @@ class HomepagePresenter extends BaseLPresenter
 					')->fetch();
 				$institutes[$institute->id]['name'] = $institute->name;
 				$institutes[$institute->id]['acronym'] = $institute->acronym;
+				$institutes[$institute->id]['free_money'] = $institute->money - $institutes[$institute->id]['approved_cost'];
 			}
 		}
 
@@ -186,10 +200,11 @@ class HomepagePresenter extends BaseLPresenter
 				max(project_institute.end) AS end,
 				min(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.start ELSE NULL END) AS approved_start,
 				max(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.end ELSE NULL END) AS approved_end
-				')->fetch();
+        ')->fetch();
 		$institute['id'] = $db_institute->id;
 		$institute['name'] = $db_institute->name;
 		$institute['acronym'] = $db_institute->acronym;
+		$institute['free_money'] = $db_institute->money - $institute['approved_cost'];
 		
 		$this->template->institute = $institute;
 		$this->template->faculty = $db_institute->faculty;
