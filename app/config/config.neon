@@ -43,9 +43,9 @@ development < common:
         database:
                 driver: mysql
                 host: localhost
-                database: timak
+                database: masus
                 username: root
-                password: 
+                password: root
                 profiler: TRUE
                 charset: utf8
 

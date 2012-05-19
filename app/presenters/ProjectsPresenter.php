@@ -355,15 +355,18 @@ class ProjectsPresenter extends BaseLPresenter
 		$form->addSelect('institute_id', 'Ústav', $this->free_institutes)
 				->getControlPrototype()->class('w250');
 		
-		$form->addText('cost', 'Celková cena projektu')
+		$form->addText('cost', 'Finančné zdroje')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
-				->addRule(NForm::FLOAT, 'Cena projektu musí byť číslo');
+				->addRule(NForm::FLOAT, 'Finančné zdroje musia byť číslo')
+				->addRule(NForm::RANGE, 'Finančné zdroje musia byť kladné číslo', array(0, 9999999999));
 		$form->addText('participation', 'Spoluúčasť na projekte')
 				->addRule(NForm::FILLED, 'Musíte zadať spoluúčasť na projekte')
-				->addRule(NForm::FLOAT, 'Spoluúčasť na projekte musí byť číslo');
-		$form->addText('hr', 'Celková cena hr')
-				->addRule(NForm::FILLED, 'Musíte zadať hr projektu')
-				->addRule(NForm::INTEGER, 'HR projektu musí byť číslo');
+				->addRule(NForm::FLOAT, 'Spoluúčasť na projekte musí byť číslo')
+				->addRule(NForm::RANGE, 'Spoluúčasť na projekte musí byť kladné číslo', array(0, 9999999999));
+		$form->addText('hr', 'Ľudské zdroje')
+				->addRule(NForm::FILLED, 'Musíte zadať ľudské zdroje projektu')
+				->addRule(NForm::INTEGER, 'Ľudské zdroje projektu musí byť číslo')
+				->addRule(NForm::RANGE, 'Ľudské zdroje zapojené do projektu musia byť kladné číslo', array(0, 9999999999));
 		$form->addText('fonds', 'Fondy')
 				->getControlPrototype()->class('w250');
 		$form->addText('start', 'Začiatok projektu')
@@ -408,6 +411,19 @@ class ProjectsPresenter extends BaseLPresenter
 				//make date values as objects
 				$values['start'] = new DateTime($values['start']);
 				$values['end'] = new DateTime($values['end']);
+				
+				//check financial resources
+				$institute = $this->db->table('institute')->where('id', $values['institute_id'])->fetch();
+				$project_institute = $this->db->table('project_institute')
+												->where('institute_id', $values['institute_id'])
+												->select('SUM(participation) AS spend_money')
+												->fetch();
+				$free_money = $institute['money'] - $project_institute['spend_money'];
+				
+				if($free_money < $values['participation']) {
+					$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
+					$error = true;
+				}
 
 				//check dates
 				if($values['start'] >= $values['end']) {
@@ -417,7 +433,7 @@ class ProjectsPresenter extends BaseLPresenter
 				
 				//chect participation and cost value -> participation must by only part of total cost of project
 				if($values['cost'] < $values['participation']) {
-					$this->flashMessage('Participácia na projekte nemôže byť menšia ako jeho celková cena.', 'error');
+					$this->flashMessage('Participácia na projekte nemôže byť väčšia ako jeho celková cena.', 'error');
 					$error = true;
 				}
 				
@@ -455,16 +471,20 @@ class ProjectsPresenter extends BaseLPresenter
 		$form->addGroup();
 		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TOTO prev todo
 		
-		$form->addText('hr', 'Celková cena hr')
-				->addRule(NForm::FILLED, 'Musíte zadať hr projektu')
-				->addRule(NForm::INTEGER, 'HR projektu musí byť číslo');
-		$form->addText('cost', 'Celková cena projektu')
+		$form->addText('cost', 'Finančné zdroje')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
-				->addRule(NForm::FLOAT, 'Cena projektu musí byť číslo');
+				->addRule(NForm::FLOAT, 'Finančné zdroje musia byť číslo')
+				->addRule(NForm::RANGE, 'Finančné zdroje musia byť kladné číslo', array(0, 9999999999));
 		$form->addText('participation', 'Spoluúčasť na projekte')
 				->addRule(NForm::FILLED, 'Musíte zadať spoluúčasť na projekte')
-				->addRule(NForm::FLOAT, 'Spoluúčasť na projekte musí byť číslo');
-		$form->addText('fonds', 'Fondy');		
+				->addRule(NForm::FLOAT, 'Spoluúčasť na projekte musí byť číslo')
+				->addRule(NForm::RANGE, 'Spoluúčasť na projekte musí byť kladné číslo', array(0, 9999999999));
+		$form->addText('hr', 'Ľudské zdroje')
+				->addRule(NForm::FILLED, 'Musíte zadať ľudské zdroje projektu')
+				->addRule(NForm::INTEGER, 'Ľudské zdroje projektu musí byť číslo')
+				->addRule(NForm::RANGE, 'Ľudské zdroje zapojené do projektu musia byť kladné číslo', array(0, 9999999999));
+		$form->addText('fonds', 'Fondy')
+				->getControlPrototype()->class('w250');
 		$form->addText('start', 'Začiatok projektu')
 				->addRule(NForm::FILLED, 'Musíte vyplniť začiatok projektu.')
 				->getControlPrototype()->class('datepicker');
@@ -507,6 +527,19 @@ class ProjectsPresenter extends BaseLPresenter
 				$values['start'] = new DateTime($values['start']);
 				$values['end'] = new DateTime($values['end']);
 
+				//check financial resources
+				$institute = $this->db->table('institute')->where('id', $values['institute_id'])->fetch();
+				$project_institute = $this->db->table('project_institute')
+												->where('institute_id', $values['institute_id'])
+												->select('SUM(participation) AS spend_money')
+												->fetch();
+				$free_money = $institute['money'] - $project_institute['spend_money'];
+				
+				if($free_money < $values['participation']) {
+					$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
+					$error = true;
+				}
+				
 				//check dates
 				if($values['start'] >= $values['end']) {
 					$this->flashMessage('Projekt nemôže mať ukončenie pred svojím začiatkom.', 'error');
@@ -515,7 +548,7 @@ class ProjectsPresenter extends BaseLPresenter
 				
 				//chect participation and cost value -> participation must by only part of total cost of project
 				if($values['cost'] < $values['participation']) {
-					$this->flashMessage('Participácia na projekte nemôže byť menšia ako jeho celková cena.', 'error');
+					$this->flashMessage('Participácia na projekte nemôže byť väčšia ako jeho celková cena.', 'error');
 					$error = true;
 				}
 
@@ -606,8 +639,8 @@ class ProjectsPresenter extends BaseLPresenter
 		
         $dg->addAction('edit', 'Uprav', 'Projects:edit', array('id'));
 
-        $dg->addColumn('id', 'No.')->setIntFilter('project.id')->setStyle('width: 50px');
-        $dg->addColumn('name', 'Name')->setTextFilter('project.name')->setStyle('text-align: left');
+        $dg->addColumn('id', 'ID')->setIntFilter('project.id')->setStyle('width: 50px');
+        $dg->addColumn('name', 'Názov projektu')->setTextFilter('project.name')->setStyle('text-align: left');
 		$dg->addCustomColumn('cost', 'Fin. zdroje')->setIntFilter('project.cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->cost);'));                                                                 																										
 		$dg->addCustomColumn('approved_cost', 'Schválené fin.zdroje')->setIntFilter('project.approved_cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_cost);'));
 		$dg->addCustomColumn('participation', 'Spoluúčasť')->setIntFilter('project.participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->participation);'));
