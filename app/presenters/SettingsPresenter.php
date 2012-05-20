@@ -176,15 +176,17 @@ class SettingsPresenter extends BaseLPresenter
 							$this->db->table('faculty')->insert($values);
 							$this->flashMessage('Zdroje boli úspešne pridané .', 'ok');
 					}
+					
+					$this->redirect('default');	
 				} else {
 					$this->flashMessage('Prekročený rozpočet alebo počet študentov.', 'error');
 				}
 			} catch (PDOException $e) {
 				NDebugger::log($e);
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
+				$this->redirect('default');	
 			}
 		}
-			$this->redirect('default');	
 	}
 
 

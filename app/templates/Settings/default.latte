@@ -17,7 +17,7 @@
 
 		{foreach $schools as $school}
 		<tr class="{$iterator->odd ? odd : even}">
-			<td>{$school->money}</td>
+			<td>{$school->money|zeroPrice}</td>
 			<td>{$school->students}</td>
 			<td class="actions">
 				<div class="actions-container">
