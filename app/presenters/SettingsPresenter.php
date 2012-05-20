@@ -144,6 +144,7 @@ class SettingsPresenter extends BaseLPresenter
 		$form->addSubmit('process', 'Ulož')
 				->getControlPrototype()
 					->class('design');
+                
 		$form->addSubmit('back', 'Naspäť')
 				->setValidationScope(NULL)
 				->getControlPrototype()
