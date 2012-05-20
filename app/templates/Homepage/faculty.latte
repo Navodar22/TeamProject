@@ -14,7 +14,8 @@
 			<th>Ústav</th>
 			<th>Počet projektov</th>
 			<th>Fin.zdroje</th>
-			<th>Schválené fin.zdroje</th>
+			<th>Spoluúčasť</th>
+			<th>Schválená spoluúčasť</th>
 			<th>Voľné fin.zdroje</th>
 			<th>Ľudské zdroje</th>
 			<th>Schválené ľudské zdroje</th>	
@@ -26,8 +27,9 @@
 			<td class="name" title="{$institute['name']}">{$institute['acronym']}</td>
 			<td>{$institute->project_count}</td>
 			<td>{$institute->total_cost|emptyPrice}</td>
-			<td class="approved">{$institute->approved_cost|emptyPrice}</td>
-			<td>{$institute->free_money|emptyPrice}</td>	
+			<td>{$institute->total_participation|emptyPrice}</td>
+			<td class="approved">{$institute->approved_participation|emptyPrice}</td>
+			<td>{$institute->free_money|zeroPrice}</td>	
 			<td>{$institute->total_hr|emptyNumber}</td>
 			<td class="approved">{$institute->approved_hr|emptyNumber}</td>
 			<td class="actions">
@@ -43,8 +45,9 @@
 			<td>Spolu</td>
 			<td>{$faculty->project_count}</td>
 			<td>{$faculty->total_cost|emptyPrice}</td>
-			<td>{$faculty->approved_cost|emptyPrice}</td>
-		  <td>{$faculty->free_money|emptyPrice}</td>
+			<td>{$faculty->total_participation|emptyPrice}</td>
+			<td>{$faculty->approved_participation|emptyPrice}</td>
+			<td>{$faculty->free_money|zeroPrice}</td>
 			<td>{$faculty->total_hr|emptyNumber}</td>
 			<td>{$faculty->approved_hr|emptyNumber}</td>		
 			<td></td>

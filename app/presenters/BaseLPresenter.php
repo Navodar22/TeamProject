@@ -26,7 +26,8 @@ abstract class BaseLPresenter extends BasePresenter
 			
 			$this->template->registerHelper('emptyPrice', callback(new EmptyPrice, 'process'));
 			$this->template->registerHelper('emptyNumber', callback(new EmptyNumber, 'process'));
-			$this->template->registerHelper('emptyDate', callback(new EmptyDate, 'process'));
+			$this->template->registerHelper('emptyDate', callback(new EmptyDate, 'process'));			
+			$this->template->registerHelper('zeroPrice', callback(new ZeroPrice, 'process'));
 		}
 	}
 	
@@ -59,26 +60,28 @@ abstract class BaseLPresenter extends BasePresenter
 		}	
 	}
 
-        public function checkMoney( $id, $money ){
-            $total_money = 0;
-            $school = $this->db->table('school')->where('id', '1')->fetch();
+	
+	
+	
+    public function checkResources($id, $values){
+		$school = $this->db->table('school')->where('id', '1')->fetch();
+		
+		$used_resources = $this->db->table('institute')
+									->where('id <> ?', $id)
+									->select('
+										SUM(money) AS money,
+										SUM(students) AS students
+									')->fetch();
+		
+		$used_resources['money'] += $values['money'];
+		$used_resources['students'] += $values['students'];
 
-            foreach($this->db->table('institute') as $institute) {
-                    if( $institute->id != $id ){
-                        $total_money += $institute->money;
-                    }
-                    
-            }
+		if($used_resources['money'] <= $school['money']  && $used_resources['students'] <= $school['students']) {
+			return true;
+		}
 
-            $total_money += $money;
-
-            if( $total_money < $school->money ){
-                return true;
-            }
-
-            return false;
-            
-        }
+		return false;            
+    }
 	
 	
 	
@@ -99,8 +102,6 @@ abstract class BaseLPresenter extends BasePresenter
 			min(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.start ELSE NULL END) AS approved_start,
 			max(CASE WHEN project_institute.state_id IN (' . implode(',', $this->aStates) . ') THEN project_institute.end ELSE NULL END) AS approved_end
 		')->fetch();
-		
-//		Ndebugger::dump($values);exit;
 		
 		$this->db->table('project')->where('id', $id)->update($values);
 	}
