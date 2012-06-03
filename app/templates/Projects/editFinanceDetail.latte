@@ -5,12 +5,14 @@
 <li>></li>
 <li><a href="{link Projects:edit, $project->id}">{$project->name}</a></li>
 <li>></li>
-<li class="actual">{$institute->name}</li>
+<li><a href="{link Projects:editInsitute, $institute->id}">{$institute->name}</a></li>
+<li>></li>
+<li class="actual">Detailné financovanie</li>
 {/block}
 
 {block content}
-<h2>Úprava ústavu - {$institute->name}</h2>
+<h2>Detailné financovanie projektu ústavom</h2>
 
 <div class="forms">
-	{control editInstituteForm}
+	{control editFinanceDetailForm}
 </div>

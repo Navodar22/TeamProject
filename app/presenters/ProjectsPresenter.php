@@ -22,6 +22,8 @@ class ProjectsPresenter extends BaseLPresenter
 	
 	public $user_id;
 	
+	public $button = FALSE;
+	
 	
 	
 	
@@ -76,7 +78,7 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		//send values to template
 		$this->template->total_values = $this->calculateTotalValues();		
-		$this->template->project = $this->project;
+		$this->template->project = $this->project;				
 		$this->template->form = $this['editForm'];
 		
 		$participate_faculties = array();
@@ -181,6 +183,33 @@ class ProjectsPresenter extends BaseLPresenter
 	
 	
 	
+	public function actionAddFinanceDetail($id) {
+		$this->project_institute = $this->db->table('project_institute')->where('id', $id)->fetch();
+		
+		if(!$this->project_institute) {
+			throw new NBadRequestException();
+		}
+		
+		$this->template->project = $this->project_institute->project;
+		$this->template->institute = $this->project_institute->institute;
+	}
+	
+	
+	
+	
+	public function actionEditFinanceDetail($id) {
+		$this->project_institute = $this->db->table('project_institute')->where('id', $id)->fetch();
+		
+		if(!$this->project_institute) {
+			throw new NBadRequestException();
+		}
+		
+		$this->template->project = $this->project_institute->project;
+		$this->template->institute = $this->project_institute->institute;
+	}
+	
+	
+	
 	/**
 	 * Add project form
 	 * 
@@ -271,6 +300,8 @@ class ProjectsPresenter extends BaseLPresenter
 		foreach($this->project->related('project_institute') as $project_institute) {
 			$form->addSubmit("edit_$project_institute->id", ' ')
 					->getControlPrototype()->class('more');
+			$form->addSubmit("finance_detail_$project_institute->id", ' ')
+					->getControlPrototype()->class('finance-detail');
 			$form->addSubmit("delete_$project_institute->id", ' ')
 					->getControlPrototype()->class('delete');
 		}
@@ -311,6 +342,11 @@ class ProjectsPresenter extends BaseLPresenter
 				//handlers for edit buttons
 				if($form["edit_$project_institute->id"]->isSubmittedBy()) {
 					$this->redirect('editInstitute', $project_institute->id);
+				}
+				
+				//handlers for money buttons
+				if($form["finance_detail_$project_institute->id"]->isSubmittedBy()) {
+					$this->redirect('editFinanceDetail', $project_institute->id);
 				}
 
 				//handlers for delete buttons
@@ -449,12 +485,12 @@ class ProjectsPresenter extends BaseLPresenter
 				//is form error free ?
 				if(!$error) {
 					$this->db->beginTransaction();
-					$this->db->table('project_institute')->insert($values);
+					$new_project_institute = $this->db->table('project_institute')->insert($values);
 					$this->calculateProjectData($this->project->id);
 					$this->db->commit();
 					
 					$this->flashMessage('Ústav bol pridaný k projektu.', 'ok');
-					$this->redirect('edit', $this->project->id);	
+					$this->redirect('addFinanceDetail', $new_project_institute->id);	
 				}
 			} else { //if submitted by back only redirect
 				$this->redirect('edit', $this->project->id);
@@ -479,6 +515,10 @@ class ProjectsPresenter extends BaseLPresenter
 
 		$form->addGroup();
 		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TOTO prev todo
+		
+		if ($this->button) {
+			$form->addText('test', 'test');
+		}
 		
 		$form->addText('cost', 'Finančné zdroje')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
@@ -505,6 +545,7 @@ class ProjectsPresenter extends BaseLPresenter
 		$form->addSubmit('process', 'Ulož')
 				->getControlPrototype()
 					->class('design');
+		
 		$form->addSubmit('back', 'Návrat')
 				->setValidationScope(NULL)
 				->getControlPrototype()
@@ -584,6 +625,146 @@ class ProjectsPresenter extends BaseLPresenter
 			$this->flashMessage('Dáta ústavu sa nepodarilo zmeniť.', 'error');
 			$this->redirect('edit', $this->project_institute->project->id);
 		}
+	}
+	
+	
+	
+	
+	public function createComponentAddFinanceDetailForm() {	
+		$form = new NAppForm();
+	
+		$startDate = new \DateTime($this->project_institute->start);
+		$endDate = new \DateTime($this->project_institute->end);
+		$startDateYear = $startDate->format('Y');
+		$endDateYear = $endDate->format('Y');
+		$diff = $endDateYear - $startDateYear;
+		
+		$year = (int)$startDateYear;
+		$finance_years = array();
+		
+		while($diff >= 0) {
+			array_push($finance_years, $year);
+			$year++;
+			$diff--;
+		}
+		
+		foreach($finance_years as $finance_year) {
+			$form->addGroup('Rok ' . (string)$finance_year);
+			$form->addContainer($finance_year);
+			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť');
+			$form[$finance_year]->addText('hr', 'Ľudské zdroje');
+		}
+		
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Ulož')
+				->getControlPrototype()
+					->class('design');
+		
+		$form->onSuccess[] = callback($this, 'addFinanceDetailFormSubmitted');
+		
+		return $form;
+	}
+	
+	
+	
+	
+	public function createComponentEditFinanceDetailForm() {	
+		$form = new NAppForm();
+	
+		$startDate = new \DateTime($this->project_institute->start);
+		$endDate = new \DateTime($this->project_institute->end);
+		$startDateYear = $startDate->format('Y');
+		$endDateYear = $endDate->format('Y');
+		$diff = $endDateYear - $startDateYear;
+		
+		$year = (int)$startDateYear;
+		$finance_years = array();
+		
+		while($diff >= 0) {
+			array_push($finance_years, $year);
+			$year++;
+			$diff--;
+		}
+		
+		foreach($finance_years as $finance_year) {
+			$form->addGroup('Rok ' . (string)$finance_year);
+			$form->addContainer($finance_year);
+			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť');
+			$form[$finance_year]->addText('hr', 'Ľudské zdroje');
+		}
+		
+		$form->setCurrentGroup(NULL);
+		$form->addSubmit('process', 'Ulož')
+				->getControlPrototype()
+					->class('design');
+		
+		$form->addSubmit('back', 'Návrat')
+				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
+		
+		$form->onSuccess[] = callback($this, 'editFinanceDetailFormSubmitted');
+		
+		return $form;
+	}
+	
+	
+	
+	
+	public function addFinanceDetailFormSubmitted($form) {
+		$containers = $form->getValues();
+		
+		$firstYearDay = function($year) {
+			return new \DateTime("1.1.$year 01:00:00");
+		};
+		
+		$lastYearDay = function($year) {
+			return new \DateTime("31.12.$year 01:00:00");
+		};
+		
+		$startDateYear = $this->project_institute->start->format('Y');
+		$endDateYear = $this->project_institute->end->format('Y');
+		
+		foreach($containers as $key => $container) {
+			
+			if($key == $startDateYear) {
+				$data = array(
+					'start' => $this->project_institute->start,
+					'end' => $lastYearDay($key),
+					'participation' => $container->participation,
+					'hr' => $container->hr,
+					'project_institute_id' => $this->project_institute->id
+				);
+			} elseif ($key == $endDateYear) {
+				$data = array(
+					'start' => $firstYearDay($key),
+					'end' => $this->project_institute->end,
+					'participation' => $container->participation,
+					'hr' => $container->hr,
+					'project_institute_id' => $this->project_institute->id
+				);
+			} else {				
+				$data = array(
+					'start' => $firstYearDay($key),
+					'end' => $lastYearDay($key),
+					'participation' => $container->participation,
+					'hr' => $container->hr,
+					'project_institute_id' => $this->project_institute->id
+				);
+			}			
+			$this->db->table('project_institute_date')->insert($data);
+		}
+		
+		$this->redirect('edit', $this->project_institute->project->id);
+	}
+	
+	
+	
+	
+	public function editFinanceDetailFormSubmitted($form) {
+		$values = $form->getValues();
+		
+		$this->redirect('edit', $this->project_institute->project->id);
 	}
 
 	

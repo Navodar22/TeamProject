@@ -108,3 +108,18 @@ create table school(
 	money float,
 	students int
 );
+
+
+
+
+drop table if exists project_institute_date;
+create table project_institute_date(
+	id int not null auto_increment primary key,
+	participation float,
+	hr int,
+	start timestamp,
+	end timestamp,
+	project_institute_id int not null,
+
+	foreign key (project_institute_id) references project_institute(id) on delete cascade on update cascade
+);
