@@ -13,21 +13,28 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	/** @var database object */
 	public $project;
 	
+	/** var session	object */
 	public $project_institute_session;
 	
 	
 	
 	
-
-	
+	/**
+	 * Add function
+	 * 
+	 * Add institute to project
+	 */
 	public function actionAdd() {
+		//get session variable
 		$session = $this->context->getService('session');
 		$this->project_institute_session = $session->getSection('project_institute_add');
 		
+		//if we havent session - redirect to previous step
 		if(!isSet($this->project_institute_session->values)) {
 			$this->redirect(':Projects:Institutes:add');
 		}
 		
+		//set template variables
 		$this->template->project = $this->db->table('project')->get($this->project_institute_session->values->project_id);
 		$this->template->institute = $this->db->table('institute')->get($this->project_institute_session->values->institute_id);
 		$this->template->total_participation = $this->project_institute_session->values->participation;
@@ -38,6 +45,11 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit function
+	 * 
+	 * Edit institute related with project
+	 */
 	public function actionEdit($id) {		
 		$this->project_institute = $this->db->table('project_institute')->where('id', $id)->fetch();
 		
@@ -45,20 +57,25 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 			throw new NBadRequestException();
 		}
 		
+		//get session variable
 		$session = $this->context->getService('session');
 		$this->project_institute_session = $session->getSection('project_institute_edit');
 		
+		//if we havent session - redirect to previous step
 		if(!isSet($this->project_institute_session->values)) {
 			$this->redirect(':Projects:Institutes:edit', $this->project_institute->id);
 		}
 
+		//set template variables
 		$this->template->project = $this->project_institute->project;
 		$this->template->project_institute = $this->project_institute;
 		$this->template->total_participation = $this->project_institute_session->values->participation;
 		$this->template->total_hr = $this->project_institute_session->values->hr;
 
+		//set default variables to form
 		$defaults = array();
 		foreach($this->project_institute->related('project_institute_date') as $project_institute_date) {
+			//parse year form date
 			$year = $project_institute_date->start->format('Y');
 			$defaults[$year] = array(
 				'participation' => $project_institute_date->participation,
@@ -73,6 +90,11 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit finances function - only second step of edit proces
+	 * 
+	 * @param int $id 
+	 */
 	public function actionEditFinances($id) {
 		$this->project_institute = $this->db->table('project_institute')->where('id', $id)->fetch();
 		
@@ -80,11 +102,13 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 			throw new NBadRequestException();
 		}
 		
+		//set template variables
 		$this->template->project = $this->project_institute->project;
 		$this->template->project_institute = $this->project_institute;
 		$this->template->total_participation = $this->project_institute->participation;
 		$this->template->total_hr = $this->project_institute->hr;
 
+		//set form default variables
 		$defaults = array();
 		foreach($this->project_institute->related('project_institute_date') as $project_institute_date) {
 			$year = $project_institute_date->start->format('Y');
@@ -101,25 +125,35 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
-	
+	/**
+	 * Add form
+	 * @return NAppForm 
+	 */
 	public function createComponentAddForm() {	
 		$form = new NAppForm();
 		
+		//get start and end dates
 		$startDate = $this->project_institute_session->values->start;
 		$endDate = $this->project_institute_session->values->end;
+		
+		//parse start and end years
 		$startDateYear = $startDate->format('Y');
 		$endDateYear = $endDate->format('Y');
+		
+		//calculate diff
 		$diff = $endDateYear - $startDateYear;
 		
 		$year = (int)$startDateYear;
 		$finance_years = array();
 		
+		//create array of all project years
 		while($diff >= 0) {
 			array_push($finance_years, $year);
 			$year++;
 			$diff--;
 		}
 		
+		//create form elements		
 		foreach($finance_years as $finance_year) {
 			$form->addGroup('Rok ' . (string)$finance_year);
 			$form->addContainer($finance_year);
@@ -151,24 +185,35 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit form 
+	 * @return NAppForm 
+	 */
 	public function createComponentEditForm() {	
 		$form = new NAppForm();
 	
+		//get start and end dates
 		$startDate = $this->project_institute_session->values->start;
 		$endDate = $this->project_institute_session->values->end;
+		
+		//parse start and end year
 		$startDateYear = $startDate->format('Y');
 		$endDateYear = $endDate->format('Y');
+		
+		//calculate diff
 		$diff = $endDateYear - $startDateYear;
 		
 		$year = (int)$startDateYear;
 		$finance_years = array();
 		
+		//crate array of project years
 		while($diff >= 0) {
 			array_push($finance_years, $year);
 			$year++;
 			$diff--;
 		}
 		
+		//crate form elements
 		foreach($finance_years as $finance_year) {
 			$form->addGroup('Rok ' . (string)$finance_year);
 			$form->addContainer($finance_year);
@@ -200,24 +245,35 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit finances form - only second step of edit proces
+	 * @return NAppForm 
+	 */
 	public function createComponentEditFinancesForm() {	
 		$form = new NAppForm();
 	
+		//get start and end dates
 		$startDate = new DateTime($this->project_institute->start);
 		$endDate = new DateTime($this->project_institute->end);
+		
+		//parse start and end years
 		$startDateYear = $startDate->format('Y');
 		$endDateYear = $endDate->format('Y');
+		
+		//calculate diff
 		$diff = $endDateYear - $startDateYear;
 		
 		$year = (int)$startDateYear;
 		$finance_years = array();
 		
+		//create array of project dates
 		while($diff >= 0) {
 			array_push($finance_years, $year);
 			$year++;
 			$diff--;
 		}
 		
+		//craete form elements
 		foreach($finance_years as $finance_year) {
 			$form->addGroup('Rok ' . (string)$finance_year);
 			$form->addContainer($finance_year);
@@ -249,18 +305,25 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Add form submitted function
+	 * @param NAppForm $form
+	 */
 	public function addFormSubmitted($form) {
 		if($form['process']->isSubmittedBy()) {
 			$containers = $form->getValues();
 
+			//lambda function
 			$firstYearDay = function($year) {
 				return new \DateTime("1.1.$year 01:00:00");
 			};
 
+			//lambda function
 			$lastYearDay = function($year) {
 				return new \DateTime("31.12.$year 01:00:00");
 			};
 
+			//parse start and end dates
 			$startDateYear = $this->project_institute_session->values->start->format('Y');
 			$endDateYear = $this->project_institute_session->values->end->format('Y');
 
@@ -269,25 +332,29 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 				'hr' => 0
 			);
 
+			//calculate total values
 			foreach($containers as $key => $container) {
 				$total_values['participation'] += $container->participation;
 				$total_values['hr'] += $container->hr;
 			}
 
+			//check total values and form values
 			if($total_values['participation'] != $this->project_institute_session->values->participation) {
 				$this->flashMessage('Zadané financovanie: ' . $total_values['participation'] . ' €/ Celkové financovanie: ' . $this->project_institute_session->values->participation . ' €', 'error');
 			}else if($total_values['hr'] != $this->project_institute_session->values->hr) {
 				$this->flashMessage('Zadané ľudské zdroje: ' . $total_values['hr'] . ' / Celkové ľudské zdroje: ' . $this->project_institute_session->values->hr, 'error');
 			} else {		
 				try {
+					//start transaction
 					$this->db->beginTransaction();
 
+					//insert new institute data and recalculate project data
 					$new_project_institute = $this->db->table('project_institute')
 														->insert($this->project_institute_session->values);
 					$this->calculateProjectData($this->project_institute_session->values->project_id);
 
+					//insert new date dates
 					foreach($containers as $key => $container) {
-
 						if($key == $startDateYear) {
 							$data = array(
 								'start' => $this->project_institute_session->values->start,
@@ -334,18 +401,25 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit form submitted function
+	 * @param NAppForm $form
+	 */
 	public function editFormSubmitted($form) {
 		if($form['process']->isSubmittedBy()) {
 			$containers = $form->getValues();
 
+			//lambda function
 			$firstYearDay = function($year) {
 				return new \DateTime("1.1.$year 01:00:00");
 			};
 
+			//lambda function
 			$lastYearDay = function($year) {
 				return new \DateTime("31.12.$year 01:00:00");
 			};
 
+			//parse start and end years
 			$startDateYear = $this->project_institute_session->values->start->format('Y');
 			$endDateYear = $this->project_institute_session->values->end->format('Y');
 
@@ -354,11 +428,13 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 				'hr' => 0
 			);
 
+			//calculate total values
 			foreach($containers as $key => $container) {
 				$total_values['participation'] += $container->participation;
 				$total_values['hr'] += $container->hr;
 			}
 
+			//check total values and form values
 			if($total_values['participation'] != $this->project_institute_session->values->participation) {
 				$this->flashMessage('Zadané financovanie: ' . $total_values['participation'] . ' €/ Celkové financovanie: ' . $this->project_institute_session->values->participation . ' €', 'error');
 			}else if($total_values['hr'] != $this->project_institute_session->values->hr) {
@@ -367,12 +443,15 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 				try {
 					$this->db->beginTransaction();
 					
+					//delete date dates form db
 					$this->project_institute->related('project_institute_date')->delete();
+					
+					//update institutes data
 					$this->db->table('project_institute')->where('id', $this->project_institute->id)->update($this->project_institute_session->values);
 					$this->calculateProjectData($this->project_institute->project->id);
 
+					//insert new date data
 					foreach($containers as $key => $container) {
-
 						if($key == $startDateYear) {
 							$data = array(
 								'start' => $this->project_institute_session->values->start,
@@ -418,18 +497,25 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Edit finances form submitted function
+	 * @param NAppForm $form
+	 */
 	public function editFinancesFormSubmitted($form) {
 		if($form['process']->isSubmittedBy()) {
 			$containers = $form->getValues();
 
+			//lambda function
 			$firstYearDay = function($year) {
 				return new \DateTime("1.1.$year 01:00:00");
 			};
 
+			//lambda function
 			$lastYearDay = function($year) {
 				return new \DateTime("31.12.$year 01:00:00");
 			};
 
+			//parse start and end year
 			$startDateYear = $this->project_institute->start->format('Y');
 			$endDateYear = $this->project_institute->end->format('Y');
 
@@ -438,11 +524,13 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 				'hr' => 0
 			);
 
+			//calculate total values
 			foreach($containers as $key => $container) {
 				$total_values['participation'] += $container->participation;
 				$total_values['hr'] += $container->hr;
 			}
 
+			//check total values and form values
 			if($total_values['participation'] != $this->project_institute->participation) {
 				$this->flashMessage('Zadané financovanie: ' . $total_values['participation'] . ' €/ Celkové financovanie: ' . $this->project_institute->participation . ' €', 'error');
 			}else if($total_values['hr'] != $this->project_institute->hr) {
@@ -451,10 +539,11 @@ class Projects_FinancesPresenter extends Projects_BasePresenter
 				try {
 					$this->db->beginTransaction();
 					
+					//delete all date data
 					$this->project_institute->related('project_institute_date')->delete();
 
+					//insert new date data
 					foreach($containers as $key => $container) {
-
 						if($key == $startDateYear) {
 							$data = array(
 								'start' => $this->project_institute->start,

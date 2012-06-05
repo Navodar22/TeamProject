@@ -8,6 +8,9 @@
 abstract class Projects_BasePresenter extends BaseLPresenter
 {
 
+	/**
+	 * Unset add and edit project session variables
+	 */
 	public function unsetProjectsSession() {
 		$session = $this->context->getService('session');
 		$project_institute_add = $session->getSection('project_institute_add');

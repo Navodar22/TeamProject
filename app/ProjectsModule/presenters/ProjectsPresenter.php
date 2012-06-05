@@ -16,6 +16,11 @@ class Projects_ProjectsPresenter extends Projects_BasePresenter
 	
 	
 	
+	/**
+	 * Startup function
+	 * 
+	 * Unset project session data
+	 */
 	public function startup() {
 		parent::startup();
 		

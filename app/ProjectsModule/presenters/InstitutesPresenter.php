@@ -56,9 +56,11 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		
 		$this->template->project = $this->project;
 		
+		//get session data
 		$session = $this->context->getService('session');
 		$project_institute_session = $session->getSection('project_institute_add');
 		
+		//if session is set - set default values
 		if($project_institute_session->values) {
 			//set default values for project dates - make it in layout with jQuery
 			$project_dates = array(
@@ -86,9 +88,11 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 			throw new NBadRequestException;
 		}		
 		
+		//get session values
 		$session = $this->context->getService('session');
 		$project_institute_session = $session->getSection('project_institute_edit');
 		
+		//if session is set - set session default values
 		if(isSet($project_institute_session->values)) {
 			//set default values for project dates - make it in layout with jQuery
 			$project_dates = array(
@@ -98,7 +102,7 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 			$this->template->project_dates = $project_dates;
 			
 			$this['editForm']->setDefaults($project_institute_session->values);
-		} else {		
+		} else { //if session isnt set set database default values
 			//set default values for project dates - make it in layout with jQuery
 			$project_dates = array(
 				'start' => date("d.m.Y", strtotime($this->project_institute->start)),
@@ -133,6 +137,7 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 			//store project_id before delete record
 			$this->db->beginTransaction();
 			$project_id = $project_institute->fetch()->project->id;
+			//project institute date deleted automaticaly via db setings
 			$project_institute->delete();
 			$this->calculateProjectData($project_id);
 			$this->db->commit();
@@ -256,7 +261,8 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 				}
 				
 				//is form error free ?
-				if(!$error) {					
+				if(!$error) {				
+					//set session variable and go to next step
 					$session = $this->context->getService('session');
 					$project_institute_add = $session->getSection('project_institute_add');
 					$project_institute_add->values = $values;
@@ -373,7 +379,8 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 				}
 
 				//is form error free ?
-				if(!$error) {					
+				if(!$error) {		
+					//set session variable and go to next step
 					$session = $this->context->getService('session');
 					$project_institute_add = $session->getSection('project_institute_edit');
 					$project_institute_add->values = $values;
