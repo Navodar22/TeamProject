@@ -206,6 +206,18 @@ class ProjectsPresenter extends BaseLPresenter
 		
 		$this->template->project = $this->project_institute->project;
 		$this->template->institute = $this->project_institute->institute;
+
+		$defaults = array();
+		foreach($this->project_institute->related('project_institute_date') as $project_institute_date) {
+			$year = $project_institute_date->start->format('Y');
+			$defaults[$year] = array(
+				'participation' => $project_institute_date->participation,
+				'hr' => $project_institute_date->hr
+			);
+		}
+		
+		$form = $this['editFinanceDetailForm'];
+		$form->setDefaults($defaults);
 	}
 	
 	
@@ -614,7 +626,7 @@ class ProjectsPresenter extends BaseLPresenter
 					$this->db->commit();
 					
 					$this->flashMessage('Dáta ústavu úspešne zmenené.', 'ok');
-					$this->redirect('edit', $this->project_institute->project->id);	
+					$this->redirect('editFinanceDetail', $this->project_institute->id);	
 				}
 
 			} else {
@@ -651,8 +663,14 @@ class ProjectsPresenter extends BaseLPresenter
 		foreach($finance_years as $finance_year) {
 			$form->addGroup('Rok ' . (string)$finance_year);
 			$form->addContainer($finance_year);
-			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť');
-			$form[$finance_year]->addText('hr', 'Ľudské zdroje');
+			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť')
+					->setDefaultValue('0')
+					->addCondition(NForm::FILLED)
+						->addRule(NForm::FLOAT, 'Participácia na projekte musí byť číslo.');
+			$form[$finance_year]->addText('hr', 'Ľudské zdroje')
+					->setDefaultValue('0')
+					->addCondition(NForm::FILLED)
+						->addRule(NForm::INTEGER, 'Ľudské zdroje musia byť číslo.');
 		}
 		
 		$form->setCurrentGroup(NULL);
@@ -689,17 +707,18 @@ class ProjectsPresenter extends BaseLPresenter
 		foreach($finance_years as $finance_year) {
 			$form->addGroup('Rok ' . (string)$finance_year);
 			$form->addContainer($finance_year);
-			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť');
-			$form[$finance_year]->addText('hr', 'Ľudské zdroje');
+			$form[$finance_year]->addText('participation', 'Finančná spoluúčasť')
+					->setDefaultValue('0')
+					->addCondition(NForm::FILLED)
+						->addRule(NForm::FLOAT, 'Participácia na projekte musí byť číslo.');
+			$form[$finance_year]->addText('hr', 'Ľudské zdroje')
+					->setDefaultValue('0')
+					->addCondition(NForm::FILLED)
+						->addRule(NForm::INTEGER, 'Ľudské zdroje musia byť číslo.');
 		}
 		
 		$form->setCurrentGroup(NULL);
 		$form->addSubmit('process', 'Ulož')
-				->getControlPrototype()
-					->class('design');
-		
-		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL)
 				->getControlPrototype()
 					->class('design');
 		
@@ -762,9 +781,69 @@ class ProjectsPresenter extends BaseLPresenter
 	
 	
 	public function editFinanceDetailFormSubmitted($form) {
-		$values = $form->getValues();
+		$containers = $form->getValues();
 		
-		$this->redirect('edit', $this->project_institute->project->id);
+		$this->project_institute->related('project_institute_date')->delete();
+		
+		$firstYearDay = function($year) {
+			return new \DateTime("1.1.$year 01:00:00");
+		};
+		
+		$lastYearDay = function($year) {
+			return new \DateTime("31.12.$year 01:00:00");
+		};
+		
+		$startDateYear = $this->project_institute->start->format('Y');
+		$endDateYear = $this->project_institute->end->format('Y');
+		
+		$total_values = array(
+			'participation' => 0,
+			'hr' => 0
+		);
+		
+		foreach($containers as $key => $container) {
+			$total_values['participation'] += $container->participation;
+			$total_values['hr'] += $container->hr;
+		}
+		
+		if($total_values['participation'] != $this->project_institute->participation) {
+			$this->flashMessage($total_values['participation'] . '/' . $this->project_institute->participation, 'error');
+		}else if($total_values['hr'] != $this->project_institute->hr) {
+			$this->flashMessage('ee2', 'error');
+		} else {
+		
+			foreach($containers as $key => $container) {
+
+				if($key == $startDateYear) {
+					$data = array(
+						'start' => $this->project_institute->start,
+						'end' => $lastYearDay($key),
+						'participation' => (int) $container->participation,
+						'hr' => (int) $container->hr,
+						'project_institute_id' => $this->project_institute->id
+					);
+				} elseif ($key == $endDateYear) {
+					$data = array(
+						'start' => $firstYearDay($key),
+						'end' => $this->project_institute->end,
+						'participation' => (int) $container->participation,
+						'hr' => (int) $container->hr,
+						'project_institute_id' => $this->project_institute->id
+					);
+				} else {				
+					$data = array(
+						'start' => $firstYearDay($key),
+						'end' => $lastYearDay($key),
+						'participation' => (int) $container->participation,
+						'hr' => (int) $container->hr,
+						'project_institute_id' => $this->project_institute->id
+					);
+				}			
+				$this->db->table('project_institute_date')->insert($data);
+			}
+
+			$this->redirect('edit', $this->project_institute->project->id);
+		}
 	}
 
 	

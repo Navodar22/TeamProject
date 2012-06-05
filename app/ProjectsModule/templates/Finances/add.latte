@@ -1,0 +1,18 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Projects:default}">Projekty</a></li>
+<li>></li>
+<li><a href="{link Projects:edit, $project->id}">{$project->name}</a></li>
+<li>></li>
+<li><a href="{link Projects:editInsitute, $institute->id}">{$institute->name}</a></li>
+<li>></li>
+<li class="actual">Detailné financovanie</li>
+{/block}
+
+{block content}
+<h2>Detailné financovanie projektu ústavom</h2>
+
+<div class="forms">
+	{control addForm}
+</div>
