@@ -1,7 +1,7 @@
 {block #breadcrumb}
-<li><a href="{link Homepage:default}">Domov</a></li>
+<li><a href="{link :Homepage:default}">Domov</a></li>
 <li>></li>
-<li><a href="{link Projects:default}">Projekty</a></li>
+<li><a href="{link :Projects:Projects:default}">Projekty</a></li>
 <li>></li>
 <li class="actual">{$project->name}</li>
 {/block}
@@ -28,7 +28,7 @@
 	<table>
 		<tr>
 			<th></th>
-			<td>{$form['process']->control} {$form['back']->control} {$form['add_institute']->control}</td>
+			<td>{$form['back']->control} {$form['add_institute']->control} {$form['process']->control}</td>
 		</tr>
 	</table>
 </div>

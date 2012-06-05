@@ -5,30 +5,29 @@
  *
  * @author     Samuel Kelemen
  */
-class Projects_ProjectsPresenter extends BaseLPresenter
+class Projects_ProjectsPresenter extends Projects_BasePresenter
 {
 	/** @var database object */
-	public $project_institute;
-	
-	/** @var database object */
 	public $project;
-	
-	/** @var array		Free faculties/insitutes for defined project - one institute can be only once in one project */
-	public $free_institutes;
 
-	
-	
+	/** @var int		User id to show projects */
 	public $user_id;
 	
 	
 	
 	
+	public function startup() {
+		parent::startup();
+		
+		$this->unsetProjectsSession();
+	}
 	
 	
+		
 	/**
 	 * Default render function
 	 * 
-	 * Render all actualy logged user
+	 * Render all projects
 	 */
 	public function renderDefault() {
 				
@@ -37,6 +36,11 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 	
 	
 	
+	/**
+	 * MyProjects render function
+	 * 
+	 * Render projects of actualy loged user
+	 */
 	public function renderMyProjects() {
 		$this->user_id = $this->getUser()->getIdentity()->getId();
 	}
@@ -98,11 +102,11 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 				->addRule(NForm::FILLED, 'Musíte zadať popis projektu.');
 		
 		$form->setCurrentGroup(NULL);
-		$form->addSubmit('process', 'Uložiť projekt')
-				->getControlPrototype()
-					->class('design');
 		$form->addSubmit('back', 'Návrat')
 				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
+		$form->addSubmit('process', 'Uložiť projekt')
 				->getControlPrototype()
 					->class('design');
 		
@@ -149,8 +153,6 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 	
 	
 	
-	
-	
 	/**
 	 * Edit project form
 	 * 
@@ -178,11 +180,11 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 		}
 		
 		$form->setCurrentGroup(NULL);
-		$form->addSubmit('process', 'Uložiť projekt')
-				->getControlPrototype()
-					->class('design');
 		$form->addSubmit('back', 'Návrat')
 				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
+		$form->addSubmit('process', 'Uložiť projekt')
 				->getControlPrototype()
 					->class('design');
 		
@@ -217,7 +219,7 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 				
 				//handlers for money buttons
 				if($form["finance_detail_$project_institute->id"]->isSubmittedBy()) {
-					$this->redirect('Finances:edit', $project_institute->id);
+					$this->redirect('Finances:editFinances', $project_institute->id);
 				}
 
 				//handlers for delete buttons
@@ -235,7 +237,7 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 				$this->flashMessage('Projekt bol úspešne upravený.', 'ok');
 				$this->redirect('default');
 			} else if ($form['add_institute']->isSubmittedBy()) {
-				$this->redirect('addInstitute', $this->project->id);
+				$this->redirect('Institutes:add', $this->project->id);
 			} else {
 				$this->redirect('default');
 			}
@@ -248,7 +250,11 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 
 	
 	
-
+	/** 
+	 * DataGrid render function - show all projects
+	 * 
+	 * @return DataGrid 
+	 */
 	public function createComponentDataGrid() {
 
 		if(empty($this->dateRange)) {
@@ -274,7 +280,7 @@ class Projects_ProjectsPresenter extends BaseLPresenter
         $dg->addAction('edit', 'Uprav', 'Projects:edit', array('id'));
 
         $dg->addColumn('id', 'No.')->setIntFilter('project.id')->setStyle('width: 50px');
-        $dg->addColumn('name', 'Name')->setTextFilter('project.name')->setStyle('text-align: left');
+        $dg->addColumn('name', 'Názov projektu')->setTextFilter('project.name')->setStyle('text-align: left');
 		$dg->addCustomColumn('cost', 'Fin. zdroje')->setIntFilter('project.cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->cost);'));                                                                 																										
 		$dg->addCustomColumn('approved_cost', 'Schválené fin.zdroje')->setIntFilter('project.approved_cost')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->approved_cost);'));
 		$dg->addCustomColumn('participation', 'Spoluúčasť')->setIntFilter('project.participation')->setHtml(create_function('$row', '$helper =  new EmptyPrice(); return $helper->process($row->participation);'));
@@ -287,6 +293,11 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 	
 	
 	
+	/**
+	 * DataGrid render function - show only logged user projects
+	 * 
+	 * @return DataGrid 
+	 */
 	public function createComponentDataGridMyProjects() {
 
 		if(empty($this->dateRange)) {
@@ -322,47 +333,6 @@ class Projects_ProjectsPresenter extends BaseLPresenter
 		$dg->addCustomColumn('approved_hr', 'Schválené ľudské zdroje')->setIntFilter('project.approved_hr')->setHtml(create_function('$row', '$helper =  new EmptyNumber(); return $helper->process($row->approved_hr);'));
 		return $dg;
 	}	
-	
-	
-	
-	
-	/**
-	 * Function to get free faculties/institutes for project.
-	 * Every institute can be assigned to project only once.
-	 * 
-	 * @param int $project_id		ID of project
-	 */
-	public function getFreeInstitutes($project_id) {
-		//get db values
-		$faculties = $this->db->table('faculty')->order('name');
-		$project = $this->db->table('project')->where('id', $project_id)->fetch();
-		
-		//init array values
-		$result = array();
-		$banned = array();
-		
-		//get banned institutes
-		foreach($project->related('project_institute') as $project_institute) {
-			$banned[] = $project_institute->institute->id;
-		}
-		
-		//get free institutes
-		foreach($faculties as $faculty) {
-			$result[$faculty->name] = array();
-			foreach($faculty->related('institute')->order('name') as $institute) {
-				if(!in_array($institute->id, $banned)) {
-					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
-				}
-			}			
-		}
-		
-		//set result to global value
-		$this->free_institutes = $result;
-	}
-	
-	
-	
-	
 	
 	
 	

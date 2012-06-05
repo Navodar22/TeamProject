@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Project presenter.
+ * ProjectInsitutes presenter.
  *
  * @author     Samuel Kelemen
  */
-class Projects_InstitutesPresenter extends BaseLPresenter
+class Projects_InstitutesPresenter extends Projects_BasePresenter
 {
 	/** @var database object */
 	public $project_institute;
@@ -18,12 +18,7 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 	
 	/** @var array		Allowed states of project */
 	public $states;
-	
-	
-	public $user_id;
-	
-	public $button = FALSE;
-	
+
 	
 	
 	
@@ -38,8 +33,7 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
-	
+		
 	/**
 	 * Add institute function
 	 * 
@@ -61,6 +55,20 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 		}
 		
 		$this->template->project = $this->project;
+		
+		$session = $this->context->getService('session');
+		$project_institute_session = $session->getSection('project_institute_add');
+		
+		if($project_institute_session->values) {
+			//set default values for project dates - make it in layout with jQuery
+			$project_dates = array(
+				'start' => $project_institute_session->values->start->format('d.m.Y'),
+				'end' => $project_institute_session->values->end->format('d.m.Y')
+			);		
+			$this->template->project_dates = $project_dates;
+			
+			$this['addForm']->setDefaults($project_institute_session->values);
+		}
 	}
 	
 	
@@ -78,15 +86,29 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 			throw new NBadRequestException;
 		}		
 		
-		//set default values for project dates - make it in layout with jQuery
-		$project_dates = array(
-			'start' => date("d.m.Y", strtotime($this->project_institute->start)),
-			'end' => date("d.m.Y", strtotime($this->project_institute->end))
-		);		
-		$this->template->project_dates = $project_dates;
+		$session = $this->context->getService('session');
+		$project_institute_session = $session->getSection('project_institute_edit');
 		
-		//set other default values of institute to edit institute form
-		$this['editForm']->setDefaults($this->project_institute);
+		if(isSet($project_institute_session->values)) {
+			//set default values for project dates - make it in layout with jQuery
+			$project_dates = array(
+				'start' => $project_institute_session->values->start->format('d.m.Y'),
+				'end' => $project_institute_session->values->end->format('d.m.Y')
+			);		
+			$this->template->project_dates = $project_dates;
+			
+			$this['editForm']->setDefaults($project_institute_session->values);
+		} else {		
+			//set default values for project dates - make it in layout with jQuery
+			$project_dates = array(
+				'start' => date("d.m.Y", strtotime($this->project_institute->start)),
+				'end' => date("d.m.Y", strtotime($this->project_institute->end))
+			);		
+			$this->template->project_dates = $project_dates;
+
+			//set other default values of institute to edit institute form
+			$this['editForm']->setDefaults($this->project_institute);
+		}
 		
 		$this->template->institute = $this->project_institute->institute;
 		$this->template->project = $this->project_institute->project;
@@ -127,8 +149,7 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
-	
+		
 	/**
 	 * Add institute form
 	 * 
@@ -165,11 +186,11 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 				->getControlPrototype()->class('datepicker');
 		
 		$form->setCurrentGroup(NULL);
-		$form->addSubmit('process', 'Pridaj ústav')
-				->getControlPrototype()
-					->class('design');
 		$form->addSubmit('back', 'Návrat')
 				->setValidationScope(NULL)
+				->getControlPrototype()
+					->class('design');
+		$form->addSubmit('process', 'Pokračovať')
 				->getControlPrototype()
 					->class('design');
 		
@@ -235,20 +256,17 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 				}
 				
 				//is form error free ?
-				if(!$error) {
-					$this->db->beginTransaction();
-					$new_project_institute = $this->db->table('project_institute')->insert($values);
-					$this->calculateProjectData($this->project->id);
-					$this->db->commit();
+				if(!$error) {					
+					$session = $this->context->getService('session');
+					$project_institute_add = $session->getSection('project_institute_add');
+					$project_institute_add->values = $values;
 					
-					$this->flashMessage('Ústav bol pridaný k projektu.', 'ok');
-					$this->redirect('Finances:add', $new_project_institute->id);	
+					$this->redirect('Finances:add');	
 				}
 			} else { //if submitted by back only redirect
 				$this->redirect('Projects:edit', $this->project->id);
 			}
 		} catch (PDOException $e) {
-			$this->db->rollback();
 			$this->flashMessage('Ústav sa nepodarilo pridať k projektu.', 'error');
 			$this->redirect('Projects:edit', $this->project->id);
 		}
@@ -267,10 +285,6 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 
 		$form->addGroup();
 		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TOTO prev todo
-		
-		if ($this->button) {
-			$form->addText('test', 'test');
-		}
 		
 		$form->addText('cost', 'Finančné zdroje')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
@@ -293,13 +307,13 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 				->addRUle(NForm::FILLED, 'Musíte vyplniť koniec projektu.')
 				->getControlPrototype()->class('datepicker');
 		
-		$form->setCurrentGroup(NULL);
-		$form->addSubmit('process', 'Ulož')
+		$form->setCurrentGroup(NULL);		
+		$form->addSubmit('back', 'Návrat')
+				->setValidationScope(NULL)
 				->getControlPrototype()
 					->class('design');
 		
-		$form->addSubmit('back', 'Návrat')
-				->setValidationScope(NULL)
+		$form->addSubmit('process', 'Pokračovať')
 				->getControlPrototype()
 					->class('design');
 		
@@ -359,13 +373,11 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 				}
 
 				//is form error free ?
-				if(!$error) {
-					$this->db->beginTransaction();
-					$this->db->table('project_institute')->where('id', $this->project_institute->id)->update($values);
-					$this->calculateProjectData($this->project_institute->project->id);
-					$this->db->commit();
-					
-					$this->flashMessage('Dáta ústavu úspešne zmenené.', 'ok');
+				if(!$error) {					
+					$session = $this->context->getService('session');
+					$project_institute_add = $session->getSection('project_institute_edit');
+					$project_institute_add->values = $values;
+
 					$this->redirect('Finances:edit', $this->project_institute->id);	
 				}
 
@@ -373,7 +385,6 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 				$this->redirect('Projects:edit', $this->project_institute->project->id);
 			}
 		} catch (PDOException $e) {
-			$this->db->rollback();
 			$this->flashMessage('Dáta ústavu sa nepodarilo zmeniť.', 'error');
 			$this->redirect('Projects:edit', $this->project_institute->project->id);
 		}
@@ -399,5 +410,37 @@ class Projects_InstitutesPresenter extends BaseLPresenter
 	
 	
 	
-	
+	/**
+	 * Function to get free faculties/institutes for project.
+	 * Every institute can be assigned to project only once.
+	 * 
+	 * @param int $project_id		ID of project
+	 */
+	public function getFreeInstitutes($project_id) {
+		//get db values
+		$faculties = $this->db->table('faculty')->order('name');
+		$project = $this->db->table('project')->where('id', $project_id)->fetch();
+		
+		//init array values
+		$result = array();
+		$banned = array();
+		
+		//get banned institutes
+		foreach($project->related('project_institute') as $project_institute) {
+			$banned[] = $project_institute->institute->id;
+		}
+		
+		//get free institutes
+		foreach($faculties as $faculty) {
+			$result[$faculty->name] = array();
+			foreach($faculty->related('institute')->order('name') as $institute) {
+				if(!in_array($institute->id, $banned)) {
+					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
+				}
+			}			
+		}
+		
+		//set result to global value
+		$this->free_institutes = $result;
+	}
 }

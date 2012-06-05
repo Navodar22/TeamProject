@@ -34,9 +34,6 @@ $container->router[] = new NRoute('index.php', 'Homepage:default', NRoute::ONE_W
 $container->router[] = new NRoute('faculty[/<id>]', 'Homepage:faculty');
 $container->router[] = new NRoute('institute[/<id>]', 'Homepage:institute');
 
-$container->router[] = $projectsRouter = new NRouteList('Projects');
-$projectsRouter[] = new NRoute('projects/<presenter>/<action>[/<id>]', 'Projects:default');
-
 $container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Homepage:default');
 
 
