@@ -257,6 +257,8 @@ class Projects_ProjectsPresenter extends Projects_BasePresenter
 	
 	/** 
 	 * DataGrid render function - show all projects
+	 * Show projects with or without data range filter.
+	 * All projects with or without data range filter show total values. Not only date range values.
 	 * 
 	 * @return DataGrid 
 	 */
@@ -266,8 +268,18 @@ class Projects_ProjectsPresenter extends Projects_BasePresenter
 			$source = $this->db->table('project');
 		} else {
 			$source = $this->db->table('project')
-					->where('project.start >= ?', $this->dateRange->from)
-					->where('project.end <= ?', $this->dateRange->to);
+					->where('project_institute:project_institute_date:start >= ?', $this->dateRange->from)
+					->where('project_institute:project_institute_date:end <= ?', $this->dateRange->to)
+					->select('
+						DISTINCT project.id,
+						project.name,
+						project.cost,
+						project.approved_cost,
+						project.participation,
+						project.approved_participation,
+						project.hr,
+						project.approved_hr
+					');
 		}
 
 		if($source->count('*') <= 0) {
@@ -300,20 +312,33 @@ class Projects_ProjectsPresenter extends Projects_BasePresenter
 	
 	/**
 	 * DataGrid render function - show only logged user projects
+	 * Show projects with or without data range filter.
+	 * All projects with or without data range filter show total values. Not only date range values.
 	 * 
 	 * @return DataGrid 
 	 */
 	public function createComponentDataGridMyProjects() {
-
+		
 		if(empty($this->dateRange)) {
-			$source = $this->db->table('project')->where('user_id', $this->user->getId());
+			$source = $this->db->table('project')
+					->where('project.user_id', $this->user->getId());
 		} else {
 			$source = $this->db->table('project')
 					->where('project.user_id', $this->user->getId())
-					->where('project.start >= ?', $this->dateRange->from)
-					->where('project.end <= ?', $this->dateRange->to);
+					->where('project_institute:project_institute_date:start >= ?', $this->dateRange->from)
+					->where('project_institute:project_institute_date:end <= ?', $this->dateRange->to)
+					->select('
+						DISTINCT project.id,
+						project.name,
+						project.cost,
+						project.approved_cost,
+						project.participation,
+						project.approved_participation,
+						project.hr,
+						project.approved_hr
+					');
 		}
-
+		
 		if($source->count('*') <= 0) {
 			
 			$dg = new DataGrid();

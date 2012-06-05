@@ -162,6 +162,13 @@ class GridDataSource extends NObject
 	 * @return int 
 	 */
 	public function getCount() {
-		return $this->notorm_source->count('*');
+//		return $this->notorm_source->count('*');
+		
+		$count = 0;
+		foreach($this->notorm_source as $source) {
+			$count++;
+		}
+		
+		return $count;
 	}
 }

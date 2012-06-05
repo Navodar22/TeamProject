@@ -16,7 +16,7 @@ abstract class BaseLPresenter extends BasePresenter
 		parent::startup();
 		
 		if(!$this->getUser()->isLoggedIn()) {
-			$this->redirect('Sign:in');
+			$this->redirect(':Sign:in');
 		} else {
 			$this->template->user = $this->user = $this->getUser()->getIdentity();
 			
