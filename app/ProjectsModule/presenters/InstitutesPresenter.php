@@ -228,25 +228,25 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 				
 				//check financial resources
 				//if state is one of allowed state
-				if(in_array($values['state_id'], $this->aStates)) {
-					$institute = $this->db->table('institute')->where('id', $values['institute_id'])->fetch();
-					
-					//in free money dont sum actualy open project
-					$project_institute = $this->db->table('project_institute')
-													->where('institute_id', $values['institute_id'])
-													->where('id <> ?', $values['institute_id'])
-													->select('sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.participation, 0)) AS approved_participation')
-													->fetch();
-					
-					//calculate only width approved_participation not approved_cost - insitute need only participation money to have
-					$free_money = $institute['money'] - $project_institute['approved_participation'];
-
-					//if we havent enough money show error and actualy free money
-					if($free_money < $values['participation']) {
-						$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
-						$error = true;
-					}
-				}
+//				if(in_array($values['state_id'], $this->aStates)) {
+//					$institute = $this->db->table('institute')->where('id', $values['institute_id'])->fetch();
+//					
+//					//in free money dont sum actualy open project
+//					$project_institute = $this->db->table('project_institute')
+//													->where('institute_id', $values['institute_id'])
+//													->where('id <> ?', $values['institute_id'])
+//													->select('sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.participation, 0)) AS approved_participation')
+//													->fetch();
+//					
+//					//calculate only width approved_participation not approved_cost - insitute need only participation money to have
+//					$free_money = $institute['money'] - $project_institute['approved_participation'];
+//
+//					//if we havent enough money show error and actualy free money
+//					if($free_money < $values['participation']) {
+//						$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
+//						$error = true;
+//					}
+//				}
 
 				//check dates
 				if($values['start'] >= $values['end']) {
@@ -350,21 +350,21 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 				$values['end'] = new DateTime($values['end']);
 
 				//check financial resources
-				if(in_array($values['state_id'], $this->aStates)) {
-					$institute = $this->db->table('institute')->where('id', $this->project_institute->institute_id)->fetch();
-					$project_institute = $this->db->table('project_institute')
-													->where('institute_id', $this->project_institute->institute_id)
-													->where('id <> ?', $this->project_institute->id)
-													->select('sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.participation, 0)) AS approved_participation')
-													->fetch();
-					
-					$free_money = $institute['money'] - $project_institute['approved_participation'];
-
-					if($free_money < $values['participation']) {
-						$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
-						$error = true;
-					}
-				}
+//				if(in_array($values['state_id'], $this->aStates)) {
+//					$institute = $this->db->table('institute')->where('id', $this->project_institute->institute_id)->fetch();
+//					$project_institute = $this->db->table('project_institute')
+//													->where('institute_id', $this->project_institute->institute_id)
+//													->where('id <> ?', $this->project_institute->id)
+//													->select('sum(IF(project_institute.state_id IN (' . implode(',', $this->aStates) . '), project_institute.participation, 0)) AS approved_participation')
+//													->fetch();
+//					
+//					$free_money = $institute['money'] - $project_institute['approved_participation'];
+//
+//					if($free_money < $values['participation']) {
+//						$this->flashMessage('Inštitút nemá dostatok volných finančných zdrojov. ( ' . $free_money . ' € )', 'error');
+//						$error = true;
+//					}
+//				}
 				
 				//check dates
 				if($values['start'] >= $values['end']) {
