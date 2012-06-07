@@ -1,0 +1,20 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Resources:default}">Zdroje</a></li>
+<li>></li>
+<li class="actual">Zmazanie Zdroju</li>
+{/block}
+
+{block content}
+<h2>{block #title}Zmazanie Zdroju{/block}</h2>
+
+<div class="forms">
+<p>Are you sure you want to delete the resource "{$resource}"?</p>
+
+<p class="error">Warnign: The operation also deletes all descendants of the resource "{$resource}"!</p>
+
+{widget delete}
+</div>

@@ -1,0 +1,19 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Users:default}">Používatelia</a></li>
+<li>></li>
+<li class="actual">Zmazanie Používateľa</li>
+{/block}
+
+{block content}
+<h2>{block #title}Zmazanie používateľa{/block}</h2>
+
+<div class="forms">
+<p>Are you sure you want to delete the user "{$user_name}"?</p>
+
+
+	{widget delete}
+</div>

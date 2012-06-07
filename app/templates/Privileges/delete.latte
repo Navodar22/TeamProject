@@ -1,0 +1,19 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Privileges:default}">Privilégia</a></li>
+<li>></li>
+<li class="actual">Pridanie Privilégia</li>
+{/block}
+
+
+{block content}
+<h2>{block #title}Delete privilege{/block}</h2>
+
+<div class="forms">
+<p>Are you sure you want to delete the privilege "{$privilege}"?</p>
+
+{widget delete}
+</div>

@@ -175,7 +175,7 @@ table.statistics-table a:hover { text-decoration: underline; color: blue }
 .overview table td.dataGridMyProjects-approved_hr  { background: #92d050; color: #000000 }
 
 .overview table td.actions { text-align: center }
-.overview table td.actions .actions-container { display: inline-block }
+.overview table td.actions .actions-container { display: inline-block; min-height: 20px; }
 .overview table td.actions .actions-container a { margin: 0 5px }
 .overview table td.name { text-align: left; padding-left: 5px }
 .overview table tr.total td { height: 30px; font-weight: bold; background: #e0e0e0; border: 3px solid #ececec }
@@ -218,3 +218,19 @@ table.statistics-table a:hover { text-decoration: underline; color: blue }
 /* Add icon */
 .add { display: inline-block; float: left; height: 19px; margin-left: 10px; padding-left: 20px; background: url('../images/button-add.png') no-repeat }
 .add:hover { color: #000066 }
+
+/* ACL */
+
+#user-info { float: right; border: 1px solid grey; padding: 10px; }
+/****************
+* User defined
+****************/
+ul.error { list-style: none; }
+ul.error li { text-align: center; color: red; }
+ul.error li.ok { color: green; }
+span.node-t { margin-left: 20px; background-image: url(../images/node.gif); display: block; width: 25px; height: 25px; }
+span.node-n { margin-left: 27px; display: block; width: 1px; height: 25px; border-left: 1px solid grey; }
+span.node-l { margin-left: 20px; background-image: url(../images/node_last.gif); display: block; width: 25px; height: 25px; }
+.cleaner { font-size: 0; line-height: 0; height: 0; clear: both; }
+
+.line{ width: 100%; height: 25px;}

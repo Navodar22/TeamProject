@@ -20,7 +20,7 @@ common:
       arguments: [@container]
 
     authenticator: 
-      class: Authenticator
+      class: Login
             
     LoadModel:
       class: ModelLoader

@@ -1,4 +1,4 @@
-insert into school values ('1', '100000', '0');
+﻿insert into school values ('1', '100000', '0');
 
 insert into state values ('1', 'Nový');
 insert into state values ('2', 'Schválený');
@@ -99,5 +99,78 @@ insert into institute (name, acronym, faculty_id) values ('Katedra humanitných 
 insert into institute (name, acronym, faculty_id) values ('Katedra architektúry', 'KA', '7');
 insert into institute (name, acronym, faculty_id) values ('Ústav súdneho znalectva', 'ÚSZ', '7');
 
+INSERT INTO `gui_users` (`id`, `name`, `password`) VALUES
+(1, 'Admin', 'e3afed0047b08059d0fada10f400c1e5'),
 
-insert into user values ('1', '50774', 'Samuel', 'Kelemen');
+(37, 'Navodar', '4f351e69c91975f5532533db26492bd7'),
+
+(40, 'aaaaa', '74b87337454200d4d33f80c4663dc5e5');
+
+
+INSERT INTO `gui_acl_roles` (`id`, `parent_id`, `key_name`, `name`, `comment`) VALUES
+(1, NULL, 'acl_admin', 'Acl Admin', 'Has access to the GUI for ACL.'),
+
+(20, NULL, 'dean', 'Dean', 'Dekan'),
+(23, NULL, 'admin', 'Admin', 'AdministÃ¡tor rolÃ­, uÅ¾Ã­vateÄ¾ov, etc'),
+
+(24, NULL, 'rozpoctar', 'RozpoÄtÃ¡r', 'Rola na Ãºpravu rozpoÄtov'),
+(25, NULL, 'uu', 'ÃšÃº', 'asdfasdf');
+
+INSERT INTO `gui_acl_resources` (`id`, `parent_id`, `key_name`, `name`, `comment`) VALUES
+(1, NULL, 'acl_permission', 'Acl Permission', 'GUI for Acl'),
+
+(24, NULL, 'fakulty', 'Fakulty', 'prÃ­stup k fakultam'),
+
+(25, NULL, 'ustav', 'Ustav', 'PrÃ­stup k Ãºstavom.'),
+
+(26, NULL, 'projekt', 'Projekt', 'Projekty'),
+
+(27, NULL, 'nastavenia', 'Nastavenia', 'Pristup k nastaveniam'),
+
+(28, NULL, 'statistiky', 'Å tatistiky', 'Å tatistiky');
+
+
+
+INSERT INTO `gui_acl_privileges` (`id`, `key_name`, `name`, `comment`) VALUES
+(1, 'acl_access', 'Acl Access', 'Access to the GUI for Acl.'),
+
+(8, 'delete', 'Delete', 'mazanie'),
+
+(9, 'view', 'View', 'pozeranie'),
+
+(10, 'add', 'Add', 'pridÃ¡vanie'),
+
+(11, 'edit', 'Edit', 'upravovanie'),
+
+(12, 'nastavenia_rozpocet', 'Nastavenia_rozpoÄet', 'PrÃ­stup k rozpoÄtom v nastaveniach'),
+
+(13, 'nastavenia_admin', 'Nastavenia_admin', 'PrÃ­stup k nastaveniam rolÃ½, pouÅ¾Ã­vateÄ¾ov, etc.'),
+
+(14, 'approve', 'Approve', 'Schvalovanie projektu');
+INSERT INTO `gui_users_roles` (`user_id`, `role_id`) VALUES
+(1, 1),
+(37, 20),
+(40, 20),
+(1, 23),
+(37, 24),
+(40, 25);
+INSERT INTO `gui_acl` (`id`, `role_id`, `privilege_id`, `resource_id`, `access`) VALUES
+(1, 1, 1, 1, 1),
+(12, 20, 9, 25, 1),
+(13, 20, 10, 25, 1),
+(14, 20, 8, 25, 1),
+
+(15, 20, 11, 25, 1),
+(16, 20, 9, 24, 1),
+(17, 20, 10, 24, 1),
+
+(18, 20, 8, 24, 1),
+(19, 20, 11, 24, 1),
+(20, 20, 10, 26, 1),
+
+(21, 20, 9, 26, 1),
+(22, 20, 11, 26, 1),
+(23, 23, 13, 27, 1),
+
+(24, 24, 12, 27, 1),
+(26, 20, 14, 26, 1);

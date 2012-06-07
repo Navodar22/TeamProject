@@ -1,0 +1,23 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Roles:default}">Role</a></li>
+<li>></li>
+<li class="actual">Používatelia Role</li>
+{/block}
+
+{block title}Používatelia Role {$role}{/block}
+{block content}
+{include './default.latte'}
+
+<h2>Users belong to the role "{$role}"</h2>
+
+<div class="tree">
+<ul>
+    {foreach $users as $user}
+    <li>{$user->name} <a href="{plink Users:edit, $user->id}"><img src="{$basePath}/images/edit.gif" height="19" width="19" title="Edit user" alt="Edit icon" /></a></li>
+    {/foreach}
+</ul>
+</div>

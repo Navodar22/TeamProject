@@ -1,0 +1,24 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Permission:default}">Povolenia</a></li>
+<li>></li>
+<li class="actual">Zmazanie Povolenia</li>
+{/block}
+
+{block content}
+<h2>{block #title}Zmazanie Povolenia{/block}</h2>
+
+<div class="forms">
+<p>Ste si istý, že chcete zmazať povolenie?</p>
+
+<table cellspacing="0" cellpadding="5">
+    <tr><th>Role</th><th>Resource</th><th>Privilege</th><th>Access</th></tr>
+    <tr><td>{$acl->role}</td><td>{$acl->resource}</td><td>{$acl->privilege}</td><td><img src="{$basePath}/images/{if $acl->access}true{else}false{/if}.gif" title="Access {if $acl->access}granted{else}denied{/if}"  width="20" height="20" alt="Access icon" /></td></tr>
+</table>
+
+{widget delete}
+
+</div>

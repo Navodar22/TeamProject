@@ -1,0 +1,23 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Users:default}">Používatelia</a></li>
+<li>></li>
+<li class="actual">Prístup Používateľov</li>
+{/block}
+
+{block content}
+<h2>{block title}Authorized access for the user "{$user_name}"{/block}</h2>
+
+<div class="overview">
+
+{if count($access)}<table cellspacing="0" cellpadding="5">
+    <tr><th>Resources</th><th>Privileges</th><th>Access</th></tr>
+    {foreach $access as $acces}
+    <tr><td>{$acces['resource']}</td><td>{$acces['privileg']}</td><td class="center"><img src="{$basePath}/images/true.gif" width="20" height="20" alt="True icon" /></td></tr>
+    {/foreach}
+</table>{/if}
+
+</div>

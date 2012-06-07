@@ -19,7 +19,7 @@ class InstitutesPresenter extends BaseLPresenter
 	
 	
 	public $backlink;
-	private $user;
+//	private $user;
 	
 	
 	
@@ -27,17 +27,12 @@ class InstitutesPresenter extends BaseLPresenter
 	 * Startup function
 	 */
 	public function startup() {
-		parent::startup();
+            parent::startup();
 
-                $this->user = $this->getUser()->getIdentity();
-                
-                if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
+//                $this->user = $this->getUser()->getIdentity();
                
-                    $this->faculties = $this->getFaculties();
-                    
-                }else{
-                    $this->redirect('Homepage:');
-                }
+            $this->faculties = $this->getFaculties();
+
                 
 	}
 	
@@ -51,6 +46,13 @@ class InstitutesPresenter extends BaseLPresenter
 	 */
 	public function renderDefault($id = NULL)
 	{
+            if ( !$this->user->isAllowed('ustav','view'))
+            {
+                $this->redirect('Homepage:');
+            }
+            
+            $this->template->institute_object = $this;
+            
 		$faculty = $this->db->table('faculty')->where('id', $id)->fetch();
 		
 		if(!$faculty) {
@@ -71,6 +73,15 @@ class InstitutesPresenter extends BaseLPresenter
 	 * @param int $faculty			ID of associate faculty
 	 */
 	public function actionEdit($id, $faculty = NULL, $backlink = NULL) {
+            if ( !$this->user->isAllowed('ustav','edit'))
+            {
+                $this->redirect('Homepage:');
+            }
+            
+            if ( !$this->allowInstitute($id) ){
+                $this->redirect('Homepage:');
+            }
+            
 		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();
 		$this->backlink = $backlink;
 		
@@ -97,6 +108,15 @@ class InstitutesPresenter extends BaseLPresenter
 	 * @param int $faculty			ID of associate faculty
 	 */
 	public function actionDelete($id, $faculty = NULL) {
+            if ( !$this->user->isAllowed('ustav','delete'))
+            {
+                $this->redirect('Homepage:');
+            }
+            
+            if ( !$this->allowInstitute($id) ){
+                $this->redirect('Homepage:');
+            }
+            
 		$this->institute = $this->db->table('institute')->where('id', $id)->fetch();		
 		
 		if(!$this->institute) {
@@ -155,7 +175,7 @@ class InstitutesPresenter extends BaseLPresenter
 		$form->addText('acronym', 'Skratka ústavu')
 				->addRule(NForm::FILLED, 'Musíte zadať skratku ústavu.');
 		
-		$form->addSelect('faculty_id', 'Zaradiť pod katedru', $this->faculties);
+		$form->addSelect('faculty_id', 'Zaradiť pod katedru', $this->getFacultiesByUser() );
 		//$form->addText('students', 'Počet študentov');
 		
 		$form->setCurrentGroup(NULL);
@@ -219,4 +239,21 @@ class InstitutesPresenter extends BaseLPresenter
 		
 		return $faculties_array;
 	}
+        
+        
+        /**
+	 * Function to get faculties in array - only non deleted
+	 */
+	public function getFacultiesByUser() {
+            $sql = \dibi::query('SELECT faculty_id, acronym FROM faculty 
+                INNER JOIN user_faculty on faculty.id = user_faculty.faculty_id
+                WHERE user_faculty.user_id=%i;',$this->user->getId());
+            
+            $faculties = $sql -> fetchPairs();
+		
+            return $faculties;
+	}
+        
+        
+        
 }

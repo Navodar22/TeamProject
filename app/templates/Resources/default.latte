@@ -1,0 +1,22 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li class="actual">Zdroje</li>
+{/block}
+
+{block content}
+
+
+<h2>{block #title}Zdroje{/block}</h2>
+
+<div class="overview">
+{if $prog_mode}<div class="line"><a class="add" href="{plink Resources:add}">Pridať zdroje</a></div>{/if}
+
+<div class="tree">
+    {include './treeView.latte'}
+</div>
+
+
+</div>

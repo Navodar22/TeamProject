@@ -8,7 +8,10 @@
 <h2>Ústavy ({isSet($faculty) ? $faculty->name : 'všetky'})</h2>
 
 <div class="overview">
+    {if $user_object->isAllowed('ustav', 'add')}
 	<a class="add" href="{plink Institutes:add}">Pridať ústav</a>
+    {/if}
+
 	<table>
 		<tr>
 			<th>Názov</th>
@@ -23,8 +26,16 @@
 					<td>{$institute->acronym}</td>
 					<td class="actions">
 						<div class="actions-container">
+                                                    {if $user_object->isAllowed('ustav', 'edit')}
+                                                        {if $institute_object->allowInstitute($institute->id) }
 							<a class="more" href="{plink Institutes:edit, $institute->id, $faculty->id}"></a>
+                                                        {/if}
+                                                    {/if}
+                                                    {if $user_object->isAllowed('ustav', 'delete')}
+                                                        {if $institute_object->allowInstitute($institute->id) }
 							<a class="delete" href="{plink Institutes:delete, $institute->id, $faculty->id}" onclick="return confirm('Naozaj chcete zmazať {$institute->name}?')"></a>
+                                                        {/if}
+                                                    {/if}
 						</div>
 					</td>
 				</tr>
@@ -36,8 +47,16 @@
 					<td>{$institute->acronym}</td>
 					<td class="actions">
 						<div class="actions-container">
+                                                    {if $user_object->isAllowed('ustav', 'edit')}
+                                                        {if $institute_object->allowInstitute($institute->id) }
 							<a class="more" href="{plink Institutes:edit, $institute->id}"></a>
+                                                        {/if}
+                                                    {/if}
+                                                    {if $user_object->isAllowed('ustav', 'delete')}
+                                                        {if $institute_object->allowInstitute($institute->id) }
 							<a class="delete" href="{plink Institutes:delete, $institute->id}" onclick="return confirm('Naozaj chcete zmazať {$institute->name}?')"></a>
+                                                        {/if}
+                                                    {/if}
 						</div>
 					</td>
 				</tr>

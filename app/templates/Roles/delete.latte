@@ -1,0 +1,20 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Roles:default}">Role</a></li>
+<li>></li>
+<li class="actual">Zmazanie Role</li>
+{/block}
+
+{block content}
+<h2>{block #title}Zmazanie Role{/block}</h2>
+
+<div class="forms">
+<p>Ymazať túto rolu? "{$role}"?</p>
+
+<p class="error">Varovanie: Táto operácia tiež zmaže všetky závyslosti na "{$role}"!</p>
+
+{widget delete}
+</div>

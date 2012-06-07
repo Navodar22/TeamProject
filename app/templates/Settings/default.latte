@@ -5,8 +5,33 @@
 {/block}
 
 {block content}
-<h2  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" >Nastavenia</h2>
+<h2>Nastavenia</h2>
 
+{if $user_object->isAllowed('nastavenia', 'nastavenia_admin')}
+<div class="overview">
+<div id="menu">
+        <ul>
+            <li{if $current=='Acl:Users'} class="hover"{/if}><a href="{plink //Users:default}">Users</a></li>
+            <li{if $current=='Acl:Permission'} class="hover"{/if}><a href="{plink //Permission:}">Permission</a></li>
+            <li{if $current=='Acl:Roles'} class="hover"{/if}><a href="{plink //Roles:}">Roles</a></li>
+            <li{if $current=='Acl:Resources'} class="hover"{/if}><a href="{plink //Resources:}">Resources</a></li>
+            <li{if $current=='Acl:Privileges'} class="hover last"{/if}><a href="{plink //Privileges:}">Privileges</a></li>
+        </ul>
+    </div>
+    <div id="content">
+            <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>        
+    </div>
+
+<script type="text/javascript">
+$("ul.border_parent").parent().css("border-left", "1px solid grey");
+</script>
+
+</div>
+<br />
+<br />
+{/if}
+
+{if $user_object->isAllowed('nastavenia', 'nastavenia_rozpocet')  }
 <div class="overview">
 	<table>
 		<tr>
@@ -31,7 +56,7 @@
 <br />
 <br />
 
-<div  n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]"  class="overview">
+<div class="overview">
 	<table>
 		<tr>
 			<th>Fakulta</th>
@@ -58,3 +83,4 @@
 
 	</table>
 </div>
+{/if}

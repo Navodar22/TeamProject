@@ -7,8 +7,11 @@
 {/block}
 
 {block content}
+
+{if $user_object->isAllowed('fakulty', 'add')}
 <h2>Pridanie novej fakulty</h2>
 
 <div class="forms">
 	{control saveForm}
 </div>
+{/if}

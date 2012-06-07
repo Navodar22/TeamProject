@@ -10,7 +10,7 @@ class FacultiesPresenter extends BaseLPresenter
 {
 	/** @var database object */
 	public $faculty;
-	private $user;
+//	private $user2;
 	
 	
 	
@@ -20,16 +20,17 @@ class FacultiesPresenter extends BaseLPresenter
 	 */
 	public function renderDefault()
 	{
-                $this->user = $this->getUser()->getIdentity();
+//                $this->user2 = $this->getUser()->getIdentity();
                 
-                if( $this->user->privileges[0] | $this->user->privileges[1] | $this->user->privileges[2] | $this->user->privileges[3] ){
-                    
-                    $this->template->faculties = $this->db->table('faculty');
-                
-                    
-                }else{
+                if ( !$this->user->isAllowed('fakulty', 'view'))
+                {
                     $this->redirect('Homepage:');
                 }
+                
+               
+                $this->template->faculty_object = $this;
+                
+                $this->template->faculties = $this->db->table('faculty');
 	} 
 	
 	
@@ -42,6 +43,15 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of editing faculty
 	 */
 	public function actionEdit($id) {
+            if ( !$this->user->isAllowed('fakulty', 'edit'))
+            {
+                $this->redirect('Homepage:');
+            }
+            
+            if ( !$this->allowFaculty($id) ){
+                $this->redirect('Homepage:');
+            }
+            
 		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();	
 		
 		if(!$this->faculty) {
@@ -62,6 +72,15 @@ class FacultiesPresenter extends BaseLPresenter
 	 * @param int $id		ID of selected faculty
 	 */
 	public function actionDelete($id) {
+            if ( !$this->user->isAllowed('fakulty', 'delete'))
+            {
+                $this->redirect('Homepage:');
+            }
+            
+            if ( !$this->allowFaculty($id) ){
+                $this->redirect('Homepage:');
+            }
+                
 		$this->faculty = $this->db->table('faculty')->where('id', $id)->fetch();		
 		
 		if(!$this->faculty) {

@@ -1,0 +1,38 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li class="actual">Privilégia</li>
+{/block}
+
+{block content}
+
+
+<h2>{block #title}Privileges{/block}</h2>
+
+<div class="overview">
+{if $prog_mode}<a class="add" href="{plink Privileges:add}">Pridať privilégia</a>{/if}
+<table>
+		<tr>
+			<th>Názov</th>
+			<th>Popis</th>
+			<th>Akcia</th>
+		</tr>
+
+{foreach $privileges as $privilege}
+<tr class="{$iterator->odd ? odd : even}">
+    <td class="name"> {$privilege->name} </td>
+    <td> {ifset $privilege->comment}<dd>{$privilege->comment}</dd>{/ifset} </td>
+    <td>
+        <a href="{plink //Privileges:edit, $privilege->id}"><img src="{$basePath}/images/edit.gif" height="19" width="19" title="Edit privileg" alt="Edit icon" /></a>{if $prog_mode} 
+        <a href="{plink Privileges:delete, $privilege->id}"><img src="{$basePath}/images/delete.gif" height="19" width="19" title="Delete privilege" alt="Delete icon" /></a>{/if}
+    </td>
+    
+{/foreach}
+
+</tr>
+</table>
+
+</div>
+

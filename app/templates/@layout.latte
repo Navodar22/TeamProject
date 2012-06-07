@@ -28,6 +28,9 @@
 	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
 	<script type="text/javascript" src="{$basePath}/js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript" src="{$basePath}/js/jquery.nette.js"></script>	
+        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/acl.css" type="text/css">
+
+        <script type="text/javascript" src="{$basePath}/js/create-key.js"></script>
 	{block head}{/block}
 </head>
 
@@ -42,24 +45,42 @@
 			<div class="clearer"></div>
 		</div>
 		<div class="header-content">
-                        <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink :Homepage:default}">Úvod</a>
+                         <a href="{plink :Homepage:default}">Úvod</a>
+                    
+                    {if $user_object->isAllowed('projekt', 'view')}
 			<a href="{plink :Projects:Projects:myProjects}">Moje projekty</a>
+                    {/if}
+                    {if $user_object->isAllowed('projekt', 'add')}
 			<a href="{plink :Projects:Projects:add}">Pridať projekt</a>
-			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink :Faculties:default}">Fakulty</a>
-			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink :Institutes:default}">Ústavy</a>
-			<a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink :Statistics:default}">Štatistiky</a>
-            <a n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" href="{plink :Settings:default}">Nastavenia</a>
+                    {/if}
+
+                    {if $user_object->isAllowed('fakulty', 'view')}
+			<a href="{plink :Faculties:default}">Fakulty</a>
+                    {/if}
+
+                    {if $user_object->isAllowed('ustav', 'view')}
+			<a href="{plink :Institutes:default}">Ústavy</a>
+                    {/if}
+
+                    {if $user_object->isAllowed('statistiky', 'view')}
+                        <a href="{plink :Statistics:default}">Štatistiky</a>
+                    {/if}
+
+                    {if $user_object->isAllowed('nastavenia', 'nastavenia_admin') || $user_object->isAllowed('nastavenia', 'nastavenia_rozpocet')  }
+                    <a href="{plink :Settings:default}">Nastavenia</a>
+                    {/if}
+                        
 			
-			<div n:if="$user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3]" class="date-range">
-				<a href="{link :Homepage:dateRange}">Zobrazované obdobie: </a>
-				{if !empty($dateRange)}
-					<span class="c-green">{$dateRange->from|date: 'd.m.y'} - {$dateRange->to|date: 'd.m.y'}</span>
-				{else}
-					<span class="c-green">Všetko</span>
-				{/if}
-			</div>
-			<div class="clearer"></div>
-		</div><!-- header-content -->
+                    <div class="date-range">
+                            <a href="{link :Homepage:dateRange}">Zobrazované obdobie: </a>
+                            {if !empty($dateRange)}
+                                    <span class="c-green">{$dateRange->from|date: 'd.m.y'} - {$dateRange->to|date: 'd.m.y'}</span>
+                            {else}
+                                    <span class="c-green">Všetko</span>
+                            {/if}
+                    </div>
+                    <div class="clearer"></div>
+            </div><!-- header-content -->
         
 	
 	</div><!-- header -->

@@ -9,27 +9,53 @@ abstract class BaseLPresenter extends BasePresenter
 {
 	
 	public $dateRange;
-	private $user;
+        public $cache;
+        public $oldLayoutMode = FALSE;
+        public $oldModuleMode = FALSE;
+        
+//	private $user;
 	
 	
     public function startup() {
-		parent::startup();
-		
-		if(!$this->getUser()->isLoggedIn()) {
-			$this->redirect(':Sign:in');
-		} else {
-			$this->template->user = $this->user = $this->getUser()->getIdentity();
-			
-                        
-			$this->dateRange = $this->getDateRange();
-			$this->template->dateRange = $this->dateRange;
-			
-			$this->template->registerHelper('emptyPrice', callback(new EmptyPrice, 'process'));
-			$this->template->registerHelper('emptyNumber', callback(new EmptyNumber, 'process'));
-			$this->template->registerHelper('emptyDate', callback(new EmptyDate, 'process'));			
-			$this->template->registerHelper('zeroPrice', callback(new ZeroPrice, 'process'));
-		}
-	}
+        parent::startup();
+
+        $this->template->prog_mode = (ACL_PROG_MODE ? true : false);
+
+        // cache
+        if (ACL_CACHING) {
+            $this->cache = \Nette\Environment::getCache();
+            if (!isset($this->cache['gui_acl'])) {
+                $this->cache->save('gui_acl', new Acl(), array(
+                    'files' => array(APP_DIR . '/config.ini'),
+                ));
+            }
+            $this->user->setAuthorizator($this->cache['gui_acl']);
+        }
+        else
+            $this->user->setAuthorizator(new Acl());
+        
+        
+        if (!$this->user->isLoggedIn()) {
+            $this->redirect(':Sign:in');
+        } else {
+//           $this -> template -> identity = $this -> user -> getIdentity(); 
+
+            $this->template->user = $this->getUser()->getIdentity();
+            
+            $this->template->user_object = $this->user;
+
+            // po uprave rolest v settings asi nepotrebne
+            $this->template->current = $this->getPresenter()->getName();
+
+            $this->dateRange = $this->getDateRange();
+            $this->template->dateRange = $this->dateRange;
+
+            $this->template->registerHelper('emptyPrice', callback(new EmptyPrice, 'process'));
+            $this->template->registerHelper('emptyNumber', callback(new EmptyNumber, 'process'));
+            $this->template->registerHelper('emptyDate', callback(new EmptyDate, 'process'));			
+            $this->template->registerHelper('zeroPrice', callback(new ZeroPrice, 'process'));
+        }
+    }
 	
 	
 	
@@ -120,4 +146,59 @@ abstract class BaseLPresenter extends BasePresenter
 		
 		return $dateRange;
 	}
+        
+    /**
+     * Check if the user has permissions to enter this section.
+     * If not, then it is redirected.
+     *
+     */
+    public function checkAccess() {
+        // if the user is not allowed access to the ACL, then redirect him
+        if (!$this->user->isAllowed(ACL_RESOURCE, ACL_PRIVILEGE)) {
+            // @todo change redirect to login page
+            $this->redirect('Denied:');
+        }
+    }
+    
+    
+    /**
+     * Check if the user has permissions to enter this faculty.
+     * If not, then it is redirected.
+     *
+     */    
+    public function allowFaculty( $faculty_id ){
+        $sql = \dibi::query('SELECT Count(id) as Pocet FROM user_faculty
+                                    WHERE user_id = %i and faculty_id = %i;',$this->user->getId(), $faculty_id  );
+        $count = $sql->fetchSingle();
+        
+        if( $count > 0 ){
+            return true;
+        }else{
+            return false;
+        }        
+    }
+    
+    /**
+     * Check if the user has permissions to enter this institute.
+     * If not, then it is redirected.
+     *
+     */    
+    public function allowInstitute( $institute_id ){
+        $sql = \dibi::query('SELECT Count(id) as Pocet FROM user_institute
+                                    WHERE user_id = %i and institute_id = %i;',$this->user->getId(), $institute_id  );
+        $count = $sql->fetchSingle();
+        
+        if( $count > 0 ){
+            return true;
+        }else{
+            return false;
+        } 
+        
+        
+        
+    }
+    
+    
+    
+    
 }

@@ -1,0 +1,26 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li><a href="{link Roles:default}">Role</a></li>
+<li>></li>
+<li class="actual">Prístup Role</li>
+{/block}
+
+{block title}Prístup Role {$role}{/block}
+{block content}
+
+
+
+<h2>Authorized access for the role "{$role}"</h2>
+
+<div class="overview">
+{if count($access)}<table cellspacing="0" cellpadding="5">
+    <tr><th>Resources</th><th>Privileges</th><th>Access</th></tr>
+    {foreach $access as $acces}
+    <tr><td>{$acces['resource']}</td><td>{$acces['privileg']}</td><td class="center"><img src="{$basePath}/images/true.gif" width="20" height="20" alt="True icon" /></td></tr>
+    {/foreach}
+</table>{/if}
+
+</div>

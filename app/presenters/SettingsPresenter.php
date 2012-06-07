@@ -21,31 +21,28 @@ class SettingsPresenter extends BaseLPresenter
 	public function renderDefault()
 	{
             $user = $this->getUser()->getIdentity();
+                              
                 
-            if( $user->privileges[0] | $user->privileges[1] | $user->privileges[2] | $user->privileges[3] ){                
-                
-                $faculties = $this->db->table('faculty');
-				$result = null;
+            $faculties = $this->db->table('faculty');
+                            $result = null;
 
-                foreach($faculties as $faculty) {
-                        $result[$faculty->id] = $this->db->table('institute')->where('faculty.id', $faculty->id)->select('
-                                sum(institute.students) AS total_students,
-                                sum(institute.money) AS total_money
-                                ')->fetch();
-                        $result[$faculty->id]['name'] = $faculty->name;
-                        $result[$faculty->id]['acronym'] = $faculty->acronym;
-                }
-
-
-
-                $db_total_data = $this->db->table('project');
-
-
-				$this->template->school_data = $result;
-                $this->template->schools = $this->db->table('school');
-            } else {
-                $this->redirect('Homepage:');
+            foreach($faculties as $faculty) {
+                    $result[$faculty->id] = $this->db->table('institute')->where('faculty.id', $faculty->id)->select('
+                            sum(institute.students) AS total_students,
+                            sum(institute.money) AS total_money
+                            ')->fetch();
+                    $result[$faculty->id]['name'] = $faculty->name;
+                    $result[$faculty->id]['acronym'] = $faculty->acronym;
             }
+
+
+
+            $db_total_data = $this->db->table('project');
+
+
+                            $this->template->school_data = $result;
+            $this->template->schools = $this->db->table('school');
+
 		
 	} 
 

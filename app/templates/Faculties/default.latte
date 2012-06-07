@@ -8,7 +8,12 @@
 <h2>Fakulty</h2>
 
 <div class="overview">
+    {if $user_object->isAllowed('fakulty', 'add')}
 	<a class="add" href="{plink Faculties:add}">Pridať fakultu</a>
+    {/if}
+    
+    
+    
 	<table>
 		<tr>
 			<th>Názov</th>
@@ -22,8 +27,16 @@
 			<td>{$faculty->acronym}</td>
 			<td class="actions">
 				<div class="actions-container">
-					<a class="more" href="{plink Faculties:edit, $faculty->id}"></a>
+                                    {if $user_object->isAllowed('fakulty', 'edit')}
+                                        {if $faculty_object->allowFaculty($faculty->id) }
+                                            <a class="more" href="{plink Faculties:edit, $faculty->id}"></a>
+                                        {/if}
+                                    {/if}
+                                    {if $user_object->isAllowed('fakulty', 'delete')}
+                                        {if $faculty_object->allowFaculty($faculty->id) }
 					<a class="delete" href="{plink Faculties:delete, $faculty->id}" onclick="return confirm('Naozaj chcete zmazať {$faculty->name}?')"></a>
+                                        {/if}
+                                    {/if}
 				</div>
 			</td>
 		</tr>

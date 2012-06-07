@@ -138,7 +138,7 @@ class Projects_ProjectsPresenter extends Projects_BasePresenter
 			if($form['process']->isSubmittedBy()) {
 				$values = $form->values;
 
-				$values['user_id'] = '1'; //@TODO actual loged user id - ldap
+				$values['user_id'] = $this->getUser()->getIdentity()->getId(); //@TODO actual loged user id - ldap
 
 				$this->db->table('project')->insert($values);
 				

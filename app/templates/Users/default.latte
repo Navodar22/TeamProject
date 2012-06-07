@@ -1,0 +1,48 @@
+{block #breadcrumb}
+<li><a href="{link Homepage:default}">Domov</a></li>
+<li>></li>
+<li><a href="{link Settings:default}">Nastavenia</a></li>
+<li>></li>
+<li class="actual">Používatelia</li>
+{/block}
+
+
+
+{block content}
+<h2>{block #title}Používatelia{/block}</h2>
+
+<div class="overview">
+<a class="add" href="{plink Users:add}">Pridať používateľa</a>
+{$form->render('begin')}
+{$form->render('errors')}
+{$form->render('end')}
+
+{widget vp}
+
+<table>
+    <tr>
+            <th>Používateľ</th>
+            <th>Role</th>
+            <th>Fakulta</th>
+            <th>Akcia</th>
+    </tr>
+
+{foreach $users as $id => $user}
+    <tr class="{$iterator->odd ? odd : even}">
+        <td class="name">{$user['name']} </td>
+        <td> {if count($user['roles'])}{foreach $user['roles'] as $role}{$role}{if !$iterator->isLast()}, {/if}{/foreach} {/if}  </td>
+        <td> {if count($user['faculties'])}{foreach $user['faculties'] as $faculty}{$faculty}{if !$iterator->isLast()}, {/if}{/foreach} {/if}   </td>
+        <td>
+        <a href="{plink Users:edit, $id}"><img src="{$basePath}/images/edit.gif" height="19" width="19" title="Edit user" alt="Edit icon" /></a>
+        <a href="{plink Users:access, $id}"><img src="{$basePath}/images/access.gif" height="20" width="20" title="Show access for this user" alt="Access icon" /></a>
+        <a href="{plink Users:delete, $id}"><img src="{$basePath}/images/delete.gif" height="19" width="19" title="Delete user" alt="Delete icon" /></a>
+        </td>
+
+    </tr>
+{/foreach}
+
+
+</table>
+{widget vp}
+
+</div>

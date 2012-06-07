@@ -16,6 +16,11 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 	/** @var array		Free faculties/insitutes for defined project - one institute can be only once in one project */
 	public $free_institutes;
 	
+        /** @var array		Free faculties/insitutes for defined project - one institute can be only once in one project 
+         *                      and institutes gets by users institutes
+         */
+	public $free_institutes_user;
+        
 	/** @var array		Allowed states of project */
 	public $states;
 
@@ -29,6 +34,8 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		parent::startup();
 		
 		$this->getStates();
+                
+                print_r( $this->getFreeInstitutesByUser(2) );
 	}
 	
 	
@@ -39,7 +46,7 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 	 * 
 	 * @param int $id		ID of project -> where connect the institute
 	 */
-	public function actionAdd($id) {
+	public function actionAdd($id) {    
 		$this->project = $this->db->table('project')->where('id', $id)->fetch();
 		
 		if(!$this->project) {
@@ -49,7 +56,7 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		//fetch array of free faculties/institutes for actual project
 		$this->getFreeInstitutes($this->project->id);
 		
-		if(empty($this->free_institutes)) {
+		if(empty($this->free_institutes_user)) {
 			$this->flashMessage('Neexistuje ústav ktorý by sa mohol pridať ku projektu.', 'error');
 			$this->redirect('Projects:edit', $this->project->id);
 		}
@@ -164,9 +171,9 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		$form = new NAppForm();
 
 		$form->addGroup();
-		$form->addSelect('state_id', 'Stav projektu', $this->states) //@TODO make global function to get states by role
+		$form->addSelect('state_id', 'Stav projektu', $this->getStateByUserRole() ) //@TODO make global function to get states by role
 				->getControlPrototype()->class('w250');
-		$form->addSelect('institute_id', 'Ústav', $this->free_institutes)
+		$form->addSelect('institute_id', 'Ústav', $this->free_institutes_user)
 				->getControlPrototype()->class('w250');
 		
 		$form->addText('cost', 'Finančné zdroje')
@@ -290,7 +297,7 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		$form = new NAppForm();
 
 		$form->addGroup();
-		$form->addSelect('state_id', 'Stav projektu', $this->states); //@TOTO prev todo
+		$form->addSelect('state_id', 'Stav projektu', $this->getStateByUserRole()); //@TOTO prev todo
 		
 		$form->addText('cost', 'Finančné zdroje')
 				->addRule(NForm::FILLED, 'Musíte zadať cenu projektu')
@@ -410,10 +417,19 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		foreach($states as $state) {
 			$result[$state->id] = $state->name; 		
 		}
-		
+                
 		$this->states = $result;
 	}
 	
+        public function getStateByUserRole(){
+            $state = $this->states;
+
+            if( !$this->user->isAllowed('projekt', 'approve') ){
+                unset( $state[2] );
+            }
+
+            return $state;
+        }
 	
 	
 	
@@ -442,12 +458,58 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 			$result[$faculty->name] = array();
 			foreach($faculty->related('institute')->order('name') as $institute) {
 				if(!in_array($institute->id, $banned)) {
+                                    
 					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
+                                        
 				}
 			}			
 		}
 		
 		//set result to global value
 		$this->free_institutes = $result;
+	}
+        
+        /**
+	 * Function to get free faculties/institutes for project.
+	 * Every institute can be assigned to project only once.
+	 * 
+	 * @param int $project_id		ID of project
+	 */
+	public function getFreeInstitutesByUser($project_id) {
+		//get db values
+		$faculties = $this->db->table('faculty')->order('name');
+		$project = $this->db->table('project')->where('id', $project_id)->fetch();
+		$institutes_user_table =  $this->db->table('user_institute')->where('user_id', $this->user->getId() );
+                
+                
+		//init array values
+		$result = array();
+		$banned = array();
+		$institutes_user = array();
+                
+                foreach($institutes_user_table as $institute_user) {
+			$institutes_user[] = $institute_user->institute_id;
+		}
+                
+		//get banned institutes
+		foreach($project->related('project_institute') as $project_institute) {
+			$banned[] = $project_institute->institute->id;
+		}
+		
+                
+		//get free institutes
+		foreach($faculties as $faculty) {
+			$result[$faculty->name] = array();
+			foreach($faculty->related('institute')->order('name') as $institute) {
+				if(!in_array($institute->id, $banned) && ( in_array($institute->id, $institutes_user) )) {
+                                    
+					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
+                                        
+				}
+			}			
+		}
+		
+		//set result to global value
+		$this->free_institutes_user = $result;
 	}
 }
