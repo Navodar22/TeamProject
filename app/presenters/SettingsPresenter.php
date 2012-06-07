@@ -184,7 +184,9 @@ class SettingsPresenter extends BaseLPresenter
 				$this->flashMessage('Pri ukladaní dát do db nastala chyba.', 'error');
 				$this->redirect('default');	
 			}
-		}
+		}else{
+                    $this->redirect('default');
+                }
 	}
 
 
