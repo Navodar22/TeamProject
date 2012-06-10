@@ -31,7 +31,7 @@ class Login extends NObject implements IAuthenticator
             throw new AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
         }*/
 
-        if (count($sql)==0 OR $row->password!==md5($password)) {
+        if (count($sql)==0 OR $row->password!==sha1($password)) {
             throw new NAuthenticationException('Neplatné prihlasovacie údaje.', self::INVALID_CREDENTIAL);
         }
 

@@ -207,7 +207,7 @@ class UsersPresenter extends BaseLPresenter{
                 $institutes = $values['institutes'];
                 
                 unset($values['heslo2'],$values['roles']);
-                $values['heslo'] = md5($values['heslo']);
+                $values['heslo'] = sha1($values['heslo']);
                 NDebugger::barDump($values);
                 dibi::query('INSERT INTO ['.TABLE_USERS.'] %v',array("name"=>$values["name"], "password"=>$values["heslo"]));
                 $user_id = \dibi::getInsertId();

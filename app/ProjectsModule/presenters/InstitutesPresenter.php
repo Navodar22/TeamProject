@@ -34,8 +34,6 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		parent::startup();
 		
 		$this->getStates();
-                
-                print_r( $this->getFreeInstitutesByUser(2) );
 	}
 	
 	
@@ -54,8 +52,10 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 		}
 		
 		//fetch array of free faculties/institutes for actual project
+		$this->getFreeInstitutesByUser($this->project->id);
 		$this->getFreeInstitutes($this->project->id);
-		
+                
+                
 		if(empty($this->free_institutes_user)) {
 			$this->flashMessage('Neexistuje ústav ktorý by sa mohol pridať ku projektu.', 'error');
 			$this->redirect('Projects:edit', $this->project->id);
@@ -506,7 +506,10 @@ class Projects_InstitutesPresenter extends Projects_BasePresenter
 					$result[$faculty->name][$institute->id] = $institute->name . ' (' . $institute->acronym . ')'; 
                                         
 				}
-			}			
+			}
+                        if( empty($result[$faculty->name])  ){
+                            unset( $result[$faculty->name] );
+                        }
 		}
 		
 		//set result to global value

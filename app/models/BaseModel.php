@@ -67,6 +67,6 @@ class BaseModel extends NObject
 	 *  Static function for hash calculating
 	 */   	
 	public static function calculateHash($password) {
-		return md5($password . str_repeat('I8uhy6th7879GF8GGdytr986h', 10));
+		return sha1($password . str_repeat('I8uhy6th7879GF8GGdytr986h', 10));
 	}
 }
